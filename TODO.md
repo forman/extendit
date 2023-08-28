@@ -2,7 +2,6 @@
 
 ### Design
 
-* Demo: switching a few seems very slow. Fix!
 * Get rid of `registerAppExtension`, just use `registerExtension` with
   options:
     - `extensionPath`: url/path to dir/source containing `package.json`
@@ -21,22 +20,21 @@
 
 ### Before Deployment
 
+* Demo: switching views seems slow, but React devtools
+  say components update within millis. Check!
 * Setup CI
 * Add TSDoc at to all types, classes, members, methods,
   functions, and constants.
 * Add badges in README.md for test result, docs, API docs, coverage,
   and package.
+* Write `getting started` section in README.md
 * Implement remaining unit-tests
 * Find out how to test React hooks using `vitest`
 * Enhance the demo:
     - Add submenus demo
-* Expand the ESLint configuration `.eslintrc.cjs`, see section below
 * Deploy package `extend-me`
-* Write README.md incl. a `getting started` section
 
 ## DONE
-
-### Design
 
 * Move log levels from `levels` into `LogLevel`.
 * Check why in the demo the app commands are not shown
@@ -52,10 +50,6 @@
 * Logger improvements
     - `warnOnce()`
     - `log()` without level --> use logger level
-
-
-### Before Deployment
-
 * Enhance the demo:
     - Demo command enablement
     - Demo menu when clauses
@@ -63,3 +57,4 @@
 * Configure TypeDoc to generate an API reference.
 * Add TSDoc to user-facing types, classes, members, methods,
   functions, and constants.
+* Expand the ESLint configuration `.eslintrc.cjs`, see section below

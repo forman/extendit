@@ -1,6 +1,4 @@
-
 ![image](docs/images/extend-me.png)
-
 
 ... is a framework and library that is used to create extensible and scalable
 TypeScript/JavaScript applications.
@@ -37,49 +35,25 @@ of [Visual Studio Code](https://code.visualstudio.com/).
 * [zustand](https://github.com/pmndrs/zustand) for state management, and
 * [Ajv](https://ajv.js.org/) for JSON validation.
 
-`ExtendMe!` is small: `extend-me.js` 34 kB │ gzip: 10 kB.
+`ExtendMe!` is small: `extend-me.js` 40 kB │ gzip: 11 kB.
 
-## React + TypeScript + Vite
+### Development
 
-This template provides a minimal setup to get React working in Vite with HMR and
-some ESLint rules.
+Get sources and install dependencies first:
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md)
-  uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc)
-  uses [SWC](https://swc.rs/) for Fast Refresh
-
-### Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the
-configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-        sourceType
-:
-    'module',
-        project
-:
-    ['./tsconfig.json', './tsconfig.node.json'],
-        tsconfigRootDir
-:
-    __dirname,
-}
-,
+```bash
+$ git clone https://github.com/forman/extend-me
+$ cd extend-me
+$ npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended`
-  to `plugin:@typescript-eslint/recommended-type-checked`
-  or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
--
+Now the following scripts are available:
 
-Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react)
-and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends`
-list
+* `npm run dev` - run the UI demo in development mode
+* `npm run build` - build the `extend-me` library, outputs to `./dist`
+* `npm run lint` - run `eslint` on project sources
+* `npm run test` - run project unit tests
+* `npm run mk-coverage` - generate project coverage report in `./coverage`
+* `npm run mk-apidocs` - generate project API docs in `./docs/api`
+
+
