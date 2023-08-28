@@ -1,0 +1,10 @@
+{
+  "name": "requires-foo-and-baz-apis",
+  "provider": "pippo",
+  "main": "main.js",
+  "description": "A test extension that depends on another extension",
+  "extensionDependencies": [
+    "pippo.exports-foo-api",
+    "pippo.exports-baz-api"
+  ]
+}

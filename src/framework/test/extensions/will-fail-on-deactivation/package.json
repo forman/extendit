@@ -1,0 +1,6 @@
+{
+  "name": "will-fail-on-deactivation",
+  "provider": "pippo",
+  "main": "main.js",
+  "description": "A test extension that will fail on deactivation by intention"
+}

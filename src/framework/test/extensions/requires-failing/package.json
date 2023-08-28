@@ -1,0 +1,9 @@
+{
+  "name": "requires-failing",
+  "provider": "pippo",
+  "main": "main.js",
+  "description": "A test extension that depends on another extension that is known to fail on activation",
+  "extensionDependencies": [
+    "pippo.will-fail-on-activation"
+  ]
+}

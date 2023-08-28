@@ -1,0 +1,6 @@
+{
+  "name": "will-fail-on-activation",
+  "provider": "pippo",
+  "main": "main.js",
+  "description": "A test extension that will fail on activation by intention"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "exports-foo-api",
+  "provider": "pippo",
+  "main": "main.js",
+  "description": "A test extension that exports a Foo API"
+}
