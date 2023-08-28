@@ -21,12 +21,15 @@
 
     /* Linting */
     "strict": true,
+    "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["src"],
+  "include": [
+     "src"
+  ],
   "exclude": [
     "**/*.test.ts",
     "**/testing.ts"
