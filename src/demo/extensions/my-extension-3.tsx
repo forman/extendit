@@ -8,7 +8,7 @@ export function activate(ctx: ExtensionContext) {
     });
 
     registerCommand("ex3.pippo", () => {
-        executeCommand("app.selectView", "ex3.pippo").then();
+        void executeCommand("app.selectView", "ex3.pippo");
     });
 
     registerViewComponent("ex3.pippo", MyEx3View);

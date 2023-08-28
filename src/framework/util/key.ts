@@ -8,7 +8,7 @@ export function keyFromValue(value: unknown): string {
         : Array.isArray(value)
             ? keyFromArray(value)
             : typeof value === "object" && value !== null
-                ? kayFromObject(value)
+                ? keyFromObject(value)
                 : `${value}`;
 }
 
@@ -26,7 +26,7 @@ export function keyFromArray(array: unknown[]): string {
  * Generate a unique string key from given object (not null).
  * @param obj - An object with properties of unknown type
  */
-export function kayFromObject(obj: object) {
+export function keyFromObject(obj: object) {
     return "{" + Object.entries(obj).map(
         ([k,v]) => k + ":" + keyFromValue(v)
     ).join(",") + "}";

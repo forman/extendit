@@ -111,7 +111,7 @@ function registerActivationEvents(contribPoint: CodeContributionPoint,
         contrib
             .map(contrib => contrib[idKey])
             .filter(contribId => typeof contribId === "string")
-            .map(contribId => activationEvent.replace(idRef, contribId))
+            .map(contribId => activationEvent.replace(idRef, contribId as string))
             .forEach(activationEvent =>
                 ctx.activationEvents.add(activationEvent)
             );

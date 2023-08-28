@@ -8,7 +8,7 @@ function ViewContainer() {
     const views = useViews();
 
     const selectedView = useMemo(
-        () => views.find(v => v.id === selectedViewId) || null,
+        () => views.find(v => v.id === selectedViewId) ?? null,
         [selectedViewId, views]
     );
 

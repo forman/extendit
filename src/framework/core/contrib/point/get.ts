@@ -68,5 +68,5 @@ function collectContributionsFromExtension<T>(
             + `must be given as an array.`
         );
     }
-    contrib.forEach(c => items.push(c));
+    contrib.forEach(c => items.push(c as T));
 }

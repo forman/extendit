@@ -81,7 +81,7 @@ export class Logger {
      */
     constructor(private readonly name: string,
                 private level?: LogLevel,
-                private logFn: (...data: unknown[]) => void = console.log) {
+                private logFn?: (...data: unknown[]) => void) {
     }
 
     /**
@@ -95,7 +95,7 @@ export class Logger {
      * Gets the logger's level.
      */
     getLevel(): LogLevel {
-        return this.level || logLevel;
+        return this.level ?? logLevel;
     }
 
     /**
@@ -178,19 +178,19 @@ export class Logger {
      * @param data - Data to log
      */
     log(level: LogLevel, ...data: unknown[]): void;
-    log(levelOrData: LogLevel | unknown, ...data: unknown[]): void {
+    log(levelOrData: LogLevel, ...data: unknown[]): void {
         let level: LogLevel;
-        if (levelOrData instanceof LogLevel) {
+        if ((levelOrData as unknown) instanceof LogLevel) {
             level = levelOrData;
         } else {
             level = this.getLevel();
             data = [levelOrData, ...data];
         }
         if (this.isLevelEnabled(level)) {
-            const logFn = this.logFn || level.logFn || this.getLevel().logFn || console.log;
+            const logFn = this.logFn ?? level.logFn ?? this.getLevel().logFn ?? console.log;
             logFn(
                 `%c${level.label} [${this.name}]`,
-                level.style || 'font-weight:bold;',
+                level.style ?? 'font-weight:bold;',
                 ...data
             );
         }

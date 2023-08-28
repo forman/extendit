@@ -1,4 +1,4 @@
-import type {FrameworkConfig, FrameworkOptions} from "./types";
+import type {FrameworkOptions} from "./types";
 
 /**
  * The framework's configuration instance.
@@ -6,7 +6,7 @@ import type {FrameworkConfig, FrameworkOptions} from "./types";
  * @internal
  * @category Framework API
  */
-export let frameworkConfig: FrameworkConfig = {
+export let frameworkConfig: FrameworkOptions = {
 };
 
 /**
@@ -18,7 +18,7 @@ export let frameworkConfig: FrameworkConfig = {
  */
 export function updateFrameworkConfig(
     options: Partial<FrameworkOptions>
-): FrameworkConfig {
+): FrameworkOptions {
     const prevConfig = frameworkConfig;
     frameworkConfig = {...prevConfig, ...options};
     return prevConfig;

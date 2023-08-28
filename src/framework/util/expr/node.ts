@@ -14,12 +14,12 @@ export type Func = (...args: unknown[]) => unknown;
  * It can be evaluated in a given context using the {@link Node.eval}
  * method.
  */
-export abstract class Node {
+export abstract class Node<T = unknown> {
     /**
      * Evaluate this node in the given context and return result.
      * @param ctx - Evaluation context, a plain JavaScript object.
      */
-    abstract eval(ctx: EvalContext): unknown;
+    abstract eval(ctx: EvalContext): T;
 
     /**
      * Convert into a unique string representation.
@@ -28,18 +28,18 @@ export abstract class Node {
     abstract toString(): string;
 }
 
-export class Literal<T> extends Node {
+export class Literal<T> extends Node<T> {
 
     constructor(readonly value: T) {
         super();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     eval(): T {
         return this.value;
     }
 
     toString(): string {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         return `${typeof this.value}(${this.value})`;
     }
 }

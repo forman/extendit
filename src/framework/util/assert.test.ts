@@ -8,15 +8,21 @@ test('assert', () => {
     const extension: {id: string} = {id: extensionId};
 
     expect(
-        () => assert(extension.id === extensionId, message)
+        () => {
+            assert(extension.id === extensionId, message)
+        }
     ).to.not.throw();
 
     expect(
-        () => assert(extension.id !== extensionId, message)
+        () => {
+            assert(extension.id !== extensionId, message)
+        }
     ).toThrowError(message);
 
     expect(
-        () => assert(extension.id !== extensionId, () => message)
+        () => {
+            assert(extension.id !== extensionId, () => message)
+        }
     ).toThrowError(message);
 })
 
@@ -26,16 +32,22 @@ test('assertDefined', () => {
     let extension: unknown = {id: extensionId};
 
     expect(
-        () => assertDefined(extension, message)
+        () => {
+            assertDefined(extension, message)
+        }
     ).to.not.throw();
 
     extension = undefined;
     expect(
-        () => assertDefined(extension, message)
+        () => {
+            assertDefined(extension, message)
+        }
     ).toThrowError(message);
 
     extension = undefined;
     expect(
-        () => assertDefined(extension, () => message)
+        () => {
+            assertDefined(extension, () => message)
+        }
     ).toThrowError(message);
 })

@@ -8,7 +8,7 @@ export function activate(ctx: ExtensionContext) {
     });
 
     registerCommand("ex2.bar", () => {
-        executeCommand("app.selectView", "ex2.bar").then();
+        void executeCommand("app.selectView", "ex2.bar");
     });
 
     registerViewComponent("ex2.bar", MyEx2View);

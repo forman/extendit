@@ -17,7 +17,7 @@ export function getExtensionId(manifest: ExtensionManifest): string {
  * @param manifest - the application manifest
  */
 export function getExtensionDisplayName(manifest: ExtensionManifest): string {
-    return manifest.displayName || manifest.name;
+    return manifest.displayName ?? manifest.name;
 }
 
 

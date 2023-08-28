@@ -17,7 +17,9 @@ function CommandPalette() {
                     menuItems.map(menuItem => (
                         <button
                             key={menuItem.id}
-                            onClick={() => executeCommand(menuItem.command)}
+                            onClick={() => {
+                                void executeCommand(menuItem.command)
+                            }}
                             disabled={menuItem.disabled}
                             type="button"
                         >

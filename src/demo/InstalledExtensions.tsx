@@ -40,7 +40,9 @@ function InstalledExtensions() {
                                 key={extension.id}
                                 disabled={!canActivateExtension(extension)}
                                 style={{color: extension.status === "rejected" ? "red" : undefined}}
-                                onClick={() => activateExtension(extension.id)}
+                                onClick={() => {
+                                    void activateExtension(extension.id)
+                                }}
                                 type="button"
                             >
                                 {getExtensionDisplayName(extension.manifest)}

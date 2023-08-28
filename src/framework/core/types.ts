@@ -118,9 +118,9 @@ export interface ExtensionContext {
  * @category Extension API
  */
 export interface ExtensionModule<T = unknown> {
-    activate?(extensionContext: ExtensionContext, ...dependencies: unknown[]): T;
+    activate?: (extensionContext: ExtensionContext, ...dependencies: unknown[]) => T;
 
-    deactivate?(extensionContext: ExtensionContext): Promise<void> | void;
+    deactivate?: (extensionContext: ExtensionContext) => Promise<void> | void;
 }
 
 /**
@@ -153,7 +153,7 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
     ? keyof T[number]
     : (T extends unknown
         ? keyof T
-        : never);
+        : string);
 
 /**
  * Represents a contribution point.
@@ -219,11 +219,3 @@ export type ModulePathResolver = (path: string) => string;
 export interface FrameworkOptions {
     modulePathResolver?: ModulePathResolver;
 }
-
-/**
- * Used to resolve extension module paths.
- * @category Framework API
- */
-export interface FrameworkConfig extends FrameworkOptions {
-}
-

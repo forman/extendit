@@ -26,7 +26,9 @@ export class Disposable implements DisposableLike {
      */
     static from(...disposables: DisposableLike[]): Disposable {
         return new Disposable(() => {
-            disposables.forEach(d => d.dispose())
+            disposables.forEach(d => {
+                d.dispose();
+            })
         });
     }
 

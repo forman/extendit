@@ -65,7 +65,7 @@ export function registerViewComponent(viewId: string, component: ViewComponent):
 
 export function useViewComponent(viewId: string): ViewComponent | null {
     const [viewComponent, setViewComponent] = useState<ViewComponent | null>(null);
-    const [error, setError] = useState<Error | null>(null);
+    const [error, setError] = useState<unknown>(null);
     useEffect(() => {
         LOG.debug("Hook 'useViewComponent' is recomputing");
 
@@ -77,7 +77,7 @@ export function useViewComponent(viewId: string): ViewComponent | null {
                 .then(vc => {
                     setViewComponent(() => vc);
                 })
-                .catch(e => {
+                .catch((e: unknown) => {
                     console.error(e);
                     setError(e);
                 });

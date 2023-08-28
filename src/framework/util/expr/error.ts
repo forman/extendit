@@ -23,7 +23,7 @@ export class ParserError extends SyntaxError {
      * @param column - The column number in which the error occurred
      * @param line - The line number in which the error occurred
      */
-    constructor(message: string, expression: string, column: number, line: number = 1) {
+    constructor(message: string, expression: string, column: number, line = 1) {
         super(message);
         this.expression = expression;
         this.column = column;

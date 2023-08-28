@@ -12,7 +12,7 @@ export function readTestManifest(
     options?: Partial<ExtensionManifest>
 ) {
     const buffer = fs.readFileSync(`${TEST_EXTENSIONS_DIR}/${test}/package.json`);
-    const manifest = JSON.parse(buffer.toString());
+    const manifest = JSON.parse(buffer.toString()) as ExtensionManifest;
     return {
         manifest: {...manifest, ...options},
         moduleResolver: (path: string) => `${TEST_EXTENSIONS_DIR}/${test}/${path}`
@@ -30,16 +30,13 @@ export function newTestManifest(
     };
 }
 
-export function newTestExtension(): Extension;
-export function newTestExtension(manifest: ExtensionManifest): Extension;
-export function newTestExtension(extensionId: string): Extension;
 export function newTestExtension(source?: string | ExtensionManifest): Extension {
     let manifest: ExtensionManifest;
     if (typeof source === 'string') {
         const [provider, name] = source.split(".");
         manifest = newTestManifest({name, provider});
     } else if (source) {
-        manifest = source;
+        manifest = source as ExtensionManifest;
     } else {
         manifest = newTestManifest();
     }

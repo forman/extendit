@@ -85,6 +85,7 @@ export class Parser {
             } else {
                 throw this.error(
                     `Missing ":" after "?" of conditional` +
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     ` near "${this.token().value}".`
                 )
             }
@@ -263,6 +264,7 @@ export class Parser {
             this.moveOn();
             return new PropertyRef(obj, token.value as string);
         } else {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             throw this.error(`Property name expected after ".", but got "${token.value}".`);
         }
     }

@@ -21,7 +21,7 @@ const LOG = new Logger('extension/activate');
  * @param extensionId - the extension identifier
  */
 export const activateExtension = async (extensionId: string): Promise<Extension> => {
-    const ctx = getExtensionContext(extensionId, true)!;
+    const ctx = getExtensionContext(extensionId, true);
     let extension = ctx.extension;
     if (extension.status !== "inactive") {
         return Promise.resolve(extension);
@@ -58,7 +58,7 @@ async function getExtensionDependencies(extension: Extension) {
     const extensionDependencies = extension.manifest.extensionDependencies;
     // Collect APIs we depend on
     const exportsArray: unknown[] = [];
-    if (extensionDependencies && extensionDependencies.length) {
+    if (extensionDependencies?.length) {
         let errors: (string | Error)[] = [];
         for (const dependencyId of extensionDependencies) {
             const dependency = await activateExtension(dependencyId);
@@ -82,7 +82,7 @@ async function getExtensionDependencies(extension: Extension) {
 
 async function importModule(ctx: ExtensionContextImpl, path: string) {
     const resolvedPath = ctx.resolveModulePath(path);
-    const module: ExtensionModule = await import(/*@vite-ignore*/resolvedPath);
+    const module: ExtensionModule = await import(/*@vite-ignore*/resolvedPath) as ExtensionModule;
     LOG.debug('Loaded extension module', resolvedPath);
     ctx.setModulePath(resolvedPath);
     ctx.setModule(module);

@@ -117,7 +117,7 @@ export function setExtensionStatus(extensionId: string,
         nextExtension = {
             ...nextExtension, reasons: [
                 ...reasons,
-                ...prevExtension.reasons || ([] as Error[]),
+                ...prevExtension.reasons ?? ([] as Error[]),
             ]
         };
     }

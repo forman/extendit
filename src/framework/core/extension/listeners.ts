@@ -38,8 +38,11 @@ export function addExtensionListener(listener: ExtensionListener): () => void {
  * @param extension - The extension
  */
 export function emitExtensionRegistered(extension: Extension) {
-    REGISTRY.forEach(listener =>
-        listener.onExtensionRegistered && listener.onExtensionRegistered(extension));
+    REGISTRY.forEach(listener => {
+            listener.onExtensionRegistered
+            && listener.onExtensionRegistered(extension);
+        }
+    );
 }
 
 /**
@@ -50,8 +53,11 @@ export function emitExtensionRegistered(extension: Extension) {
  * @param extension - The extension
  */
 export function emitExtensionWillUnregister(extension: Extension) {
-    REGISTRY.forEach(listener =>
-        listener.onExtensionWillUnregister && listener.onExtensionWillUnregister(extension));
+    REGISTRY.forEach(listener => {
+            listener.onExtensionWillUnregister
+            && listener.onExtensionWillUnregister(extension);
+        }
+    );
 }
 
 /**
@@ -62,6 +68,9 @@ export function emitExtensionWillUnregister(extension: Extension) {
  * @param extensionId - The extension identifier
  */
 export function emitExtensionUnregistered(extensionId: string) {
-    REGISTRY.forEach(listener =>
-        listener.onExtensionUnregistered && listener.onExtensionUnregistered(extensionId));
+    REGISTRY.forEach(listener => {
+            listener.onExtensionUnregistered
+            && listener.onExtensionUnregistered(extensionId);
+        }
+    );
 }

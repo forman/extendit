@@ -39,7 +39,7 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
 
     resolveModulePath(path: string): string {
         const resolveModulePath = this.moduleResolver
-            || frameworkConfig.modulePathResolver;
+            ?? frameworkConfig.modulePathResolver;
         if (resolveModulePath instanceof Function) {
             return resolveModulePath(path);
         }
@@ -67,7 +67,7 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     }
 
     get modulePath(): string {
-        return this._modulePath!;
+        return this._modulePath ?? "";
     }
 
     setModulePath(modulePath: string) {
@@ -83,7 +83,9 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     }
 
     dispose(): void {
-        this._subscriptions.forEach(d => d.dispose());
+        this._subscriptions.forEach(d => {
+            d.dispose()
+        });
         this._subscriptions.splice(0);
     }
 }

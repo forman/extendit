@@ -25,7 +25,7 @@ export class AssertionError extends Error {
 export function assert(condition: unknown,
                        message?: string | (() => string)): asserts condition {
     if (!condition) {
-        throw AssertionError.fromMessage(message || 'Assertion failed');
+        throw AssertionError.fromMessage(message ?? 'Assertion failed');
     }
 }
 
@@ -41,7 +41,7 @@ export function assertDefined<T>(value: T | undefined | null,
     if (value === undefined || value === null) {
         throw AssertionError.fromMessage(
             message
-            || `Expected 'value' to be defined, but received ${value}`
+            ?? `Expected 'value' to be defined, but received ${value}`
         );
     }
 }

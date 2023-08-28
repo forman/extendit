@@ -51,7 +51,9 @@ export function registerAppExtension(appManifest: ExtensionManifest,
     setExtensionStatus(extensionId, "active");
     if (deactivate) {
         return Disposable.from(
-            new Disposable(() => deactivate(ctx)),
+            new Disposable(() => {
+                void deactivate(ctx);
+            }),
             disposable
         );
     }
@@ -73,13 +75,13 @@ export function registerExtension(manifest: ExtensionManifest,
     const extensionId = extension.id;
     const ctx = new ExtensionContextImpl(extensionId);
     ctx.setModuleResolver(moduleResolver);
-    (manifest.activationEvents || []).forEach(event => ctx.activationEvents.add(event));
+    (manifest.activationEvents ?? []).forEach(event => ctx.activationEvents.add(event));
     setStoreRecord("extensions", extensionId, extension);
     setStoreRecord("extensionContexts", extensionId, ctx);
     emitExtensionRegistered(extension);
     return new Disposable(() => {
         emitExtensionWillUnregister(extension);
-        deactivateExtension(extensionId).then(() => {
+        void deactivateExtension(extensionId).then(() => {
             ctx.dispose();
             deleteStoreRecord("extensions", extensionId);
             deleteStoreRecord("extensionContexts", extensionId);

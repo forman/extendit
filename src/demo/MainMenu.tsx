@@ -19,7 +19,9 @@ function MainMenu() {
                         menuItem.command ? (
                             <button
                                 key={menuItem.id}
-                                onClick={() => executeCommand(menuItem.command!)}
+                                onClick={() => {
+                                    void executeCommand(menuItem.command!)
+                                }}
                                 disabled={menuItem.disabled}
                                 type="button"
                                 className="menu-item"

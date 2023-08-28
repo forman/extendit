@@ -120,7 +120,7 @@ function processJsonMenuItem(
     jsonMenuItem: JsonMenuItem,
 ): ProcessedMenuItem {
     const [group, order] = parseGroupAndOrder(jsonMenuItem.group);
-    const label = jsonMenuItem.label || "";
+    const label = jsonMenuItem.label ?? "";
     let when: When | undefined = undefined;
     if (jsonMenuItem.when) {
         when = whenClauseCompiler.compile(jsonMenuItem.when);
@@ -174,11 +174,11 @@ function newMenuItem(
     }
 
     // derive label
-    let label = processedMenuItem.label || "";
+    let label = processedMenuItem.label;
     if (command) {
-        label = label ? label : (command.title || "");
+        label = label ? label : (command.title ?? "");
     } else if (submenu) {
-        label = label ? label : (submenu.label || "");
+        label = label ? label : submenu.label;
     }
 
     // derive icon
@@ -189,7 +189,7 @@ function newMenuItem(
 
     // derive disabled
     let disabled: boolean | undefined;
-    if (command && command.enablement) {
+    if (command?.enablement) {
         disabled = !command.enablement(ctx);
     }
 
