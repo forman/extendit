@@ -1,10 +1,12 @@
 ![image](docs/images/extend-me.png)
 
-... is a framework and library that is used to create extensible and scalable
-TypeScript/JavaScript applications.
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-At its core ExtendMe! provides the means for a host application to dynamically 
-import JavaScript modules - extensions - that add new features and capabilities 
+ExtendMe! is a framework and library that is used to create extensible and
+scalable TypeScript/JavaScript applications.
+
+At its core ExtendMe! provides the means for a host application to dynamically
+import JavaScript modules - extensions - that add new features and capabilities
 to the application.
 
 An extension comprises a `package.json` and optionally some JavaScript code. The
@@ -17,8 +19,8 @@ application or host extension can consume them. Contributions are encoded in
 the `contributes` object of an extension's `package.json`. A contribution may be
 either fully specified by the JSON data in the `contributes` object, or it may
 require also JavaScript to be loaded and executed. Examples are commands and UI
-components. Such code contributions are loaded lazily: Only the first time a 
-code contribution is needed by a consumer, the contributing extension will be 
+components. Such code contributions are loaded lazily: Only the first time a
+code contribution is needed by a consumer, the contributing extension will be
 loaded and activated.
 
 `ExtendMe!` provides some

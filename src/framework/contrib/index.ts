@@ -1,30 +1,21 @@
 export {
-    type Command,
-    type CommandFn,
-    useCommands,
-    registerCommand,
-    executeCommand,
+  type Command,
+  type CommandFn,
+  useCommands,
+  registerCommand,
+  executeCommand,
 } from "./commands";
 
-export {
-    type Submenu,
-    useSubmenus,
-} from "./submenus";
+export { type Submenu, useSubmenus } from "./submenus";
+
+export { type MenuItem, useMenu } from "./menus";
+
+export { type CommandMenuItem, useCommandPalette } from "./command-palette";
 
 export {
-    type MenuItem,
-    useMenu,
-} from "./menus";
-
-export {
-    type CommandMenuItem,
-    useCommandPalette,
-} from "./command-palette";
-
-export {
-    type View,
-    type ViewComponent,
-    useViews,
-    useViewComponent,
-    registerViewComponent,
+  type View,
+  type ViewComponent,
+  useViews,
+  useViewComponent,
+  registerViewComponent,
 } from "./views";

@@ -7,21 +7,21 @@ import MainMenu from "./MainMenu";
 import "./App.css";
 
 function App() {
-    return (
-        <>
-            <div className="row2">
-                <AvailableExtensions/>
-                <InstalledExtensions/>
-            </div>
-            <div className="row2">
-                <CommandPalette/>
-                <MainMenu/>
-            </div>
-            <div className="row1">
-                <ViewContainer/>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="row2">
+        <AvailableExtensions />
+        <InstalledExtensions />
+      </div>
+      <div className="row2">
+        <CommandPalette />
+        <MainMenu />
+      </div>
+      <div className="row1">
+        <ViewContainer />
+      </div>
+    </>
+  );
 }
 
 export default App;

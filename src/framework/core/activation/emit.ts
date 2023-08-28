@@ -1,10 +1,8 @@
-import {getExtensionContexts} from "@/core/store";
-import {activateExtension} from "@/core/extension/activate";
-import {Logger} from "@/util/log";
+import { getExtensionContexts } from "@/core/store";
+import { activateExtension } from "@/core/extension/activate";
+import { Logger } from "@/util/log";
 
-
-const LOG = new Logger('activation/emit');
-
+const LOG = new Logger("activation/emit");
 
 /**
  * Emit an activation event.
@@ -15,17 +13,16 @@ const LOG = new Logger('activation/emit');
  * @param activationEvent - The activation event.
  */
 export async function emitActivationEvent(activationEvent: string) {
-    LOG.debug('emitActivationEvent', activationEvent);
-    const extensionIds = getExtensionContexts()
-        .filter(
-            ctx =>
-                ctx.extension.status === "inactive"
-                && (ctx.activationEvents.has('*')
-                    || ctx.activationEvents.has(activationEvent))
-        ).map(
-            ctx => ctx.extensionId
-        );
-    return Promise.allSettled(
-        extensionIds.map(extensionId => activateExtension(extensionId))
-    );
+  LOG.debug("emitActivationEvent", activationEvent);
+  const extensionIds = getExtensionContexts()
+    .filter(
+      (ctx) =>
+        ctx.extension.status === "inactive" &&
+        (ctx.activationEvents.has("*") ||
+          ctx.activationEvents.has(activationEvent))
+    )
+    .map((ctx) => ctx.extensionId);
+  return Promise.allSettled(
+    extensionIds.map((extensionId) => activateExtension(extensionId))
+  );
 }

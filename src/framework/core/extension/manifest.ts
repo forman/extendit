@@ -1,4 +1,4 @@
-import type {ExtensionManifest} from "@/core/types";
+import type { ExtensionManifest } from "@/core/types";
 
 /**
  * Get the extension identifier from given manifest.
@@ -7,7 +7,7 @@ import type {ExtensionManifest} from "@/core/types";
  * @param manifest - the application manifest
  */
 export function getExtensionId(manifest: ExtensionManifest): string {
-    return `${manifest.provider}.${manifest.name}`;
+  return `${manifest.provider}.${manifest.name}`;
 }
 
 /**
@@ -17,7 +17,5 @@ export function getExtensionId(manifest: ExtensionManifest): string {
  * @param manifest - the application manifest
  */
 export function getExtensionDisplayName(manifest: ExtensionManifest): string {
-    return manifest.displayName ?? manifest.name;
+  return manifest.displayName ?? manifest.name;
 }
-
-

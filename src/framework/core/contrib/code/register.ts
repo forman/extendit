@@ -1,6 +1,5 @@
-import {deleteStoreRecord, setStoreRecord} from "@/core/store";
-import {Disposable} from "@/util/disposable";
-
+import { deleteStoreRecord, setStoreRecord } from "@/core/store";
+import { Disposable } from "@/util/disposable";
 
 /**
  * Registers the given code contribution.
@@ -12,13 +11,13 @@ import {Disposable} from "@/util/disposable";
  * @returns Disposable A disposable that unregisters the code contribution.
  */
 export function registerCodeContribution<T>(
-    contribPointId: string,
-    contribId: string,
-    codeContribution: T
+  contribPointId: string,
+  contribId: string,
+  codeContribution: T
 ): Disposable {
-    const id = contribPointId + "/" + contribId;
-    setStoreRecord("codeContributions", id, codeContribution);
-    return new Disposable(() => {
-        deleteStoreRecord("codeContributions", id);
-    });
+  const id = contribPointId + "/" + contribId;
+  setStoreRecord("codeContributions", id, codeContribution);
+  return new Disposable(() => {
+    deleteStoreRecord("codeContributions", id);
+  });
 }

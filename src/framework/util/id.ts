@@ -1,6 +1,5 @@
-const defaultAbc = "0123456789" +
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-    "abcdefghijklmnopqrstuvwxyz";
+const defaultAbc =
+  "0123456789" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz";
 
 /**
  * Generate a new identifier with optional `length` and from optional `abc`.
@@ -11,9 +10,9 @@ const defaultAbc = "0123456789" +
  *  Defaults so ASCII alphanumeric characters.
  */
 export function newId(length = 8, abc: string = defaultAbc) {
-    let id = "";
-    for (let i = 0; i < length; i++) {
-        id += abc[Math.floor(abc.length * Math.random())];
-    }
-    return id;
+  let id = "";
+  for (let i = 0; i < length; i++) {
+    id += abc[Math.floor(abc.length * Math.random())];
+  }
+  return id;
 }

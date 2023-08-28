@@ -1,9 +1,8 @@
-import {useMemo} from "react";
-import {useStore as useZustandStore} from "zustand";
-import type {ContributionPoint, Extension} from "./types";
-import {frameworkStore, type StoreState} from "./store";
-import {getContributionsFromExtensions} from "./contrib/point/get";
-
+import { useMemo } from "react";
+import { useStore as useZustandStore } from "zustand";
+import type { ContributionPoint, Extension } from "./types";
+import { frameworkStore, type StoreState } from "./store";
+import { getContributionsFromExtensions } from "./contrib/point/get";
 
 /**
  * A React hook that gets data from the framework's store.
@@ -14,7 +13,7 @@ import {getContributionsFromExtensions} from "./contrib/point/get";
  * @returns Data selected from the framework store
  */
 export function useStore<U>(selector: (state: StoreState) => U): U {
-    return useZustandStore(frameworkStore, selector);
+  return useZustandStore(frameworkStore, selector);
 }
 
 /**
@@ -24,11 +23,8 @@ export function useStore<U>(selector: (state: StoreState) => U): U {
  * @returns An array comprising all extensions
  */
 export function useExtensions(): Extension[] {
-    const extensions = useStore(state => state.extensions);
-    return useMemo(
-        () => Object.values(extensions),
-        [extensions]
-    );
+  const extensions = useStore((state) => state.extensions);
+  return useMemo(() => Object.values(extensions), [extensions]);
 }
 
 /**
@@ -41,10 +37,10 @@ export function useExtensions(): Extension[] {
  * @returns An array comprising all contributions points
  */
 export function useContributions<T>(contribPointId: string, key?: string): T[] {
-    const extensions = useExtensions();
-    return useMemo(() => {
-        return getContributionsFromExtensions(contribPointId, extensions, key);
-    }, [contribPointId, key, extensions]);
+  const extensions = useExtensions();
+  return useMemo(() => {
+    return getContributionsFromExtensions(contribPointId, extensions, key);
+  }, [contribPointId, key, extensions]);
 }
 
 /**
@@ -53,11 +49,8 @@ export function useContributions<T>(contribPointId: string, key?: string): T[] {
  * @returns An array comprising all contributions points
  */
 export function useContributionPoints(): ContributionPoint[] {
-    const contributionPoints = useStore(state => state.contributionPoints);
-    return useMemo(
-        () => Object.values(contributionPoints),
-        [contributionPoints]
-    );
+  const contributionPoints = useStore((state) => state.contributionPoints);
+  return useMemo(() => Object.values(contributionPoints), [contributionPoints]);
 }
 
 /**
@@ -68,5 +61,5 @@ export function useContributionPoints(): ContributionPoint[] {
  * @returns framework's context object
  */
 export function useContext() {
-    return useZustandStore(frameworkStore, state => state.context);
+  return useZustandStore(frameworkStore, (state) => state.context);
 }

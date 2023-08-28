@@ -1,35 +1,29 @@
-import type {JSONSchemaType} from "ajv";
-import {
-    type ContributionPoint,
-    useContributions,
-} from "@/core";
-import {useMemo} from "react";
-import * as log from '@/util/log';
-
+import type { JSONSchemaType } from "ajv";
+import { type ContributionPoint, useContributions } from "@/core";
+import { useMemo } from "react";
+import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/submenus");
 
-
 export interface Submenu {
-    id: string;
-    label: string;
+  id: string;
+  label: string;
 }
 
 const submenuSchema: JSONSchemaType<Submenu> = {
-    type: "object",
-    properties: {
-        id: {type: "string"},
-        label: {type: "string"},
-    },
-    required: ["id", "label"],
-    additionalProperties: false,
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    label: { type: "string" },
+  },
+  required: ["id", "label"],
+  additionalProperties: false,
 };
 
 const schema: JSONSchemaType<Submenu[]> = {
-    type: "array",
-    items: submenuSchema,
+  type: "array",
+  items: submenuSchema,
 };
-
 
 /**
  * The "submenus" contribution point.
@@ -39,19 +33,18 @@ const schema: JSONSchemaType<Submenu[]> = {
  * @category UI Contributions API
  */
 export const submenusPoint: ContributionPoint<Submenu[]> = {
-    id: "submenus",
-    schema,
+  id: "submenus",
+  schema,
 };
 
-
 export function useSubmenus() {
-    return useContributions<Submenu>(submenusPoint.id);
+  return useContributions<Submenu>(submenusPoint.id);
 }
 
 export function useSubmenusMap() {
-    const submenus = useSubmenus();
-    return useMemo(() => {
-        LOG.debug("Hook 'useSubmenusMap' is recomputing");
-        return new Map<string, Submenu>(submenus.map(sm => [sm.id, sm]));
-    }, [submenus]);
+  const submenus = useSubmenus();
+  return useMemo(() => {
+    LOG.debug("Hook 'useSubmenusMap' is recomputing");
+    return new Map<string, Submenu>(submenus.map((sm) => [sm.id, sm]));
+  }, [submenus]);
 }

@@ -5,12 +5,12 @@
  * A utility type representing a JSON value.
  */
 export type JsonValue =
-    | string
-    | number
-    | boolean
-    | null
-    | JsonObject
-    | JsonArray;
+  | string
+  | number
+  | boolean
+  | null
+  | JsonObject
+  | JsonArray;
 
 /**
  * A utility type representing a JSON property value.
@@ -24,11 +24,10 @@ export type JsonPropertyValue = JsonValue | undefined;
  * A utility type representing a JSON object.
  */
 export interface JsonObject {
-    [p: string]: JsonPropertyValue
+  [p: string]: JsonPropertyValue;
 }
 
 /**
  * A utility type representing a JSON array.
  */
 export type JsonArray = JsonValue[];
-

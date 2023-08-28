@@ -1,31 +1,30 @@
-import type {JSONSchemaType} from "ajv";
-import type {DisposableLike} from "@/util/disposable";
-import type {JsonObject, JsonPropertyValue} from "@/util/json";
-
+import type { JSONSchemaType } from "ajv";
+import type { DisposableLike } from "@/util/disposable";
+import type { JsonObject, JsonPropertyValue } from "@/util/json";
 
 /**
  * Represents the content of an extension's `package.json` file.
  * @category Extension API
  */
 export interface ExtensionManifest {
-    // package.json standard entries
-    provider: string;
-    name: string;
-    main?: string;
-    version?: string;
-    displayName?: string;
+  // package.json standard entries
+  provider: string;
+  name: string;
+  main?: string;
+  version?: string;
+  displayName?: string;
 
-    // package.json extension entries
-    activationEvents?: string[];
-    extensionDependencies?: string[];
-    contributes?: JsonObject;
+  // package.json extension entries
+  activationEvents?: string[];
+  extensionDependencies?: string[];
+  contributes?: JsonObject;
 
-    /**
-     * Allows for other package.json entries.
-     * Property type should actually be just JsonValue,
-     * but then we get TS error TS2411.
-     */
-    [property: string]: JsonPropertyValue;
+  /**
+   * Allows for other package.json entries.
+   * Property type should actually be just JsonValue,
+   * but then we get TS error TS2411.
+   */
+  [property: string]: JsonPropertyValue;
 }
 
 /**
@@ -34,12 +33,12 @@ export interface ExtensionManifest {
  * @category Extension API
  */
 export type ExtensionStatus =
-    | "inactive"
-    | "loading"
-    | "activating"
-    | "active"
-    | "deactivating"
-    | "rejected";
+  | "inactive"
+  | "loading"
+  | "activating"
+  | "active"
+  | "deactivating"
+  | "rejected";
 
 /**
  * Represents an extension.
@@ -49,31 +48,31 @@ export type ExtensionStatus =
  * @category Extension API
  */
 export interface Extension<T = unknown> {
-    /**
-     * The canonical extension identifier in the form of `publisher.name`.
-     */
-    readonly id: string;
+  /**
+   * The canonical extension identifier in the form of `publisher.name`.
+   */
+  readonly id: string;
 
-    /**
-     * The parsed contents of the extension's `package.json`.
-     */
-    readonly manifest: ExtensionManifest;
+  /**
+   * The parsed contents of the extension's `package.json`.
+   */
+  readonly manifest: ExtensionManifest;
 
-    /**
-     * Current status of the extension.
-     */
-    readonly status: ExtensionStatus;
+  /**
+   * Current status of the extension.
+   */
+  readonly status: ExtensionStatus;
 
-    /**
-     * The public API exported by this extension (return value of `activateExtension`).
-     * It is an invalid action to access this field before this extension has been activated.
-     */
-    readonly exports: T;
+  /**
+   * The public API exported by this extension (return value of `activateExtension`).
+   * It is an invalid action to access this field before this extension has been activated.
+   */
+  readonly exports: T;
 
-    /**
-     * One or more reasons for extension rejection, if status === "rejected"
-     */
-    readonly reasons?: Error[];
+  /**
+   * One or more reasons for extension rejection, if status === "rejected"
+   */
+  readonly reasons?: Error[];
 }
 
 /**
@@ -86,23 +85,23 @@ export interface Extension<T = unknown> {
  * @category Extension API
  */
 export interface ExtensionContext {
-    /**
-     * An array to which disposables can be added. When this
-     * extension is deactivated the disposables will be disposed.
-     *
-     * *Note* that asynchronous dispose-functions aren't awaited.
-     */
-    readonly subscriptions: DisposableLike[];
+  /**
+   * An array to which disposables can be added. When this
+   * extension is deactivated the disposables will be disposed.
+   *
+   * *Note* that asynchronous dispose-functions aren't awaited.
+   */
+  readonly subscriptions: DisposableLike[];
 
-    /**
-     * The current `Extension` instance.
-     */
-    readonly extension: Extension;
+  /**
+   * The current `Extension` instance.
+   */
+  readonly extension: Extension;
 
-    /**
-     * The resolved module path.
-     */
-    readonly modulePath: string;
+  /**
+   * The resolved module path.
+   */
+  readonly modulePath: string;
 }
 
 /**
@@ -118,9 +117,12 @@ export interface ExtensionContext {
  * @category Extension API
  */
 export interface ExtensionModule<T = unknown> {
-    activate?: (extensionContext: ExtensionContext, ...dependencies: unknown[]) => T;
+  activate?: (
+    extensionContext: ExtensionContext,
+    ...dependencies: unknown[]
+  ) => T;
 
-    deactivate?: (extensionContext: ExtensionContext) => Promise<void> | void;
+  deactivate?: (extensionContext: ExtensionContext) => Promise<void> | void;
 }
 
 /**
@@ -130,30 +132,30 @@ export interface ExtensionModule<T = unknown> {
  * @category Extension API
  */
 export interface ExtensionListener {
-    /**
-     * An extension has been registered.
-     * @param extension - The extension
-     */
-    onExtensionRegistered?(extension: Extension): void;
+  /**
+   * An extension has been registered.
+   * @param extension - The extension
+   */
+  onExtensionRegistered?(extension: Extension): void;
 
-    /**
-     * An extension will be been unregistered.
-     * @param extension - The extension
-     */
-    onExtensionWillUnregister?(extension: Extension): void;
+  /**
+   * An extension will be been unregistered.
+   * @param extension - The extension
+   */
+  onExtensionWillUnregister?(extension: Extension): void;
 
-    /**
-     * An extension has been unregistered.
-     * @param extensionId - The extension's identifier
-     */
-    onExtensionUnregistered?(extensionId: string): void;
+  /**
+   * An extension has been unregistered.
+   * @param extensionId - The extension's identifier
+   */
+  onExtensionUnregistered?(extensionId: string): void;
 }
 
 type KeyOfObjOrArrayItem<T> = T extends unknown[]
-    ? keyof T[number]
-    : (T extends unknown
-        ? keyof T
-        : string);
+  ? keyof T[number]
+  : T extends unknown
+  ? keyof T
+  : string;
 
 /**
  * Represents a contribution point.
@@ -161,18 +163,18 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
  * @see registerContributionPoint
  */
 export interface ContributionPoint<T = unknown, PT = T> {
-    id: string;
-    /**
-     * The JSON schema of a contribution.
-     */
-    schema: JSONSchemaType<T>;
-    /**
-     * Used to convert raw JSON contributions from the manifest.
-     * Defaults to identity.
-     */
-    processContribution?: (contrib: T) => PT;
-    description?: string;
-    docUrl?: string;
+  id: string;
+  /**
+   * The JSON schema of a contribution.
+   */
+  schema: JSONSchemaType<T>;
+  /**
+   * Used to convert raw JSON contributions from the manifest.
+   * Defaults to identity.
+   */
+  processContribution?: (contrib: T) => PT;
+  description?: string;
+  docUrl?: string;
 }
 
 /**
@@ -181,29 +183,30 @@ export interface ContributionPoint<T = unknown, PT = T> {
  *
  * @category Extension Contribution API
  */
-export interface CodeContributionPoint<T = unknown, PT = T> extends ContributionPoint<T, PT> {
-    /**
-     * This property is used to generate activation keys
-     * from contributions with an ID-property named by `idKey`.
-     * Defaults to `"id"`.
-     */
-    idKey?: KeyOfObjOrArrayItem<T>;
+export interface CodeContributionPoint<T = unknown, PT = T>
+  extends ContributionPoint<T, PT> {
+  /**
+   * This property is used to generate activation keys
+   * from contributions with an ID-property named by `idKey`.
+   * Defaults to `"id"`.
+   */
+  idKey?: KeyOfObjOrArrayItem<T>;
 
-    /**
-     * The activation event used to activate the extension,
-     * i.e., let it register its code contribution, so it can be
-     * later loaded from code. Usually takes the forms
-     *
-     * - `"on<PointId>:${id}"` which activates only the extension that
-     *   provides the contribution with the given identifier, or
-     * - `"on<PointId>"` which activates all contributing extensions
-     *    unconditionally.
-     *
-     * `<PointId>` usually names a single contribution.
-     * Example: For a contribution point identifier `"commands"` the
-     * `activationEvent` would be `"onCommand"` or `"onCommand:${id}"`.
-     */
-    activationEvent: string;
+  /**
+   * The activation event used to activate the extension,
+   * i.e., let it register its code contribution, so it can be
+   * later loaded from code. Usually takes the forms
+   *
+   * - `"on<PointId>:${id}"` which activates only the extension that
+   *   provides the contribution with the given identifier, or
+   * - `"on<PointId>"` which activates all contributing extensions
+   *    unconditionally.
+   *
+   * `<PointId>` usually names a single contribution.
+   * Example: For a contribution point identifier `"commands"` the
+   * `activationEvent` would be `"onCommand"` or `"onCommand:${id}"`.
+   */
+  activationEvent: string;
 }
 
 /**
@@ -217,5 +220,5 @@ export type ModulePathResolver = (path: string) => string;
  * @category Framework API
  */
 export interface FrameworkOptions {
-    modulePathResolver?: ModulePathResolver;
+  modulePathResolver?: ModulePathResolver;
 }

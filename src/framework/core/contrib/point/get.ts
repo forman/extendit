@@ -1,11 +1,9 @@
-import type {Extension} from "@/core/types";
-import {getExtensionContext} from "@/core/store";
-import type {ExtensionContextImpl} from "@/core/extension/context";
-import * as log from '@/util/log';
-
+import type { Extension } from "@/core/types";
+import { getExtensionContext } from "@/core/store";
+import type { ExtensionContextImpl } from "@/core/extension/context";
+import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/point");
-
 
 /**
  * Get the processed contributions from the manifest (package.json)
@@ -24,49 +22,49 @@ const LOG = new log.Logger("contrib/point");
  *  is a key-value mapping.
  */
 export function getContributionsFromExtensions<T>(
-    contribPointId: string,
-    extensions: Extension[],
-    key?: string
+  contribPointId: string,
+  extensions: Extension[],
+  key?: string
 ) {
-    LOG.debug("getContributionsFromExtensions", contribPointId, key);
+  LOG.debug("getContributionsFromExtensions", contribPointId, key);
 
-    const items: T[] = [];
-    extensions.forEach(extension => {
-        const ctx = getExtensionContext(extension.id, true);
-        collectContributionsFromExtension(ctx, contribPointId, key, items);
-    })
-    return items;
+  const items: T[] = [];
+  extensions.forEach((extension) => {
+    const ctx = getExtensionContext(extension.id, true);
+    collectContributionsFromExtension(ctx, contribPointId, key, items);
+  });
+  return items;
 }
 
 function collectContributionsFromExtension<T>(
-    ctx: ExtensionContextImpl,
-    contribPointId: string,
-    key: string | undefined,
-    items: T[]
+  ctx: ExtensionContextImpl,
+  contribPointId: string,
+  key: string | undefined,
+  items: T[]
 ) {
-    let contrib = ctx.processedContributions.get(contribPointId);
+  let contrib = ctx.processedContributions.get(contribPointId);
+  if (!contrib) {
+    return;
+  }
+  if (typeof key === "string") {
+    if (typeof contrib !== "object") {
+      throw new Error(
+        `Internal error: extension '${ctx.extensionId}': ` +
+          `contributions to point '${contribPointId}' ` +
+          `must be given as an object.`
+      );
+    }
+    contrib = (contrib as Record<string, unknown>)[key];
     if (!contrib) {
-        return;
+      return;
     }
-    if (typeof key === 'string') {
-        if (typeof contrib !== 'object') {
-            throw new Error(
-                `Internal error: extension '${ctx.extensionId}': `
-                + `contributions to point '${contribPointId}' `
-                + `must be given as an object.`
-            );
-        }
-        contrib = (contrib as Record<string, unknown>)[key];
-        if (!contrib) {
-            return;
-        }
-    }
-    if (!Array.isArray(contrib)) {
-        throw new Error(
-            `Internal error: extension '${ctx.extensionId}': `
-            + `contributions to point '${contribPointId}${key ? "/" + key : ""}' `
-            + `must be given as an array.`
-        );
-    }
-    contrib.forEach(c => items.push(c as T));
+  }
+  if (!Array.isArray(contrib)) {
+    throw new Error(
+      `Internal error: extension '${ctx.extensionId}': ` +
+        `contributions to point '${contribPointId}${key ? "/" + key : ""}' ` +
+        `must be given as an array.`
+    );
+  }
+  contrib.forEach((c) => items.push(c as T));
 }

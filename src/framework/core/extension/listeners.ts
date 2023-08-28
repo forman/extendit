@@ -1,5 +1,4 @@
-import type {Extension, ExtensionListener} from "@/core/types";
-
+import type { Extension, ExtensionListener } from "@/core/types";
 
 let REGISTRY = new Set<ExtensionListener>();
 
@@ -9,12 +8,13 @@ let REGISTRY = new Set<ExtensionListener>();
  * @category Extension API
  * @param registry - The new registry
  */
-export function setExtensionListenersRegistry(registry: Set<ExtensionListener>): Set<ExtensionListener> {
-    const prevRegistry = REGISTRY;
-    REGISTRY = registry;
-    return prevRegistry;
+export function setExtensionListenersRegistry(
+  registry: Set<ExtensionListener>
+): Set<ExtensionListener> {
+  const prevRegistry = REGISTRY;
+  REGISTRY = registry;
+  return prevRegistry;
 }
-
 
 /**
  * Add a new {@link ExtensionListener} to the framework.
@@ -24,10 +24,10 @@ export function setExtensionListenersRegistry(registry: Set<ExtensionListener>):
  * @returns a function that removes the listener from the framework
  */
 export function addExtensionListener(listener: ExtensionListener): () => void {
-    REGISTRY.add(listener);
-    return () => {
-        REGISTRY.delete(listener);
-    };
+  REGISTRY.add(listener);
+  return () => {
+    REGISTRY.delete(listener);
+  };
 }
 
 /**
@@ -38,11 +38,9 @@ export function addExtensionListener(listener: ExtensionListener): () => void {
  * @param extension - The extension
  */
 export function emitExtensionRegistered(extension: Extension) {
-    REGISTRY.forEach(listener => {
-            listener.onExtensionRegistered
-            && listener.onExtensionRegistered(extension);
-        }
-    );
+  REGISTRY.forEach((listener) => {
+    listener.onExtensionRegistered && listener.onExtensionRegistered(extension);
+  });
 }
 
 /**
@@ -53,11 +51,10 @@ export function emitExtensionRegistered(extension: Extension) {
  * @param extension - The extension
  */
 export function emitExtensionWillUnregister(extension: Extension) {
-    REGISTRY.forEach(listener => {
-            listener.onExtensionWillUnregister
-            && listener.onExtensionWillUnregister(extension);
-        }
-    );
+  REGISTRY.forEach((listener) => {
+    listener.onExtensionWillUnregister &&
+      listener.onExtensionWillUnregister(extension);
+  });
 }
 
 /**
@@ -68,9 +65,8 @@ export function emitExtensionWillUnregister(extension: Extension) {
  * @param extensionId - The extension identifier
  */
 export function emitExtensionUnregistered(extensionId: string) {
-    REGISTRY.forEach(listener => {
-            listener.onExtensionUnregistered
-            && listener.onExtensionUnregistered(extensionId);
-        }
-    );
+  REGISTRY.forEach((listener) => {
+    listener.onExtensionUnregistered &&
+      listener.onExtensionUnregistered(extensionId);
+  });
 }

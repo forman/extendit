@@ -1,23 +1,22 @@
 import type {
-    CodeContributionPoint,
-    ContributionPoint,
-    Extension,
-    ExtensionListener
+  CodeContributionPoint,
+  ContributionPoint,
+  Extension,
+  ExtensionListener,
 } from "@/core/types";
-import type {ExtensionContextImpl} from "@/core/extension/context";
+import type { ExtensionContextImpl } from "@/core/extension/context";
 import {
-    getContributionPoints,
-    getExtensionContext,
-    setExtensionStatus
+  getContributionPoints,
+  getExtensionContext,
+  setExtensionStatus,
 } from "@/core/store";
-import {validator} from "@/util/validator";
-import {Logger} from "@/util/log";
-import {capitalize} from "@/util/capitalize";
-
+import { validator } from "@/util/validator";
+import { Logger } from "@/util/log";
+import { capitalize } from "@/util/capitalize";
 
 const LOG = new Logger("contrib/process");
 
-const idRef ="${id}";
+const idRef = "${id}";
 
 /**
  * Processes the contributions of an extension on registration
@@ -39,107 +38,117 @@ const idRef ="${id}";
  * @category Extension Contribution API
  */
 export const contributionProcessor: ExtensionListener = {
-    onExtensionRegistered(extension: Extension) {
-        const extensionContext = getExtensionContext(extension.id, true);
-        getContributionPoints().forEach(contribPoint => {
-            processContributionsFromExtension(contribPoint, extensionContext);
-        });
-    }
+  onExtensionRegistered(extension: Extension) {
+    const extensionContext = getExtensionContext(extension.id, true);
+    getContributionPoints().forEach((contribPoint) => {
+      processContributionsFromExtension(contribPoint, extensionContext);
+    });
+  },
 };
 
 function processContributionsFromExtension(
-    contribPoint: ContributionPoint,
-    ctx: ExtensionContextImpl
+  contribPoint: ContributionPoint,
+  ctx: ExtensionContextImpl
 ) {
-    const contributes = ctx.extension.manifest.contributes;
-    if (!contributes) {
-        // Nothing to do
-        return;
+  const contributes = ctx.extension.manifest.contributes;
+  if (!contributes) {
+    // Nothing to do
+    return;
+  }
+  const contrib = contributes[contribPoint.id];
+  if (!contrib) {
+    // Nothing to do
+    return;
+  }
+  LOG.debug(
+    "processContributionsFromExtension",
+    ctx.extension.id,
+    contribPoint.id
+  );
+  try {
+    validateContrib(contribPoint, contrib, ctx);
+    if (isCodeContributionPoint(contribPoint)) {
+      registerActivationEvents(contribPoint, contrib, ctx);
     }
-    const contrib = contributes[contribPoint.id];
-    if (!contrib) {
-        // Nothing to do
-        return;
-    }
-    LOG.debug('processContributionsFromExtension', ctx.extension.id, contribPoint.id);
-    try {
-        validateContrib(contribPoint, contrib, ctx);
-        if (isCodeContributionPoint(contribPoint)) {
-            registerActivationEvents(contribPoint, contrib, ctx);
-        }
-        registerProcessedContrib(contribPoint, contrib, ctx);
-    } catch (error) {
-        setExtensionStatus(ctx.extensionId, "rejected", error);
-    }
+    registerProcessedContrib(contribPoint, contrib, ctx);
+  } catch (error) {
+    setExtensionStatus(ctx.extensionId, "rejected", error);
+  }
 }
 
-function validateContrib(contribPoint: ContributionPoint,
-                         contrib: unknown,
-                         ctx: ExtensionContextImpl) {
-    const validate = validator.compile(contribPoint.schema);
-    const success = validate(contrib);
-    if (!success) {
-        const message = `JSON validation failed for contribution ` +
-            `to point '${contribPoint.id}' from extension '${ctx.extensionId}'`;
-        let messageDetails = "";
-        if (validate.errors) {
-            const firstError = validate.errors[0];
-            const firstMessage = firstError.message;
-            if (firstMessage) {
-                messageDetails += ". " + capitalize(firstMessage);
-                const instancePath = firstError.instancePath;
-                if (instancePath) {
-                    messageDetails += ` at instance path ${instancePath}`;
-                }
-            }
-            LOG.error(message + ":", validate.errors);
+function validateContrib(
+  contribPoint: ContributionPoint,
+  contrib: unknown,
+  ctx: ExtensionContextImpl
+) {
+  const validate = validator.compile(contribPoint.schema);
+  const success = validate(contrib);
+  if (!success) {
+    const message =
+      `JSON validation failed for contribution ` +
+      `to point '${contribPoint.id}' from extension '${ctx.extensionId}'`;
+    let messageDetails = "";
+    if (validate.errors) {
+      const firstError = validate.errors[0];
+      const firstMessage = firstError.message;
+      if (firstMessage) {
+        messageDetails += ". " + capitalize(firstMessage);
+        const instancePath = firstError.instancePath;
+        if (instancePath) {
+          messageDetails += ` at instance path ${instancePath}`;
         }
-        throw new Error(message + messageDetails + ".");
+      }
+      LOG.error(message + ":", validate.errors);
     }
+    throw new Error(message + messageDetails + ".");
+  }
 }
 
-function registerActivationEvents(contribPoint: CodeContributionPoint,
-                                  contrib: unknown,
-                                  ctx: ExtensionContextImpl) {
-    const activationEvent = contribPoint.activationEvent;
-    if (!activationEvent || !activationEvent.includes(idRef)) {
-        ctx.activationEvents.add(activationEvent);
-        return;
+function registerActivationEvents(
+  contribPoint: CodeContributionPoint,
+  contrib: unknown,
+  ctx: ExtensionContextImpl
+) {
+  const activationEvent = contribPoint.activationEvent;
+  if (!activationEvent || !activationEvent.includes(idRef)) {
+    ctx.activationEvents.add(activationEvent);
+    return;
+  }
+  const idKey = contribPoint.idKey ?? "id";
+  if (Array.isArray(contrib)) {
+    contrib
+      .map((contrib) => contrib[idKey])
+      .filter((contribId) => typeof contribId === "string")
+      .map((contribId) => activationEvent.replace(idRef, contribId as string))
+      .forEach((activationEvent) => ctx.activationEvents.add(activationEvent));
+  } else if (typeof contrib === "object") {
+    const contribObj = contrib as unknown as Record<string, unknown>;
+    const contribId = contribObj[idKey];
+    if (typeof contribId === "string") {
+      ctx.activationEvents.add(activationEvent.replace(idRef, contribId));
     }
-    const idKey = contribPoint.idKey ?? "id";
-    if (Array.isArray(contrib)) {
-        contrib
-            .map(contrib => contrib[idKey])
-            .filter(contribId => typeof contribId === "string")
-            .map(contribId => activationEvent.replace(idRef, contribId as string))
-            .forEach(activationEvent =>
-                ctx.activationEvents.add(activationEvent)
-            );
-    } else if (typeof contrib === "object") {
-        const contribObj = contrib as unknown as Record<string, unknown>;
-        const contribId = contribObj[idKey];
-        if (typeof contribId === "string") {
-            ctx.activationEvents.add(activationEvent.replace(idRef, contribId));
-        }
-    }
+  }
 }
 
-function registerProcessedContrib(contribPoint: ContributionPoint,
-                                  contrib: unknown,
-                                  ctx: ExtensionContextImpl) {
-    let processedContrib;
-    if (contribPoint.processContribution) {
-        processedContrib = contribPoint.processContribution(contrib);
-    } else {
-        processedContrib = contrib;
-    }
-    ctx.processedContributions.set(contribPoint.id, processedContrib);
+function registerProcessedContrib(
+  contribPoint: ContributionPoint,
+  contrib: unknown,
+  ctx: ExtensionContextImpl
+) {
+  let processedContrib;
+  if (contribPoint.processContribution) {
+    processedContrib = contribPoint.processContribution(contrib);
+  } else {
+    processedContrib = contrib;
+  }
+  ctx.processedContributions.set(contribPoint.id, processedContrib);
 }
 
 function isCodeContributionPoint(
-    contribPoint: ContributionPoint
+  contribPoint: ContributionPoint
 ): contribPoint is CodeContributionPoint {
-    const activationEvent = (contribPoint as CodeContributionPoint).activationEvent;
-    // noinspection SuspiciousTypeOfGuard
-    return typeof activationEvent === "string";
+  const activationEvent = (contribPoint as CodeContributionPoint)
+    .activationEvent;
+  // noinspection SuspiciousTypeOfGuard
+  return typeof activationEvent === "string";
 }
