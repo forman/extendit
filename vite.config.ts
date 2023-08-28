@@ -67,7 +67,7 @@ function listExcludedFiles(dirPath: string,
 
     function match(path: string, pattern?: string) {
         return pattern === path
-            || path.indexOf(pattern + "/") === 0;
+            || path.startsWith(pattern + "/");
     }
 
     const excludedFiles = files.filter(file => {
