@@ -23,7 +23,6 @@ export type JsonPropertyValue = JsonValue | undefined;
 /**
  * A utility type representing a JSON object.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface JsonObject {
     [p: string]: JsonPropertyValue
 }
