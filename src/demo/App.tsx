@@ -4,6 +4,8 @@ import CommandPalette from "./CommandPalette";
 import ViewContainer from "./ViewContainer";
 import MainMenu from "./MainMenu";
 
+import "./App.css";
+
 function App() {
     return (
         <>
