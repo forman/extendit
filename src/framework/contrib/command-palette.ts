@@ -10,7 +10,7 @@ import * as log from '@/util/log';
 const LOG = new log.Logger("contrib/command-palette");
 
 
-export interface ProcessedCommandMenuItem extends Omit<ProcessedMenuItem, "submenu"> {
+interface ProcessedCommandMenuItem extends Omit<ProcessedMenuItem, "submenu"> {
     command: string;
 }
 

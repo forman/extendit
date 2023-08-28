@@ -20,6 +20,7 @@ export type {
     ExtensionContext,
     ExtensionModule,
     ExtensionListener,
+    ExtensionStatus,
     ModulePathResolver,
     FrameworkOptions
 } from "./types";
@@ -39,7 +40,6 @@ export {
     useContributions,
     useContributionPoints
 } from "./hooks";
-export {Disposable} from "@/util/disposable";
 
 //////////////////////////////////////////////////////////////////////////
 // Extension Contribution API:

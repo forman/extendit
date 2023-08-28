@@ -1,4 +1,5 @@
 import {defineConfig} from 'vite'
+import {configDefaults} from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 import dts from 'vite-plugin-dts'
 import {resolve, join} from 'node:path'
@@ -18,7 +19,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            "@": resolve(__dirname, "./src/framework"),
+            "@": resolve(__dirname, "src/framework"),
         },
     },
     publicDir: false,
@@ -54,6 +55,14 @@ export default defineConfig({
                 },
             },
         },
+    },
+    test: {
+        coverage: {
+            exclude: [
+                'src/demo',
+                'src/framework/test/extensions/**',
+            ]
+        }
     },
 })
 

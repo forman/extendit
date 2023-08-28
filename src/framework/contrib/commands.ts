@@ -3,12 +3,12 @@ import type {JSONSchemaType} from "ajv";
 import {
     type CodeContributionPoint,
     type When,
-    Disposable,
     useContributions,
     getCodeContribution,
     registerCodeContribution,
     whenClauseCompiler,
 } from "@/core";
+import {Disposable} from '@/util/disposable';
 import * as log from '@/util/log';
 
 

@@ -2,11 +2,11 @@ import React, {useEffect, useState} from "react";
 import type {JSONSchemaType} from "ajv";
 import {
     type CodeContributionPoint,
-    Disposable,
     getCodeContribution,
     registerCodeContribution,
     useContributions
 } from "@/core";
+import {Disposable} from '@/util/disposable';
 import * as log from '@/util/log';
 
 

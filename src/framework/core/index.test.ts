@@ -7,7 +7,6 @@ test('Framework Core API is complete', () => {
     // console.log(api)
     expect(api).toEqual(
         [
-            'Disposable',
             'WhenClauseCompiler',
             'activateExtension',
             'addExtensionListener',

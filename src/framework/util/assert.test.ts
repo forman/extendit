@@ -24,6 +24,12 @@ test('assert', () => {
             assert(extension.id !== extensionId, () => message)
         }
     ).toThrowError(message);
+
+    expect(
+        () => {
+            assert(extension.id !== extensionId)
+        }
+    ).toThrowError('Assertion failed');
 })
 
 test('assertDefined', () => {
@@ -38,16 +44,24 @@ test('assertDefined', () => {
     ).to.not.throw();
 
     extension = undefined;
+
     expect(
         () => {
             assertDefined(extension, message)
         }
     ).toThrowError(message);
 
-    extension = undefined;
     expect(
         () => {
             assertDefined(extension, () => message)
         }
     ).toThrowError(message);
+
+    extension = null;
+
+    expect(
+        () => {
+            assertDefined(extension)
+        }
+    ).toThrowError("Expected 'value' to be defined, but received null");
 })

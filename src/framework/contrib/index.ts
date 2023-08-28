@@ -17,6 +17,7 @@ export {
 } from "./menus";
 
 export {
+    type CommandMenuItem,
     useCommandPalette,
 } from "./command-palette";
 

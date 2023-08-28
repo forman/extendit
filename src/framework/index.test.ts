@@ -7,7 +7,6 @@ test('Framework API is complete', () => {
     // console.log(api)
     expect(api).toEqual(
         [
-            "Disposable",
             "WhenClauseCompiler",
             "activateExtension",
             "addExtensionListener",

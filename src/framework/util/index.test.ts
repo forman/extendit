@@ -10,6 +10,7 @@ test('Framework Util API is complete', () => {
             "assert",
             "disposable",
             "expr",
+            "json",
             "log",
             "validator",
         ]
