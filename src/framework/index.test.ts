@@ -17,6 +17,7 @@ test("Framework API is complete", () => {
     "getExtension",
     "getExtensionDisplayName",
     "getExtensionId",
+    "readExtensionManifest",
     "registerCodeContribution",
     "registerContributionPoint",
     "registerExtension",

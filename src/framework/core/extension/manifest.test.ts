@@ -1,9 +1,29 @@
 import { describe, expect, test } from "vitest";
-import {
-  getExtensionId,
-  getExtensionDisplayName,
-} from "@/core/extension/manifest";
+import { getExtensionId, getExtensionDisplayName } from "./manifest";
 import { newTestManifest } from "@/test/testing";
+import { readExtensionManifest } from "./manifest";
+
+test("readExtensionManifest", async () => {
+  const [manifest, pathResolver] = await readExtensionManifest(
+    "src/framework/test/extensions/exports-baz-api/package.json"
+  );
+  expect(manifest).toBeDefined();
+  expect(manifest).toBeInstanceOf(Object);
+  expect(getExtensionId(manifest)).toEqual("pippo.exports-baz-api");
+  expect(pathResolver).toBeInstanceOf(Function);
+  expect(pathResolver("package.json")).toEqual(
+    "src/framework/test/extensions/exports-baz-api/package.json"
+  );
+  expect(pathResolver("main.js")).toEqual(
+    "src/framework/test/extensions/exports-baz-api/main.js"
+  );
+  expect(pathResolver("./main.js")).toEqual(
+    "src/framework/test/extensions/exports-baz-api/main.js"
+  );
+  expect(pathResolver("/main.js")).toEqual(
+    "src/framework/test/extensions/exports-baz-api/main.js"
+  );
+});
 
 test("getExtensionId", () => {
   const manifest = newTestManifest();

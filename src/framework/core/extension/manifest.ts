@@ -34,7 +34,7 @@ const manifestSchema: JsonSchemaType<ExtensionManifest> = {
  * @returns A tuple `[manifest, resolvePath]` comprising the validated manifest
  *  and a path resolver function.
  */
-export async function readManifest(
+export async function readExtensionManifest(
   manifestPath: string
 ): Promise<[ExtensionManifest, ExtensionPathResolver]> {
   const manifestModule = (await import(manifestPath)) as unknown as Record<

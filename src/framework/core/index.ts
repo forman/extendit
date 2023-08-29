@@ -19,7 +19,11 @@ export type {
   ExtensionPathResolver,
   FrameworkOptions,
 } from "./types";
-export { getExtensionId, getExtensionDisplayName } from "./extension/manifest";
+export {
+  getExtensionId,
+  getExtensionDisplayName,
+  readExtensionManifest,
+} from "./extension/manifest";
 export { registerExtension } from "./extension/register";
 export { activateExtension } from "./extension/activate";
 export { deactivateExtension } from "./extension/deactivate";

@@ -51,11 +51,11 @@ test("newTestExtension(manifest)", () => {
 
 test("import() can load JSON", async () => {
   const manifestModule = (await import(
-    "src/framework/test/extensions/exports-baz-api/package.json"
+    "./extensions/exports-baz-api/package.json"
   )) as unknown;
   // console.log(manifest)
   expect(manifestModule).toHaveProperty("default");
-  expect(manifestModule?.default).toEqual({
+  expect((manifestModule as Record<string, unknown>).default).toEqual({
     provider: "pippo",
     name: "exports-baz-api",
     main: "main.js",
