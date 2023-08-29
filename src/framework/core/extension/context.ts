@@ -2,7 +2,7 @@ import type {
   Extension,
   ExtensionModule,
   ExtensionContext,
-  ModulePathResolver,
+  ExtensionPathResolver,
 } from "@/core/types";
 import type { DisposableLike } from "@/util/disposable";
 import { frameworkConfig } from "@/core/config";
@@ -31,13 +31,13 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
   private _subscriptions: DisposableLike[] = [];
   private _module: ExtensionModule | undefined = undefined;
   private _modulePath: string | undefined = undefined;
-  private _moduleResolver: ModulePathResolver | undefined = undefined;
+  private _moduleResolver: ExtensionPathResolver | undefined = undefined;
 
   constructor(readonly extensionId: string) {}
 
   resolveModulePath(path: string): string {
     const resolveModulePath =
-      this.moduleResolver ?? frameworkConfig.modulePathResolver;
+      this.moduleResolver ?? frameworkConfig.pathResolver;
     if (resolveModulePath instanceof Function) {
       return resolveModulePath(path);
     }
@@ -60,7 +60,7 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     return this._moduleResolver;
   }
 
-  setModuleResolver(moduleResolver: ModulePathResolver | undefined) {
+  setPathResolver(moduleResolver: ExtensionPathResolver) {
     this._moduleResolver = moduleResolver;
   }
 

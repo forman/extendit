@@ -39,10 +39,10 @@ test("deactivateExtension already inactive", async () => {
 });
 
 test("deactivateExtension with failing deactivate()", async () => {
-  const { manifest, moduleResolver } = readTestManifest(
+  const { manifest, pathResolver } = readTestManifest(
     "will-fail-on-deactivation"
   );
-  const disposable = registerExtension(manifest, moduleResolver);
+  const disposable = registerExtension(manifest, { pathResolver });
   let extension = await activateExtension("pippo.will-fail-on-deactivation");
   expect(extension.status).toEqual("active");
   extension = await deactivateExtension("pippo.will-fail-on-deactivation");

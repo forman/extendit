@@ -13,7 +13,7 @@ export function readTestManifest(
   const manifest = JSON.parse(buffer.toString()) as ExtensionManifest;
   return {
     manifest: { ...manifest, ...options },
-    moduleResolver: (path: string) => `${TEST_EXTENSIONS_DIR}/${test}/${path}`,
+    pathResolver: (path: string) => `${TEST_EXTENSIONS_DIR}/${test}/${path}`,
   };
 }
 

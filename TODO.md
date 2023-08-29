@@ -2,11 +2,6 @@
 
 ### Design
 
-* Get rid of `registerAppExtension`, just use `registerExtension` with
-  options:
-  - `extensionPath`: url/path to dir/source containing `package.json`
-  - `manifest` + `moduleResolver`
-  - `module`
 * Get rid of globals, instead instantiate `Framework` class that
   contains the configuration, the store, the API, and provides hook factories.
 * Allow using the package without React.
@@ -36,6 +31,10 @@
 
 ## DONE
 
+* Get rid of `registerAppExtension`, just use `registerExtension` with
+  options:
+  - `pathResolver`
+  - `module`
 * Move log levels from `levels` into `LogLevel`.
 * Check why in the demo the app commands are not shown
 * Turn `react` into a peer dependency

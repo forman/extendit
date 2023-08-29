@@ -1,6 +1,6 @@
 import type { JSONSchemaType } from "ajv";
 import type { DisposableLike } from "@/util/disposable";
-import type { JsonObject, JsonPropertyValue } from "@/util/json";
+import type { JsonObject } from "@/util/json";
 
 /**
  * Represents the content of an extension's `package.json` file.
@@ -13,6 +13,7 @@ export interface ExtensionManifest {
   main?: string;
   version?: string;
   displayName?: string;
+  description?: string;
 
   // package.json extension entries
   activationEvents?: string[];
@@ -24,7 +25,7 @@ export interface ExtensionManifest {
    * Property type should actually be just JsonValue,
    * but then we get TS error TS2411.
    */
-  [property: string]: JsonPropertyValue;
+  //[property: string]: JsonPropertyValue;
 }
 
 /**
@@ -213,12 +214,34 @@ export interface CodeContributionPoint<T = unknown, PT = T>
  * Used to resolve module paths.
  * @category Framework API
  */
-export type ModulePathResolver = (path: string) => string;
+export type ExtensionPathResolver = (path: string) => string;
 
 /**
- * Used to resolve extension module paths.
+ * Options passed top the {@link registerExtension}.
+ * @category Extension API
+ */
+export interface ExtensionOptions {
+  /**
+   * Function that resolves relative extension paths.
+   * Defaults to the same option in {@link FrameworkOptions}.
+   */
+  pathResolver?: ExtensionPathResolver;
+  /**
+   * Extension module.
+   * Defaults to the result of importing the path given by the value of the
+   * `main` setting in the extension manifest.
+   */
+  module?: ExtensionModule;
+}
+
+/**
+ * Framework options that can be set using {@link updateFrameworkConfig}.
  * @category Framework API
  */
 export interface FrameworkOptions {
-  modulePathResolver?: ModulePathResolver;
+  /**
+   * Used to resolve extension module paths.
+   * @category Framework API
+   */
+  pathResolver?: ExtensionPathResolver;
 }

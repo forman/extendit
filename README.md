@@ -55,7 +55,7 @@ Now the following scripts are available:
 * `npm run build` - build the `extend-me` library, outputs to `./dist`
 * `npm run lint` - run `eslint` on project sources
 * `npm run test` - run project unit tests
-* `npm run mk-coverage` - generate project coverage report in `./coverage`
-* `npm run mk-apidocs` - generate project API docs in `./docs/api`
+* `npm run coverage` - generate project coverage report in `./coverage`
+* `npm run typedoc` - generate project API docs in `./docs/api`
 
 

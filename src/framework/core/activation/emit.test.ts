@@ -6,18 +6,18 @@ import { Disposable } from "@/util/disposable";
 import { getExtension, getExtensionContext } from "@/core/store";
 
 test("emitActivationEvent", async () => {
-  const { manifest, moduleResolver } = readTestManifest("exports-foo-api");
+  const { manifest, pathResolver } = readTestManifest("exports-foo-api");
   const disposable1 = registerExtension(
     { ...manifest, name: "foo" },
-    moduleResolver
+    { pathResolver }
   );
   const disposable2 = registerExtension(
     { ...manifest, name: "bar" },
-    moduleResolver
+    { pathResolver }
   );
   const disposable3 = registerExtension(
     { ...manifest, name: "baz" },
-    moduleResolver
+    { pathResolver }
   );
   getExtensionContext("pippo.foo", true).activationEvents.add("onView");
   getExtensionContext("pippo.bar", true).activationEvents.add("onView");

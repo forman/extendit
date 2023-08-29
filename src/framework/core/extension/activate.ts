@@ -30,10 +30,15 @@ export const activateExtension = async (
 
   try {
     let exports: unknown = undefined;
-    const modulePath = extension.manifest.main;
-    if (modulePath) {
-      extension = setExtensionStatus(extensionId, "loading");
-      const module = await importModule(ctx, modulePath);
+    let module: ExtensionModule | undefined = ctx.module;
+    if (!module) {
+      const modulePath = extension.manifest.main;
+      if (modulePath) {
+        extension = setExtensionStatus(extensionId, "loading");
+        module = await importModule(ctx, modulePath);
+      }
+    }
+    if (module) {
       extension = setExtensionStatus(extensionId, "activating");
       if (module.activate instanceof Function) {
         exports = await Promise.resolve(module.activate(ctx, ...dependencies));

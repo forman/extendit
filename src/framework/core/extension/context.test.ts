@@ -10,7 +10,7 @@ describe("ExtensionContextImpl", () => {
 
   test("resolve path", () => {
     const ctx = new ExtensionContextImpl("pippo.foo");
-    ctx.setModuleResolver((x: string) => "extensions/" + x);
+    ctx.setPathResolver((x: string) => "extensions/" + x);
     expect(ctx.resolveModulePath("main.js")).toEqual("extensions/main.js");
   });
 

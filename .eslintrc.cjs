@@ -20,7 +20,11 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
+    project: [
+      "./tsconfig.json",
+      "./tsconfig.vite.json",
+      "./tsconfig.test.json"
+    ],
     tsconfigRootDir: __dirname,
   },
   plugins: ["react-refresh"],

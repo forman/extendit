@@ -27,8 +27,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "mk-coverage": "vitest --coverage",
-    "mk-apidocs": "typedoc src/framework/index.ts --out docs/api"
+    "coverage": "vitest --coverage",
+    "typedoc": "typedoc src/framework/index.ts --out docs/api"
   },
   "dependencies": {
     "ajv": "^8.12.0",

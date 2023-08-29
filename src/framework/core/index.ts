@@ -16,12 +16,13 @@ export type {
   ExtensionModule,
   ExtensionListener,
   ExtensionStatus,
-  ModulePathResolver,
+  ExtensionPathResolver,
   FrameworkOptions,
 } from "./types";
 export { getExtensionId, getExtensionDisplayName } from "./extension/manifest";
-export { registerAppExtension, registerExtension } from "./extension/register";
+export { registerExtension } from "./extension/register";
 export { activateExtension } from "./extension/activate";
+export { deactivateExtension } from "./extension/deactivate";
 export { getExtension } from "./store";
 export { addExtensionListener } from "./extension/listeners";
 export {
@@ -48,9 +49,8 @@ export {
 export { executeWhen } from "./contrib/when/execute";
 
 //////////////////////////////////////////////////////////////////////////
-// Add extension listener that processes contributions
+// Add extension listener that processes extension contributions
 // on extension registration.
-// TODO: check, if we should move this into registerAppExtension()
 
 import { contributionProcessor } from "./contrib/point/process";
 import { addExtensionListener } from "./extension/listeners";

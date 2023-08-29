@@ -9,9 +9,9 @@ import { activateExtension } from "./activate";
 import { registerExtension } from "./register";
 
 test("activateExtension that exports Foo API", async () => {
-  const { manifest, moduleResolver } = readTestManifest("exports-foo-api");
+  const { manifest, pathResolver } = readTestManifest("exports-foo-api");
 
-  const disposable = registerExtension(manifest, moduleResolver);
+  const disposable = registerExtension(manifest, { pathResolver });
   const extension = await activateExtension("pippo.exports-foo-api");
   expect(extension.status).toEqual("active");
   expect(extension.exports).toBeInstanceOf(Object);
@@ -29,16 +29,23 @@ test("activateExtension that exports Foo API", async () => {
 });
 
 test("activateExtension with dependencies", async () => {
-  const { manifest: manifest1, moduleResolver: moduleResolver1 } =
+  const { manifest: manifest1, pathResolver: pathResolver1 } =
     readTestManifest("exports-baz-api");
-  const { manifest: manifest2, moduleResolver: moduleResolver2 } =
+  const { manifest: manifest2, pathResolver: pathResolver2 } =
     readTestManifest("exports-foo-api");
-  const { manifest: manifest3, moduleResolver: moduleResolver3 } =
-    readTestManifest("requires-foo-and-baz-apis");
+  const { manifest: manifest3, pathResolver: pathResolver3 } = readTestManifest(
+    "requires-foo-and-baz-apis"
+  );
 
-  const disposable1 = registerExtension(manifest1, moduleResolver1);
-  const disposable2 = registerExtension(manifest2, moduleResolver2);
-  const disposable3 = registerExtension(manifest3, moduleResolver3);
+  const disposable1 = registerExtension(manifest1, {
+    pathResolver: pathResolver1,
+  });
+  const disposable2 = registerExtension(manifest2, {
+    pathResolver: pathResolver2,
+  });
+  const disposable3 = registerExtension(manifest3, {
+    pathResolver: pathResolver3,
+  });
 
   await activateExtension("pippo.requires-foo-and-baz-apis");
   const extension1 = getExtension("pippo.exports-baz-api", true);
@@ -57,9 +64,9 @@ test("activateExtension with dependencies", async () => {
 });
 
 test("activateExtension in non-inactive state", async () => {
-  const { manifest, moduleResolver } = readTestManifest("exports-foo-api");
+  const { manifest, pathResolver } = readTestManifest("exports-foo-api");
 
-  const disposable = registerExtension(manifest, moduleResolver);
+  const disposable = registerExtension(manifest, { pathResolver });
 
   // Already active --> do nothing
   const exports = {};
@@ -92,10 +99,10 @@ test("activateExtension fails for missing main.js file", async () => {
 });
 
 test("activateExtension fails on activation", async () => {
-  const { manifest, moduleResolver } = readTestManifest(
+  const { manifest, pathResolver } = readTestManifest(
     "will-fail-on-activation"
   );
-  const disposable = registerExtension(manifest, moduleResolver);
+  const disposable = registerExtension(manifest, { pathResolver });
   const extension = await activateExtension("pippo.will-fail-on-activation");
   expect(extension.status).toEqual("rejected");
   expect(Array.isArray(extension.reasons)).toBe(true);
@@ -108,12 +115,16 @@ test("activateExtension fails on activation", async () => {
 });
 
 test("activateExtension fails for failing dependency", async () => {
-  const { manifest: manifest1, moduleResolver: moduleResolver1 } =
+  const { manifest: manifest1, pathResolver: moduleResolver1 } =
     readTestManifest("will-fail-on-activation");
-  const { manifest: manifest2, moduleResolver: moduleResolver2 } =
+  const { manifest: manifest2, pathResolver: moduleResolver2 } =
     readTestManifest("requires-failing");
-  const disposable1 = registerExtension(manifest1, moduleResolver1);
-  const disposable2 = registerExtension(manifest2, moduleResolver2);
+  const disposable1 = registerExtension(manifest1, {
+    pathResolver: moduleResolver1,
+  });
+  const disposable2 = registerExtension(manifest2, {
+    pathResolver: moduleResolver2,
+  });
   const extension = await activateExtension("pippo.requires-failing");
   expect(extension.status).toEqual("rejected");
   expect(Array.isArray(extension.reasons)).toBe(true);

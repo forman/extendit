@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import type { ExtensionContext, ExtensionManifest } from "@/core";
 import {
-  registerAppExtension,
+  activateExtension,
+  getExtensionId,
   registerContributionPoint,
+  registerExtension,
   updateContext,
 } from "@/core";
 import { registerCommand } from "@/contrib";
@@ -10,6 +12,7 @@ import { viewsPoint } from "@/contrib/views";
 import { submenusPoint } from "@/contrib/submenus";
 import { menusPoint } from "@/contrib/menus";
 import { commandsPoint } from "@/contrib/commands";
+import { updateFrameworkConfig } from "@/core/config";
 
 interface AppState {
   selectedViewId: string | null;
@@ -73,7 +76,7 @@ function activate(ctx: ExtensionContext) {
   ctx.subscriptions.push(registerCommand("app.updateContext", updateContext));
 }
 
-const moduleResolver = (path: string) => {
+const pathResolver = (path: string) => {
   // By default
   if (path.startsWith("/")) {
     return path;
@@ -93,8 +96,9 @@ registerContributionPoint(menusPoint);
 registerContributionPoint(submenusPoint);
 registerContributionPoint(viewsPoint);
 
-registerAppExtension(
-  appManifest,
-  { activate },
-  { modulePathResolver: moduleResolver }
-);
+updateFrameworkConfig({ pathResolver });
+
+registerExtension(appManifest, {
+  module: { activate },
+});
+void activateExtension(getExtensionId(appManifest));

@@ -10,9 +10,8 @@ import {
   getExtensionContext,
   setExtensionStatus,
 } from "@/core/store";
-import { validator } from "@/util/validator";
+import { validateJson } from "@/util/validator";
 import { Logger } from "@/util/log";
-import { capitalize } from "@/util/capitalize";
 
 const LOG = new Logger("contrib/process");
 
@@ -81,27 +80,12 @@ function validateContrib(
   contrib: unknown,
   ctx: ExtensionContextImpl
 ) {
-  const validate = validator.compile(contribPoint.schema);
-  const success = validate(contrib);
-  if (!success) {
-    const message =
-      `JSON validation failed for contribution ` +
-      `to point '${contribPoint.id}' from extension '${ctx.extensionId}'`;
-    let messageDetails = "";
-    if (validate.errors) {
-      const firstError = validate.errors[0];
-      const firstMessage = firstError.message;
-      if (firstMessage) {
-        messageDetails += ". " + capitalize(firstMessage);
-        const instancePath = firstError.instancePath;
-        if (instancePath) {
-          messageDetails += ` at instance path ${instancePath}`;
-        }
-      }
-      LOG.error(message + ":", validate.errors);
-    }
-    throw new Error(message + messageDetails + ".");
-  }
+  validateJson(
+    contribPoint.schema,
+    contrib,
+    "contribution to point " +
+      `'${contribPoint.id}' from extension '${ctx.extensionId}'`
+  );
 }
 
 function registerActivationEvents(
