@@ -13,6 +13,7 @@ export default defineConfig({
     react(),
     dts({
       include: ["src/framework"],
+      exclude: ["src/**/*.test.*", "src/framework/test/**/*"],
     }),
   ],
   resolve: {
@@ -33,11 +34,7 @@ export default defineConfig({
       // make sure to externalize deps that shouldn't be bundled
       // into the library
       external: [
-        ...listExcludedFiles(
-          join(__dirname, "src"),
-          "framework",
-          "framework/test"
-        ),
+        ...listExcludedFiles(join(__dirname, "src")),
         "ajv",
         "react",
         "react-dom",
@@ -62,33 +59,29 @@ export default defineConfig({
   },
 });
 
-function listExcludedFiles(
-  dirPath: string,
-  includes?: string,
-  excludes?: string
-): string[] {
+function listExcludedFiles(dirPath: string): string[] {
   const files: string[] = [];
   const handleFile = (file: string) => files.push(file);
-  listExcludedFilesRec(dirPath, "", handleFile);
+  listAllFiles(dirPath, "", handleFile);
 
-  function match(path: string, pattern?: string) {
-    return pattern === path || path.startsWith(pattern + "/");
+  function isTestFile(path: string) {
+    return (
+      path.startsWith("demo/") ||
+      path.includes(".test.") ||
+      path.startsWith("test/")
+    );
   }
 
   const excludedFiles = files
-    .filter((file) => {
-      if (excludes && match(file, excludes)) {
-        return true;
-      }
-      return !includes || !match(file, includes);
-    })
+    .filter(isTestFile)
     .map((file) => join(dirPath, file));
+
   console.log(`Excluding ${excludedFiles.length} files.`);
-  // console.log("Excluded files:", excludedFiles)
+  console.log("Excluded files:", excludedFiles);
   return excludedFiles;
 }
 
-function listExcludedFilesRec(
+function listAllFiles(
   rootPath: string,
   relPath: string,
   onFile: (file: string) => void
@@ -98,7 +91,7 @@ function listExcludedFilesRec(
     const absEntry = `${absPath}/${name}`;
     const relEntry = relPath !== "" ? `${relPath}/${name}` : name;
     if (statSync(absEntry).isDirectory()) {
-      listExcludedFilesRec(rootPath, relEntry, onFile);
+      listAllFiles(rootPath, relEntry, onFile);
     } else {
       onFile(relEntry);
     }

@@ -4,9 +4,8 @@ import { getExtension, getExtensionContext } from "@/core/store";
 import { registerExtension } from "./register";
 import { addExtensionListener } from "./listeners";
 import { ExtensionContextImpl } from "./context";
-import { ExtensionModule } from "../types";
+import { type ExtensionModule } from "../types";
 import { activateExtension } from "./activate";
-import { getExtensionId } from "./manifest";
 
 test("registerExtension", () => {
   addExtensionListener({
@@ -39,7 +38,9 @@ test("registerExtension with module", async () => {
   expect(extension).toBeInstanceOf(Object);
   expect(extension.status).toEqual("active");
   expect(extension.exports).toBe(myApi);
-  expect(extension.exports.sayHello()).toEqual("Hello!");
+  expect(
+    ((extension.exports as Record<string, unknown>).sayHello as () => string)()
+  ).toEqual("Hello!");
   disposable.dispose();
 });
 
@@ -48,7 +49,7 @@ test("registerExtension with activationEvents", async () => {
     activationEvents: ["onView", "onView:${id}"],
   });
   const disposable = registerExtension(manifest);
-  const ctx = getExtensionContext("pippo.foo");
+  const ctx = getExtensionContext("pippo.foo", true);
   expect(ctx.activationEvents).toEqual(new Set(["onView", "onView:${id}"]));
   disposable.dispose();
 });

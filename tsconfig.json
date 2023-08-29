@@ -33,16 +33,9 @@
   "include": [
     "src"
   ],
-  "exclude": [
-    "**/*.test.ts",
-    "**/testing.ts"
-  ],
   "references": [
     {
       "path": "./tsconfig.vite.json"
-    },
-    {
-      "path": "./tsconfig.test.json"
     }
   ]
 }

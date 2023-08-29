@@ -4,7 +4,7 @@ import { addExtensionListener } from "@/core/extension/listeners";
 import { newTestManifest } from "@/test/testing";
 import { registerExtension } from "@/core/extension/register";
 import { registerContributionPoint } from "@/core/contrib/point/register";
-import type { ContributionPoint } from "@/core/types";
+import type { CodeContributionPoint, ContributionPoint } from "@/core/types";
 import { Disposable } from "@/util/disposable";
 import { getExtension, getExtensionContext } from "@/core/store";
 import { contributionProcessor } from "./process";
@@ -199,7 +199,7 @@ describe("code contributions", () => {
     required: ["command", "title"],
   };
 
-  const commandsPoint: ContributionPoint<Command[]> = {
+  const commandsPoint: CodeContributionPoint<Command[]> = {
     id: "commands",
     schema: {
       type: "array",
