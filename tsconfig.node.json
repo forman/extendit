@@ -1,3 +1,5 @@
+// I don't understand why this is needed, see
+// https://github.com/vitejs/vite/issues/11396
 {
   "compilerOptions": {
     "composite": true,
@@ -10,8 +12,6 @@
     "strictNullChecks": true
   },
   "include": [
-    "vite.config.ts",
-    "**/*.test.ts",
-    "**/testing.ts"
+    "vite.config.ts"
   ]
 }
