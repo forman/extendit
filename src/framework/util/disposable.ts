@@ -9,16 +9,17 @@ export interface DisposableLike {
  * Represents a type which can release resources, such
  * as event listening or a timer.
  *
- * Idea and type definition taken from
- * https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/vscode/index.d.ts
+ * {@see https://en.wikipedia.org/wiki/Dispose_pattern}
+ * {@see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/vscode/index.d.ts}
  */
 export class Disposable implements DisposableLike {
   /**
-   * Combine many disposable-likes into one. You can use this method when having objects with
-   * a dispose function which aren't instances of `Disposable`.
+   * Combine many disposable-likes into one. You can use this method when
+   * having objects with a dispose function which aren't instances of
+   * `Disposable`.
    *
-   * @param disposables - Objects that have at least a `dispose`-function member.
-   *  Note that asynchronous dispose-functions aren't awaited.
+   * @param disposables - Objects that have at least a `dispose`-function
+   *  member. Note that asynchronous dispose-functions aren't awaited.
    * @returns - A new disposable which, upon dispose, will
    *  dispose all provided disposables.
    */
