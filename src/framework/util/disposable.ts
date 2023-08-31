@@ -9,8 +9,8 @@ export interface DisposableLike {
  * Represents a type which can release resources, such
  * as event listening or a timer.
  *
- * {@see https://en.wikipedia.org/wiki/Dispose_pattern}
- * {@see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/vscode/index.d.ts}
+ * @see https://en.wikipedia.org/wiki/Dispose_pattern
+ * @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/vscode/index.d.ts
  */
 export class Disposable implements DisposableLike {
   /**

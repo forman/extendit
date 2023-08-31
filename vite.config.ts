@@ -25,12 +25,21 @@ export default defineConfig({
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points
-      entry: resolve(__dirname, "src/framework/index.ts"),
+      entry: [
+        resolve(__dirname, "src/framework"),
+        resolve(__dirname, "src/framework/contrib"),
+        resolve(__dirname, "src/framework/util"),
+      ],
       name: "ExtendMe!",
       // the proper extensions will be added
-      fileName: "extend-me",
+      fileName: "[name]",
     },
     rollupOptions: {
+      input: {
+        index: "src/framework/index.ts",
+        "contrib/index": "src/framework/contrib/index.ts",
+        "util/index": "src/framework/util/index.ts",
+      },
       // make sure to externalize deps that shouldn't be bundled
       // into the library
       external: [

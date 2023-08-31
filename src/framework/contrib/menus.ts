@@ -16,7 +16,7 @@ const LOG = new log.Logger("contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 
-interface BaseMenuItem {
+export interface BaseMenuItem {
   command?: string;
   submenu?: string;
   label?: string;
@@ -24,7 +24,7 @@ interface BaseMenuItem {
   icon?: string;
 }
 
-interface JsonMenuItem extends BaseMenuItem {
+export interface JsonMenuItem extends BaseMenuItem {
   when?: string;
 }
 

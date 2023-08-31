@@ -15,7 +15,12 @@ import { ExtensionContextImpl } from "./context";
 import { deactivateExtension } from "./deactivate";
 
 /**
- * Register a new extension given by the extension manifest.
+ * Registers a new extension given by the extension manifest.
+ * After registration the function emits
+ * {@link ExtensionListener.onExtensionRegistered}. If the
+ * returned {@link Disposable} is invoked,
+ * {@link ExtensionListener.onExtensionWillUnregister} and
+ * {@link ExtensionListener.onExtensionUnregistered} are emitted.
  *
  * @category Extension API
  * @param manifest - The extension manifest

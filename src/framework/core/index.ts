@@ -17,6 +17,7 @@ export type {
   ExtensionListener,
   ExtensionStatus,
   ExtensionPathResolver,
+  ExtensionOptions,
   FrameworkOptions,
 } from "./types";
 export {
@@ -24,10 +25,11 @@ export {
   getExtensionDisplayName,
   readExtensionManifest,
 } from "./extension/manifest";
+export { getExtension } from "./store";
+export { updateFrameworkConfig } from "./config";
 export { registerExtension } from "./extension/register";
 export { activateExtension } from "./extension/activate";
 export { deactivateExtension } from "./extension/deactivate";
-export { getExtension } from "./store";
 export { addExtensionListener } from "./extension/listeners";
 export {
   useExtensions,

@@ -9,7 +9,6 @@ test("Framework API is complete", () => {
     "WhenClauseCompiler",
     "activateExtension",
     "addExtensionListener",
-    "contrib",
     "deactivateExtension",
     "executeWhen",
     "getCodeContribution",
@@ -26,7 +25,6 @@ test("Framework API is complete", () => {
     "useContributionPoints",
     "useContributions",
     "useExtensions",
-    "util",
     "whenClauseCompiler",
   ]);
 });

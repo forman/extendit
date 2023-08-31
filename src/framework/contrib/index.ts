@@ -8,7 +8,7 @@ export {
 
 export { type Submenu, useSubmenus } from "./submenus";
 
-export { type MenuItem, useMenu } from "./menus";
+export { type JsonMenuItem, type MenuItem, useMenu } from "./menus";
 
 export { type CommandMenuItem, useCommandPalette } from "./command-palette";
 
