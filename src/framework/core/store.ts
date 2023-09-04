@@ -12,12 +12,12 @@ const LOG = new Logger("store");
  * @internal
  * @category Extension API
  */
-export interface StoreState {
+export interface StoreState<CTX extends object = object> {
   extensions: Record<string, Extension>;
   extensionContexts: Record<string, ExtensionContextImpl>;
   contributionPoints: Record<string, ContributionPoint>;
   codeContributions: Record<string, unknown>;
-  context: Record<string, unknown>;
+  context: CTX;
 }
 
 /**
@@ -198,41 +198,58 @@ export function getContributionPoints(): ContributionPoint[] {
  * Get the framework's context object.
  * @category Framework API
  */
-export function getContext() {
-  return frameworkStore.getState().context;
+export function getFrameworkContext<CTX extends object = object>(): CTX {
+  return frameworkStore.getState().context as CTX;
 }
 
 /**
  * Update the framework's context object.
+ * `contextUpdate` is merged into current context at the root level
+ * of the context object.
  *
  * @category Framework API
- * @param context Context entries
- * @param replace If `true`, the context is replaced by `context`
+ * @param contextUpdate A partial context update.
  */
-export function updateContext(
-  context: Record<string, unknown>,
-  replace?: boolean
+export function updateFrameworkContext<CTX extends object = object>(
+  contextUpdate: Partial<CTX> | ((context: CTX) => Partial<CTX>)
 ) {
-  if (replace) {
-    frameworkStore.setState({ context: { ...context } });
-  } else {
-    frameworkStore.setState((state) => ({
-      context: { ...state.context, ...context },
-    }));
+  if (contextUpdate instanceof Function) {
+    contextUpdate = contextUpdate(frameworkStore.getState().context as CTX);
   }
+  frameworkStore.setState((state) => ({
+    context: { ...state.context, ...contextUpdate },
+  }));
+}
+
+/**
+ * Set (replace) the framework's context object by a shallow copy of the
+ * given new context object.
+ *
+ * @category Framework API
+ * @param context The new context object.
+ */
+export function setFrameworkContext<CTX extends object = object>(
+  context: CTX | ((context: CTX) => CTX)
+) {
+  if (context instanceof Function) {
+    context = context(frameworkStore.getState().context as CTX);
+  }
+  frameworkStore.setState({ context: { ...context } });
 }
 
 //////////////////////////////////////////////////
 // Utilities
 
-export function getStoreRecord<K extends keyof StoreState>(
+type StateKeysWithoutContext = keyof Omit<StoreState, "context">;
+
+export function getStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string
 ): StoreState[K][string] {
   return frameworkStore.getState()[key][id] as StoreState[K][string];
 }
 
-export function setStoreRecord<K extends keyof StoreState>(
+export function setStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string,
   value: StoreState[K][string]
@@ -240,14 +257,14 @@ export function setStoreRecord<K extends keyof StoreState>(
   frameworkStore.setState((state) => setStateRecord(state, key, id, value));
 }
 
-export function deleteStoreRecord<K extends keyof StoreState>(
+export function deleteStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string
 ) {
   frameworkStore.setState((state) => deleteStateRecord(state, key, id));
 }
 
-function setStateRecord<K extends keyof StoreState>(
+function setStateRecord<K extends StateKeysWithoutContext>(
   state: StoreState,
   key: K,
   id: string,
@@ -256,7 +273,7 @@ function setStateRecord<K extends keyof StoreState>(
   return { [key]: { ...state[key], [id]: value } };
 }
 
-function deleteStateRecord<K extends keyof StoreState>(
+function deleteStateRecord<K extends StateKeysWithoutContext>(
   state: StoreState,
   key: K,
   id: string

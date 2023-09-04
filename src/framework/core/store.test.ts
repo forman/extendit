@@ -2,14 +2,15 @@ import { expect, test } from "vitest";
 import { registerExtension } from "@/core/extension/register";
 import { newTestManifest } from "@/test/testing";
 import {
-  getContext,
+  getFrameworkContext,
   getExtension,
   getExtensionContext,
   getStoreRecord,
   deleteStoreRecord,
   setExtensionStatus,
   setStoreRecord,
-  updateContext,
+  updateFrameworkContext,
+  setFrameworkContext,
 } from "./store";
 
 test("getExtension with undefined extension", () => {
@@ -58,14 +59,52 @@ test("setExtensionStatus", () => {
   disposable.dispose();
 });
 
-test("executeWhen uses framework context", () => {
-  expect(getContext()).toEqual({});
-  updateContext({ view: "dataSources", listItem: "localFS" });
-  expect(getContext()).toEqual({ view: "dataSources", listItem: "localFS" });
-  updateContext({ view: "datasets" });
-  expect(getContext()).toEqual({ view: "datasets", listItem: "localFS" });
-  updateContext({}, true);
-  expect(getContext()).toEqual({});
+test("get/updateFrameworkContext", () => {
+  interface Ctx {
+    view: string;
+    listItem: number;
+    listItems: number[];
+  }
+  expect(getFrameworkContext<Ctx>()).toEqual({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateFrameworkContext<Ctx>({
+    view: "dataSources",
+    listItem: 3,
+    listItems: [1, 2, 3],
+  });
+  expect(getFrameworkContext<Ctx>()).toEqual({
+    view: "dataSources",
+    listItem: 3,
+    listItems: [1, 2, 3],
+  });
+  updateFrameworkContext<Ctx>({
+    listItem: 2,
+  });
+  expect(getFrameworkContext<Ctx>()).toEqual({
+    view: "dataSources",
+    listItem: 2,
+    listItems: [1, 2, 3],
+  });
+  updateFrameworkContext<Ctx>((ctx) => ({
+    listItem: 13,
+    listItems: [...ctx.listItems, 13],
+  }));
+  expect(getFrameworkContext<Ctx>()).toEqual({
+    view: "dataSources",
+    listItem: 13,
+    listItems: [1, 2, 3, 13],
+  });
+});
+
+test("get/setFrameworkContext", () => {
+  setFrameworkContext({ foo: 12 });
+  expect(getFrameworkContext()).toEqual({ foo: 12 });
+
+  setFrameworkContext(() => ({ bar: 2 }));
+  expect(getFrameworkContext()).toEqual({ bar: 2 });
+
+  setFrameworkContext((ctx) => ({ ...ctx, foo: 13 }));
+  expect(getFrameworkContext()).toEqual({ bar: 2, foo: 13 });
 });
 
 test("add and remove store record", () => {

@@ -5,7 +5,7 @@ import {
   getExtensionId,
   registerContributionPoint,
   registerExtension,
-  updateContext,
+  updateFrameworkContext,
 } from "@/core";
 import { registerCommand } from "@/contrib";
 import { viewsPoint } from "@/contrib/views";
@@ -26,12 +26,12 @@ export const useAppStore = create<AppState>()(() => ({
 
 function selectView(selectedViewId: string | null) {
   useAppStore.setState(() => ({ selectedViewId }));
-  updateContext({ view: useAppStore.getState().selectedViewId });
+  updateFrameworkContext({ view: useAppStore.getState().selectedViewId });
 }
 
 function clearView() {
   useAppStore.setState(() => ({ selectedViewId: null }));
-  updateContext({ view: null });
+  updateFrameworkContext({ view: null });
 }
 
 // The app's manifest.
@@ -73,7 +73,9 @@ function activate(ctx: ExtensionContext) {
 
   ctx.subscriptions.push(registerCommand("app.clearView", clearView));
 
-  ctx.subscriptions.push(registerCommand("app.updateContext", updateContext));
+  ctx.subscriptions.push(
+    registerCommand("app.updateContext", updateFrameworkContext)
+  );
 }
 
 const pathResolver = (path: string) => {

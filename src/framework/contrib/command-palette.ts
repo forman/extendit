@@ -1,4 +1,4 @@
-import { useContext, useContributions } from "@/core";
+import { useFrameworkContext, useContributions } from "@/core";
 import { type Command, useCommands } from "@/contrib/commands";
 import { useMemo } from "react";
 import type { MenuItem, ProcessedMenuItem } from "@/contrib/menus";
@@ -19,7 +19,7 @@ export interface CommandMenuItem extends Omit<MenuItem, "submenu"> {
 export function useCommandPalette(): CommandMenuItem[] {
   const commands = useCommands();
   const menuItems = useCommandPaletteItems();
-  const ctx = useContext();
+  const ctx = useFrameworkContext();
   return useMemo(() => {
     LOG.debug("Hook 'useCommandPalette' is recomputing");
     return sortMenuItems(newMenuItems(commands, menuItems, ctx));

@@ -54,12 +54,12 @@ export function useContributionPoints(): ContributionPoint[] {
 }
 
 /**
- * A React hook that provides provides access to the
+ * A React hook that provides access to the
  * framework's context object.
  *
  * @category React Hooks
  * @returns framework's context object
  */
-export function useContext() {
+export function useFrameworkContext() {
   return useZustandStore(frameworkStore, (state) => state.context);
 }

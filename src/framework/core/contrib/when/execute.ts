@@ -1,4 +1,4 @@
-import { getContext } from "@/core/store";
+import { getFrameworkContext } from "@/core/store";
 import type { When } from "@/core/contrib/when/compiler";
 
 /**
@@ -8,5 +8,5 @@ import type { When } from "@/core/contrib/when/compiler";
  * @param when - The compiled when clause.
  */
 export function executeWhen(when: When): boolean {
-  return when(getContext());
+  return when(getFrameworkContext());
 }

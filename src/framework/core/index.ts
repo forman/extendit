@@ -1,9 +1,13 @@
 //////////////////////////////////////////////////////////////////////////
 // Framework API:
 
-export { getContext, updateContext } from "./store";
+export {
+  getFrameworkContext,
+  setFrameworkContext,
+  updateFrameworkContext,
+} from "./store";
 
-export { useContext } from "./hooks";
+export { useFrameworkContext } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
 // Extension API:

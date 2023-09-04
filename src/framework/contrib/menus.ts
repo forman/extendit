@@ -3,7 +3,7 @@ import {
   type When,
   useContributions,
   whenClauseCompiler,
-  useContext,
+  useFrameworkContext,
 } from "@/core";
 import { useMemo } from "react";
 import { type Command, useCommandsMap } from "./commands";
@@ -123,7 +123,7 @@ export function useMenu(menuId: string) {
   const menuItems = useContributions<ProcessedMenuItem>(menusPoint.id, menuId);
   const commandsMap = useCommandsMap();
   const submenusMap = useSubmenusMap();
-  const ctx = useContext();
+  const ctx = useFrameworkContext();
   return useMemo(() => {
     LOG.debug("Hook 'useMenu' is recomputing");
     return insertGroupSeparators(
