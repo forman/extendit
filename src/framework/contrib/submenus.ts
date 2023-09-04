@@ -5,12 +5,15 @@ import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/submenus");
 
-export interface Submenu {
+export interface JsonSubmenu {
   id: string;
   label: string;
 }
 
+export interface Submenu extends JsonSubmenu {}
+
 const submenuSchema: JSONSchemaType<Submenu> = {
+  $id: "submenu",
   type: "object",
   properties: {
     id: { type: "string" },
@@ -21,6 +24,7 @@ const submenuSchema: JSONSchemaType<Submenu> = {
 };
 
 const schema: JSONSchemaType<Submenu[]> = {
+  $id: "submenus",
   type: "array",
   items: submenuSchema,
 };

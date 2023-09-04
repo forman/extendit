@@ -1,6 +1,7 @@
 export {
   type Command,
   type CommandFn,
+  type JsonCommand,
   useCommands,
   registerCommand,
   executeCommand,

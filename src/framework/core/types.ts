@@ -1,6 +1,5 @@
-import type { JSONSchemaType } from "ajv";
 import type { DisposableLike } from "@/util/disposable";
-import type { JsonObject } from "@/util/json";
+import type { JSONSchemaType } from "ajv";
 
 /**
  * Represents the content of an extension's `package.json` file.
@@ -18,7 +17,8 @@ export interface ExtensionManifest {
   // package.json extension entries
   activationEvents?: string[];
   extensionDependencies?: string[];
-  contributes?: JsonObject;
+  // contributes?: JsonObject;
+  contributes?: Record<string, unknown>;
 
   /**
    * Allows for other package.json entries.

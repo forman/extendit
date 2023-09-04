@@ -21,12 +21,14 @@ interface CommandBase {
   icon?: string;
 }
 
-interface JsonCommand extends CommandBase {
+export interface JsonCommand extends CommandBase {
   enablement?: string;
+  checked?: string;
 }
 
 export interface Command extends CommandBase {
   enablement?: When;
+  checked?: When;
 }
 
 const commandSchema: JSONSchemaType<JsonCommand> = {
@@ -38,6 +40,7 @@ const commandSchema: JSONSchemaType<JsonCommand> = {
     tooltip: { type: "string", nullable: true },
     icon: { type: "string", nullable: true },
     enablement: { type: "string", nullable: true },
+    checked: { type: "string", nullable: true },
   },
   required: ["command"],
   additionalProperties: false,
@@ -53,10 +56,11 @@ function processContribution(commands: JsonCommand[]): Command[] {
 }
 
 function processCommand(command: JsonCommand): Command {
-  const { enablement, ...commandBase } = command;
+  const { enablement, checked, ...commandBase } = command;
   return {
     ...commandBase,
     enablement: enablement ? whenClauseCompiler.compile(enablement) : undefined,
+    checked: checked ? whenClauseCompiler.compile(checked) : undefined,
   } as Command;
 }
 

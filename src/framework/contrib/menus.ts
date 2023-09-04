@@ -1,4 +1,3 @@
-import type { JSONSchemaType } from "ajv";
 import {
   type ContributionPoint,
   type When,
@@ -11,14 +10,18 @@ import { type Command, useCommandsMap } from "./commands";
 import { type Submenu, useSubmenusMap } from "./submenus";
 import { newId } from "@/util/id";
 import * as log from "@/util/log";
+import type { JSONSchemaType } from "ajv";
 
 const LOG = new log.Logger("contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 
 export interface BaseMenuItem {
-  command?: string;
   submenu?: string;
+  command?: string;
+  // Damn, this is what is needed, but it doesn't work with AJV
+  // args?: JsonValue[];
+  args?: (null | boolean | number | string)[];
   label?: string;
   group?: string;
   icon?: string;
@@ -42,6 +45,7 @@ export interface ProcessedMenuItem extends ResolvedMenuItem {
 
 export interface MenuItem extends ResolvedMenuItem {
   disabled?: boolean;
+  checked?: boolean;
 }
 
 type JsonMenusContrib = Record<string, JsonMenuItem[]>;
@@ -50,18 +54,31 @@ type ProcessedMenusContrib = Record<string, ProcessedMenuItem[]>;
 const menuItemSchema: JSONSchemaType<JsonMenuItem> = {
   type: "object",
   properties: {
-    command: { type: "string", nullable: true },
     submenu: { type: "string", nullable: true },
+    command: { type: "string", nullable: true },
+    args: {
+      type: "array",
+      nullable: true,
+      items: {
+        anyOf: [
+          { type: "null", nullable: true },
+          { type: "boolean" },
+          { type: "number" },
+          { type: "integer" },
+          { type: "string" },
+        ],
+      },
+    },
     label: { type: "string", nullable: true },
     group: { type: "string", nullable: true },
     icon: { type: "string", nullable: true },
     when: { type: "string", nullable: true },
   },
-  required: [],
   additionalProperties: false,
+  //required: [],
 };
 
-const schema: JSONSchemaType<JsonMenusContrib> = {
+const schema: JSONSchemaType<Record<string, JsonMenuItem[]>> = {
   type: "object",
   additionalProperties: {
     type: "array",
@@ -103,7 +120,7 @@ export function useMenu(menuId: string) {
         " should be retrieved using hook useCommandPalette()."
     );
   }
-  const menuItems = useContributions<MenuItem>(menusPoint.id, menuId);
+  const menuItems = useContributions<ProcessedMenuItem>(menusPoint.id, menuId);
   const commandsMap = useCommandsMap();
   const submenusMap = useSubmenusMap();
   const ctx = useContext();
@@ -187,15 +204,23 @@ function newMenuItem(
     disabled = !command.enablement(ctx);
   }
 
+  // derive checked
+  let checked: boolean | undefined = undefined;
+  if (command?.checked) {
+    checked = command.checked(ctx);
+  }
+
   return {
     id: processedMenuItem.id,
-    command: processedMenuItem.command,
     submenu: processedMenuItem.submenu,
+    command: processedMenuItem.command,
+    args: processedMenuItem.args,
     group: processedMenuItem.group,
     order: processedMenuItem.order,
     label,
     icon,
     disabled,
+    checked,
   };
 }
 
