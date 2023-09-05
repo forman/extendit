@@ -5,11 +5,12 @@ export {
   useCommands,
   registerCommand,
   executeCommand,
+  commandsPoint,
 } from "./commands";
 
-export { type Submenu, useSubmenus } from "./submenus";
+export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
 
-export { type JsonMenuItem, type MenuItem, useMenu } from "./menus";
+export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
 
 export { type CommandMenuItem, useCommandPalette } from "./command-palette";
 
@@ -19,4 +20,7 @@ export {
   useViews,
   useViewComponent,
   registerViewComponent,
+  viewsPoint,
 } from "./views";
+
+export { registerContributionPoints } from "./register";

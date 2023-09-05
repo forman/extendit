@@ -60,7 +60,7 @@ test("setExtensionStatus", () => {
 });
 
 test("get/updateFrameworkContext", () => {
-  interface Ctx {
+  interface Ctx extends Record<string, unknown> {
     view: string;
     listItem: number;
     listItems: number[];

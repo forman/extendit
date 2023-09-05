@@ -3,15 +3,11 @@ import type { ExtensionContext, ExtensionManifest } from "@/core";
 import {
   activateExtension,
   getExtensionId,
-  registerContributionPoint,
   registerExtension,
   updateFrameworkContext,
 } from "@/core";
 import { registerCommand } from "@/contrib";
-import { viewsPoint } from "@/contrib/views";
-import { submenusPoint } from "@/contrib/submenus";
-import { menusPoint } from "@/contrib/menus";
-import { commandsPoint } from "@/contrib/commands";
+import { registerContributionPoints } from "@/contrib";
 import { updateFrameworkConfig } from "@/core/config";
 
 interface AppState {
@@ -93,10 +89,7 @@ const pathResolver = (path: string) => {
 //log.setLevel(log.LogLevel.OFF);
 
 // Register app-level contribution points
-registerContributionPoint(commandsPoint);
-registerContributionPoint(menusPoint);
-registerContributionPoint(submenusPoint);
-registerContributionPoint(viewsPoint);
+registerContributionPoints();
 
 updateFrameworkConfig({ pathResolver });
 

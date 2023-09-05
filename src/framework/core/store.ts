@@ -12,7 +12,9 @@ const LOG = new Logger("store");
  * @internal
  * @category Extension API
  */
-export interface StoreState<CTX extends object = object> {
+export interface StoreState<
+  CTX extends Record<string, unknown> = Record<string, unknown>,
+> {
   extensions: Record<string, Extension>;
   extensionContexts: Record<string, ExtensionContextImpl>;
   contributionPoints: Record<string, ContributionPoint>;
@@ -210,9 +212,9 @@ export function getFrameworkContext<CTX extends object = object>(): CTX {
  * @category Framework API
  * @param contextUpdate A partial context update.
  */
-export function updateFrameworkContext<CTX extends object = object>(
-  contextUpdate: Partial<CTX> | ((context: CTX) => Partial<CTX>)
-) {
+export function updateFrameworkContext<
+  CTX extends Record<string, unknown> = Record<string, unknown>,
+>(contextUpdate: Partial<CTX> | ((context: CTX) => Partial<CTX>)) {
   if (contextUpdate instanceof Function) {
     contextUpdate = contextUpdate(frameworkStore.getState().context as CTX);
   }
@@ -228,9 +230,9 @@ export function updateFrameworkContext<CTX extends object = object>(
  * @category Framework API
  * @param context The new context object.
  */
-export function setFrameworkContext<CTX extends object = object>(
-  context: CTX | ((context: CTX) => CTX)
-) {
+export function setFrameworkContext<
+  CTX extends Record<string, unknown> = Record<string, unknown>,
+>(context: CTX | ((context: CTX) => CTX)) {
   if (context instanceof Function) {
     context = context(frameworkStore.getState().context as CTX);
   }
