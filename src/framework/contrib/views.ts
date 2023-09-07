@@ -93,34 +93,47 @@ export function registerViewComponent(
   return registerCodeContribution(viewsPoint.id, viewId, component);
 }
 
+interface ViewComponentState {
+  viewId?: string | null;
+  component: React.JSX.Element | null;
+  error?: unknown;
+}
+
+const initState: ViewComponentState = {
+  viewId: null,
+  component: null,
+};
 export function useViewComponent(
   viewId: string | null
 ): React.JSX.Element | null {
-  const [viewComponent, setViewComponent] = useState<React.JSX.Element | null>(
-    null
-  );
-  const [error, setError] = useState<unknown>(null);
+  const [state, setState] = useState<ViewComponentState>(initState);
   useEffect(() => {
     LOG.debug("Hook 'useViewComponent' is recomputing");
-
-    if (!viewComponent && !error && viewId) {
+    if (viewId) {
+      if (viewId === state.viewId && (state.component || state.error)) {
+        // If we have component, ok
+        // If we have error, don't try again
+        return;
+      }
       getCodeContribution<React.JSX.Element>(
         viewsPoint as CodeContributionPoint, // FIXME!
         viewId
       )
-        .then((vc) => {
-          setViewComponent(() => vc);
+        .then((component) => {
+          setState({ viewId, component });
         })
-        .catch((e: unknown) => {
+        .catch((error: unknown) => {
           LOG.error(
             "Hook 'useViewComponent' failed due to following error:",
-            e
+            error
           );
-          setError(e);
+          setState({ viewId, component: null, error });
         });
+    } else {
+      setState(initState);
     }
-  }, [viewId, viewComponent, error]);
-  return viewComponent;
+  }, [viewId, state.component, state.viewId, state.error]);
+  return viewId === state.viewId ? state.component : null;
 }
 
 export interface ViewComponentProps {
