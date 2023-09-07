@@ -66,7 +66,6 @@ test("get/updateFrameworkContext", () => {
     listItems: number[];
   }
   expect(getFrameworkContext<Ctx>()).toEqual({});
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateFrameworkContext<Ctx>({
     view: "dataSources",
     listItem: 3,

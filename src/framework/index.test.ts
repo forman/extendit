@@ -27,6 +27,7 @@ test("Framework API is complete", () => {
     "useContributions",
     "useExtensions",
     "useFrameworkContext",
+    "useFrameworkContextValue",
     "whenClauseCompiler",
   ]);
 });

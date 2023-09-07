@@ -60,6 +60,26 @@ export function useContributionPoints(): ContributionPoint[] {
  * @category React Hooks
  * @returns framework's context object
  */
-export function useFrameworkContext() {
-  return useZustandStore(frameworkStore, (state) => state.context);
+export function useFrameworkContext<
+  CTX extends Record<string, unknown> = Record<string, unknown>,
+>(): CTX {
+  return useZustandStore(frameworkStore, (state) => state.context as CTX);
+}
+
+/**
+ * A React hook that provides access to a subset of the
+ * framework's context object.
+ *
+ * @category React Hooks
+ * @param selector - a selector
+ * @returns result of the selector applied to the framework's context object
+ */
+export function useFrameworkContextValue<
+  C extends Record<string, unknown> = Record<string, unknown>,
+  V = unknown,
+>(selector: (ctx: C) => unknown): V {
+  return useZustandStore(
+    frameworkStore,
+    (state) => selector(state.context as C) as V
+  );
 }

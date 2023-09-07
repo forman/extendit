@@ -24,22 +24,21 @@ export default defineConfig({
   publicDir: false,
   build: {
     lib: {
+      // This is also the default
+      formats: ["es", "cjs"],
       // Could also be a dictionary or array of multiple entry points
-      entry: [
-        resolve(__dirname, "src/framework"),
-        resolve(__dirname, "src/framework/contrib"),
-        resolve(__dirname, "src/framework/util"),
-      ],
+      entry: {
+        "contrib/index": resolve(__dirname, "src/framework/contrib/index.ts"),
+        "util/index": resolve(__dirname, "src/framework/util/index.ts"),
+        index: resolve(__dirname, "src/framework/index.ts"),
+      },
+      // Only used for formats "umd" and "iife"
       name: "ExtendMe!",
+      // "[name]" will resolve to keys from "entry" object,
       // the proper extensions will be added
       fileName: "[name]",
     },
     rollupOptions: {
-      input: {
-        index: "src/framework/index.ts",
-        "contrib/index": "src/framework/contrib/index.ts",
-        "util/index": "src/framework/util/index.ts",
-      },
       // make sure to externalize deps that shouldn't be bundled
       // into the library
       external: [
@@ -86,7 +85,7 @@ function listExcludedFiles(dirPath: string): string[] {
     .map((file) => join(dirPath, file));
 
   console.log(`Excluding ${excludedFiles.length} files.`);
-  console.log("Excluded files:", excludedFiles);
+  //console.log("Excluded files:", excludedFiles);
   return excludedFiles;
 }
 

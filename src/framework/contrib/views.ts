@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { JSONSchemaType } from "ajv";
 import {
   type CodeContributionPoint,
+  type When,
   getCodeContribution,
   registerCodeContribution,
   useContributions,
+  useFrameworkContext,
+  whenClauseCompiler,
 } from "@/core";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
@@ -17,20 +20,33 @@ export interface View {
   icon?: string;
 }
 
-const viewSchema: JSONSchemaType<View> = {
+export interface JsonView extends View {
+  when?: string;
+}
+
+interface ProcessedView extends View {
+  when?: When;
+}
+
+const viewSchema: JSONSchemaType<JsonView> = {
   type: "object",
   properties: {
     id: { type: "string" },
     title: { type: "string", nullable: true },
     icon: { type: "string", nullable: true },
+    when: { type: "string", nullable: true },
   },
   required: ["id"],
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<View[]> = {
-  type: "array",
-  items: viewSchema,
+const schema: JSONSchemaType<Record<string, JsonView[]>> = {
+  type: "object",
+  additionalProperties: {
+    type: "array",
+    items: viewSchema,
+  },
+  required: [],
 };
 
 /**
@@ -40,17 +56,40 @@ const schema: JSONSchemaType<View[]> = {
  *
  * @category UI Contributions API
  */
-export const viewsPoint: CodeContributionPoint<View[]> = {
+export const viewsPoint: CodeContributionPoint<Record<string, View[]>> = {
   id: "views",
   schema,
+  processContribution,
   idKey: "id",
   activationEvent: "onView:${id}",
 };
 
+function processContribution(
+  views: Record<string, JsonView[]>
+): Record<string, ProcessedView[]> {
+  const processedContributions: Record<string, ProcessedView[]> = {};
+  Object.entries(views).forEach(([k, v]) => {
+    processedContributions[k] = v.map((view) => {
+      const { when: whenClause, ...rest } = view;
+      let when: When | undefined = undefined;
+      if (whenClause) {
+        when = whenClauseCompiler.compile(whenClause);
+      }
+      return { ...rest, when };
+    });
+  });
+  return processedContributions;
+}
+
 export type ViewComponent = React.ComponentType;
 
-export function useViews() {
-  return useContributions<View>(viewsPoint.id);
+export function useViews(containerId: string): View[] {
+  const views = useContributions<ProcessedView>(viewsPoint.id, containerId);
+  const ctx = useFrameworkContext();
+  return useMemo(() => {
+    LOG.debug("Hook 'useViews' is recomputing");
+    return views.filter((view) => (view.when ? view.when(ctx) : false));
+  }, [views, ctx]);
 }
 
 export function registerViewComponent(
@@ -60,7 +99,7 @@ export function registerViewComponent(
   return registerCodeContribution(viewsPoint.id, viewId, component);
 }
 
-export function useViewComponent(viewId: string): ViewComponent | null {
+export function useViewComponent(viewId: string | null): ViewComponent | null {
   const [viewComponent, setViewComponent] = useState<ViewComponent | null>(
     null
   );
@@ -68,7 +107,7 @@ export function useViewComponent(viewId: string): ViewComponent | null {
   useEffect(() => {
     LOG.debug("Hook 'useViewComponent' is recomputing");
 
-    if (viewComponent === null && error === null) {
+    if (!viewComponent && !error && viewId) {
       getCodeContribution<ViewComponent>(
         viewsPoint as CodeContributionPoint, // FIXME!
         viewId

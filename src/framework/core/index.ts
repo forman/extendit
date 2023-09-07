@@ -7,7 +7,7 @@ export {
   updateFrameworkContext,
 } from "./store";
 
-export { useFrameworkContext } from "./hooks";
+export { useFrameworkContext, useFrameworkContextValue } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
 // Extension API:

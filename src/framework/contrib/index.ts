@@ -15,6 +15,7 @@ export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
 export { type CommandMenuItem, useCommandPalette } from "./command-palette";
 
 export {
+  type JsonView,
   type View,
   type ViewComponent,
   useViews,

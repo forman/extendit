@@ -4,7 +4,7 @@ import { useAppStore } from "./app-store";
 
 function ViewContainer() {
   const selectedViewId = useAppStore((s) => s.selectedViewId);
-  const views = useViews();
+  const views = useViews("main");
 
   const selectedView = useMemo(
     () => views.find((v) => v.id === selectedViewId) ?? null,

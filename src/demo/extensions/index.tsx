@@ -30,12 +30,14 @@ const manifest1: ExtensionManifest = {
         },
       ],
     },
-    views: [
-      {
-        id: "ex1.foo",
-        title: "Foo 1",
-      },
-    ],
+    views: {
+      main: [
+        {
+          id: "ex1.foo",
+          title: "Foo 1",
+        },
+      ],
+    },
   },
 };
 
@@ -69,12 +71,14 @@ const manifest2: ExtensionManifest = {
         },
       ],
     },
-    views: [
-      {
-        id: "ex2.bar",
-        title: "Bar 2",
-      },
-    ],
+    views: {
+      main: [
+        {
+          id: "ex2.bar",
+          title: "Bar 2",
+        },
+      ],
+    },
   },
 };
 
@@ -108,12 +112,14 @@ const manifest3: ExtensionManifest = {
         },
       ],
     },
-    views: [
-      {
-        id: "ex3.pippo",
-        title: "Pippo 3",
-      },
-    ],
+    views: {
+      main: [
+        {
+          id: "ex3.pippo",
+          title: "Pippo 3",
+        },
+      ],
+    },
   },
 };
 
