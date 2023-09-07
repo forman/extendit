@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { type View, useViews, useViewComponent } from "@/contrib";
+import { useViews, ViewComponent } from "@/contrib";
 import { useAppStore } from "./app-store";
 
 function ViewContainer() {
@@ -22,23 +22,11 @@ function ViewContainer() {
       </p>
       <div>
         {selectedView && (
-          <ViewComponentContainer key={selectedViewId} view={selectedView} />
+          <ViewComponent key={selectedViewId} viewId={selectedView.id} />
         )}
       </div>
     </div>
   );
-}
-
-interface ViewComponentContainerProps {
-  view: View;
-}
-
-function ViewComponentContainer({ view }: ViewComponentContainerProps) {
-  const ViewComponent = useViewComponent(view.id);
-  if (ViewComponent !== null) {
-    return <ViewComponent key={view.id} />;
-  }
-  return null;
 }
 
 export default ViewContainer;

@@ -26,6 +26,7 @@
 * Implement remaining unit-tests
 * Find out how to test React hooks using `vitest`
 * Enhance the demo:
+  - Add explanations what's going on
   - Add submenus demo
 * Deploy package `extend-me`
 

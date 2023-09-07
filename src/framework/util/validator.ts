@@ -46,7 +46,6 @@ export function validateJson<T = unknown>(
       messageDetails += ` for ${valueName}`;
     }
     const errors = validate.errors;
-    console.log("------------------------>", errors);
     if (errors && errors.length) {
       const firstError = errors[0];
       const firstMessage = firstError.message;

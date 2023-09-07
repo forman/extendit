@@ -137,17 +137,13 @@ export function useMenu(menuId: string) {
 function processJsonMenuItem(jsonMenuItem: JsonMenuItem): ProcessedMenuItem {
   const [group, order] = parseGroupAndOrder(jsonMenuItem.group);
   const label = jsonMenuItem.label ?? "";
-  let when: When | undefined = undefined;
-  if (jsonMenuItem.when) {
-    when = whenClauseCompiler.compile(jsonMenuItem.when);
-  }
   return {
     ...jsonMenuItem,
     id: newId(),
+    when: whenClauseCompiler.compile(jsonMenuItem.when),
     label,
     group,
     order,
-    when,
   };
 }
 
@@ -157,16 +153,9 @@ function newMenuItems(
   submenusMap: Map<string, Submenu>,
   ctx: Record<string, unknown>
 ): MenuItem[] {
-  const menuItems: MenuItem[] = [];
-  processedMenuItems.forEach((processedMenuItem) => {
-    const excluded = processedMenuItem.when && !processedMenuItem.when(ctx);
-    if (!excluded) {
-      menuItems.push(
-        newMenuItem(processedMenuItem, commandsMap, submenusMap, ctx)
-      );
-    }
-  });
-  return menuItems;
+  return processedMenuItems
+    .filter((item) => (item.when ? item.when(ctx) : true))
+    .map((item) => newMenuItem(item, commandsMap, submenusMap, ctx));
 }
 
 function newMenuItem(

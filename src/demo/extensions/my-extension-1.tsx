@@ -15,5 +15,5 @@ export function activate(ctx: ExtensionContext) {
     await executeCommand("app.selectView", "ex1.foo").then();
   });
 
-  registerViewComponent("ex1.foo", MyEx1View);
+  registerViewComponent("ex1.foo", <MyEx1View />);
 }

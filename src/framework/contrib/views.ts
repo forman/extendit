@@ -71,36 +71,32 @@ function processContribution(
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
-      let when: When | undefined = undefined;
-      if (whenClause) {
-        when = whenClauseCompiler.compile(whenClause);
-      }
-      return { ...rest, when };
+      return { ...rest, when: whenClauseCompiler.compile(whenClause) };
     });
   });
   return processedContributions;
 }
-
-export type ViewComponent = React.ComponentType;
 
 export function useViews(containerId: string): View[] {
   const views = useContributions<ProcessedView>(viewsPoint.id, containerId);
   const ctx = useFrameworkContext();
   return useMemo(() => {
     LOG.debug("Hook 'useViews' is recomputing");
-    return views.filter((view) => (view.when ? view.when(ctx) : false));
+    return views.filter((view) => (view.when ? view.when(ctx) : true));
   }, [views, ctx]);
 }
 
 export function registerViewComponent(
   viewId: string,
-  component: ViewComponent
+  component: React.JSX.Element
 ): Disposable {
   return registerCodeContribution(viewsPoint.id, viewId, component);
 }
 
-export function useViewComponent(viewId: string | null): ViewComponent | null {
-  const [viewComponent, setViewComponent] = useState<ViewComponent | null>(
+export function useViewComponent(
+  viewId: string | null
+): React.JSX.Element | null {
+  const [viewComponent, setViewComponent] = useState<React.JSX.Element | null>(
     null
   );
   const [error, setError] = useState<unknown>(null);
@@ -108,7 +104,7 @@ export function useViewComponent(viewId: string | null): ViewComponent | null {
     LOG.debug("Hook 'useViewComponent' is recomputing");
 
     if (!viewComponent && !error && viewId) {
-      getCodeContribution<ViewComponent>(
+      getCodeContribution<React.JSX.Element>(
         viewsPoint as CodeContributionPoint, // FIXME!
         viewId
       )
@@ -116,10 +112,21 @@ export function useViewComponent(viewId: string | null): ViewComponent | null {
           setViewComponent(() => vc);
         })
         .catch((e: unknown) => {
-          console.error(e);
+          LOG.error(
+            "Hook 'useViewComponent' failed due to following error:",
+            e
+          );
           setError(e);
         });
     }
   }, [viewId, viewComponent, error]);
   return viewComponent;
+}
+
+export interface ViewComponentProps {
+  viewId: string;
+}
+
+export function ViewComponent({ viewId }: ViewComponentProps) {
+  return useViewComponent(viewId);
 }

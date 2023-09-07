@@ -59,8 +59,8 @@ function processCommand(command: JsonCommand): Command {
   const { enablement, checked, ...commandBase } = command;
   return {
     ...commandBase,
-    enablement: enablement ? whenClauseCompiler.compile(enablement) : undefined,
-    checked: checked ? whenClauseCompiler.compile(checked) : undefined,
+    enablement: whenClauseCompiler.compile(enablement),
+    checked: whenClauseCompiler.compile(checked),
   } as Command;
 }
 

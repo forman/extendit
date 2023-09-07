@@ -53,7 +53,6 @@ test("import() can load JSON", async () => {
   const manifestModule = (await import(
     "./extensions/exports-baz-api/package.json"
   )) as unknown;
-  // console.log(manifest)
   expect(manifestModule).toHaveProperty("default");
   expect((manifestModule as Record<string, unknown>).default).toEqual({
     provider: "pippo",

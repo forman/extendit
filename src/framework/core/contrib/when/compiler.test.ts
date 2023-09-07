@@ -14,6 +14,7 @@ test("WhenClauseCompiler caches", () => {
   const when1 = compiler.compile(whenClause);
   const when2 = compiler.compile(whenClause);
   const when3 = compiler.compile(whenClause);
+  expect(when1).toBeInstanceOf(Function);
   expect(when1).toBe(when2);
   expect(when1).toBe(when3);
 });
@@ -23,18 +24,18 @@ test("WhenClauseCompiler deals with name missing in context", () => {
 
   let when: When;
 
-  when = compiler.compile("view == 'datasets'");
+  when = compiler.compile("view == 'datasets'")!;
   expect(when({ view: "dataSources" })).toBe(false);
 
-  when = compiler.compile("view == datasets");
+  when = compiler.compile("view == datasets")!;
   expect(when({ view: "dataSources" })).toBe(false);
 
-  when = compiler.compile("view == 'dataSources'");
+  when = compiler.compile("view == 'dataSources'")!;
   expect(when({ view: "dataSources" })).toBe(true);
 
-  when = compiler.compile("view == dataSources");
+  when = compiler.compile("view == dataSources")!;
   expect(when({ view: "dataSources" })).toBe(true);
 
-  when = compiler.compile("dataSources == 'dataSources'");
+  when = compiler.compile("dataSources == 'dataSources'")!;
   expect(when({})).toBe(true);
 });

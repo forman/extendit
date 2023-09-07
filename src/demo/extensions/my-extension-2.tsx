@@ -15,5 +15,5 @@ export function activate(ctx: ExtensionContext) {
     void executeCommand("app.selectView", "ex2.bar");
   });
 
-  registerViewComponent("ex2.bar", MyEx2View);
+  registerViewComponent("ex2.bar", <MyEx2View />);
 }

@@ -4,6 +4,5 @@ import * as expr from "./index";
 test("Framework Util Expression API is complete", () => {
   const api = Object.getOwnPropertyNames(expr);
   api.sort();
-  // console.log(api)
   expect(api).toEqual(["Node", "Parser", "ParserError"]);
 });

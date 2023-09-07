@@ -32,7 +32,10 @@ export class WhenClauseCompiler {
    * @param whenClause The when-clause / expression
    * @returns a function that executes the when-clause
    */
-  compile(whenClause: string): When {
+  compile(whenClause: string | undefined | null): When | undefined {
+    if (!whenClause) {
+      return undefined;
+    }
     const cachedWhenFn = this.cache.get(whenClause);
     if (cachedWhenFn) {
       return cachedWhenFn;
