@@ -31,14 +31,14 @@
     "./contrib": {
       "types": "./dist/contrib/index.d.ts",
       "require": "./dist/contrib/index.cjs",
-      "module": "./dist/contrib.js",
-      "default": "./dist/contrib.js"
+      "module": "./dist/contrib/index.js",
+      "default": "./dist/contrib/index.js"
     },
     "./util": {
       "types": "./dist/util/index.d.ts",
       "require": "./dist/util/index.cjs",
-      "module": "./dist/util.js",
-      "default": "./dist/util.js"
+      "module": "./dist/util/index.js",
+      "default": "./dist/util/index.js"
     }
   },
   "scripts": {
