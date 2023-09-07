@@ -267,11 +267,11 @@ function parseGroupAndOrder(group: string | undefined): [string, number] {
   let order = 0;
   const index = group.lastIndexOf("@");
   if (index >= 0) {
-    group = group.slice(0, index);
     order = Number.parseInt(group.slice(index + 1));
     if (Number.isNaN(order)) {
       order = 0;
     }
+    group = group.slice(0, index);
   }
   return [group, order];
 }
