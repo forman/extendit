@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useStore as useZustandStore } from "zustand";
 import type { ContributionPoint, Extension } from "./types";
-import { frameworkStore, type StoreState } from "./store";
+import { frameworkStore, type FrameworkState } from "./store";
 import { getContributionsFromExtensions } from "./contrib/point/get";
 
 /**
@@ -12,7 +12,7 @@ import { getContributionsFromExtensions } from "./contrib/point/get";
  * @param selector - Selector function that picks data from the store
  * @returns Data selected from the framework store
  */
-export function useStore<U>(selector: (state: StoreState) => U): U {
+export function useStore<U>(selector: (state: FrameworkState) => U): U {
   return useZustandStore(frameworkStore, selector);
 }
 

@@ -7,12 +7,14 @@ import { Logger } from "@/util/log";
 const LOG = new Logger("store");
 
 /**
- * Represents the framework store's state.
+ * Represents the framework's reactive state.
  *
- * @internal
- * @category Extension API
+ * This is unstable API, it may change any time.
+ * use at your own risk.
+ *
+ * @category Framework API
  */
-export interface StoreState<
+export interface FrameworkState<
   CTX extends Record<string, unknown> = Record<string, unknown>,
 > {
   extensions: Record<string, Extension>;
@@ -26,15 +28,27 @@ export interface StoreState<
  * The framework's store instance.
  *
  * @internal
- * @category Extension API
+ * @category Framework API
  */
-export const frameworkStore = createStore<StoreState>()(() => ({
+export const frameworkStore = createStore<FrameworkState>()(() => ({
   extensions: {},
   extensionContexts: {},
   contributionPoints: {},
   codeContributions: {},
   context: {},
 }));
+
+/**
+ * Gets a snapshot of the framework's state.
+ *
+ * This is unstable API, it may change any time.
+ * use at your own risk.
+ *
+ * @category Framework API
+ */
+export function getFrameworkState(): FrameworkState {
+  return frameworkStore.getState();
+}
 
 /**
  * Get the extension for the given extension identifier.
@@ -242,19 +256,19 @@ export function setFrameworkContext<
 //////////////////////////////////////////////////
 // Utilities
 
-type StateKeysWithoutContext = keyof Omit<StoreState, "context">;
+type StateKeysWithoutContext = keyof Omit<FrameworkState, "context">;
 
 export function getStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string
-): StoreState[K][string] {
-  return frameworkStore.getState()[key][id] as StoreState[K][string];
+): FrameworkState[K][string] {
+  return frameworkStore.getState()[key][id] as FrameworkState[K][string];
 }
 
 export function setStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string,
-  value: StoreState[K][string]
+  value: FrameworkState[K][string]
 ) {
   frameworkStore.setState((state) => setStateRecord(state, key, id, value));
 }
@@ -267,19 +281,19 @@ export function deleteStoreRecord<K extends StateKeysWithoutContext>(
 }
 
 function setStateRecord<K extends StateKeysWithoutContext>(
-  state: StoreState,
+  state: FrameworkState,
   key: K,
   id: string,
-  value: StoreState[K][string]
-): Partial<StoreState> {
+  value: FrameworkState[K][string]
+): Partial<FrameworkState> {
   return { [key]: { ...state[key], [id]: value } };
 }
 
 function deleteStateRecord<K extends StateKeysWithoutContext>(
-  state: StoreState,
+  state: FrameworkState,
   key: K,
   id: string
-): Partial<StoreState> {
+): Partial<FrameworkState> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { [id]: _, ...rest } = state[key];
   return { [key]: { ...rest } };

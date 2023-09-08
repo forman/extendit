@@ -185,17 +185,14 @@ function newMenuItem(
     icon = command.icon;
   }
 
-  // derive disabled
-  let disabled: boolean | undefined;
-  if (command?.enablement) {
-    disabled = !command.enablement(ctx);
-  }
-
-  // derive checked
-  let checked: boolean | undefined = undefined;
-  if (command?.checked) {
-    checked = command.checked(ctx);
-  }
+  // Think about keeping such code for debugging
+  // e.g., use process.env
+  /*if (command?.checked) {
+    LOG.debug(
+      `Command ${command.command}: ${command.checked.clause} -->`,
+      command.checked(ctx)
+    );
+  }*/
 
   return {
     id: processedMenuItem.id,
@@ -204,10 +201,10 @@ function newMenuItem(
     args: processedMenuItem.args,
     group: processedMenuItem.group,
     order: processedMenuItem.order,
+    disabled: command?.enablement ? !command.enablement(ctx) : undefined,
+    checked: command?.checked ? command.checked(ctx) : undefined,
     label,
     icon,
-    disabled,
-    checked,
   };
 }
 

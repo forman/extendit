@@ -2,6 +2,8 @@
 // Framework API:
 
 export {
+  type FrameworkState,
+  getFrameworkState,
   getFrameworkContext,
   setFrameworkContext,
   updateFrameworkContext,
