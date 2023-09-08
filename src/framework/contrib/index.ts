@@ -19,7 +19,6 @@ export {
   type View,
   type ViewComponentProps,
   ViewComponent,
-  getViews,
   useViews,
   useViewComponent,
   registerViewComponent,
