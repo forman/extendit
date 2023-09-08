@@ -13,6 +13,9 @@ import {
 } from "./listeners";
 import { ExtensionContextImpl } from "./context";
 import { deactivateExtension } from "./deactivate";
+import { Logger } from "@/util/log";
+
+const LOG = new Logger("extension/register");
 
 /**
  * Registers a new extension given by the extension manifest.
@@ -35,6 +38,7 @@ export function registerExtension(
   const extension = newExtension(manifest);
   const extensionId = extension.id;
   const ctx = new ExtensionContextImpl(extensionId);
+  LOG.debug(`registerExtension`, extensionId);
   if (pathResolver) ctx.setPathResolver(pathResolver);
   if (module) ctx.setModule(module);
   (manifest.activationEvents ?? []).forEach((event) =>
@@ -44,6 +48,7 @@ export function registerExtension(
   setStoreRecord("extensionContexts", extensionId, ctx);
   emitExtensionRegistered(extension);
   return new Disposable(() => {
+    LOG.debug(`deregisterExtension`, extensionId);
     emitExtensionWillUnregister(extension);
     void deactivateExtension(extensionId).then(() => {
       ctx.dispose();

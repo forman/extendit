@@ -64,7 +64,7 @@ export class LogLevel {
   ) {}
 }
 
-let logLevel: LogLevel = LogLevel.ALL;
+let logLevel: LogLevel = import.meta.env.PROD ? LogLevel.WARN : LogLevel.ALL;
 
 /**
  * Gets the global log level.
