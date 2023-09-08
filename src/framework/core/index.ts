@@ -1,17 +1,4 @@
 //////////////////////////////////////////////////////////////////////////
-// Framework API:
-
-export {
-  type FrameworkState,
-  getFrameworkState,
-  getFrameworkContext,
-  setFrameworkContext,
-  updateFrameworkContext,
-} from "./store";
-
-export { useFrameworkContext, useFrameworkContextValue } from "./hooks";
-
-//////////////////////////////////////////////////////////////////////////
 // Extension API:
 // Use this API in your application to manage extensions.
 
@@ -58,7 +45,6 @@ export {
   WhenClauseCompiler,
   whenClauseCompiler,
 } from "./contrib/when/compiler";
-export { executeWhen } from "./contrib/when/execute";
 
 //////////////////////////////////////////////////////////////////////////
 // Add extension listener that processes extension contributions

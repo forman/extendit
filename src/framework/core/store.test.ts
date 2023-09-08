@@ -2,15 +2,12 @@ import { expect, test } from "vitest";
 import { registerExtension } from "@/core/extension/register";
 import { newTestManifest } from "@/test/testing";
 import {
-  getFrameworkContext,
   getExtension,
   getExtensionContext,
   getStoreRecord,
   deleteStoreRecord,
   setExtensionStatus,
   setStoreRecord,
-  updateFrameworkContext,
-  setFrameworkContext,
 } from "./store";
 
 test("getExtension with undefined extension", () => {
@@ -57,53 +54,6 @@ test("setExtensionStatus", () => {
   expect(extension.reasons![0]).toBe(error);
 
   disposable.dispose();
-});
-
-test("get/updateFrameworkContext", () => {
-  interface Ctx extends Record<string, unknown> {
-    view: string;
-    listItem: number;
-    listItems: number[];
-  }
-  expect(getFrameworkContext<Ctx>()).toEqual({});
-  updateFrameworkContext<Ctx>({
-    view: "dataSources",
-    listItem: 3,
-    listItems: [1, 2, 3],
-  });
-  expect(getFrameworkContext<Ctx>()).toEqual({
-    view: "dataSources",
-    listItem: 3,
-    listItems: [1, 2, 3],
-  });
-  updateFrameworkContext<Ctx>({
-    listItem: 2,
-  });
-  expect(getFrameworkContext<Ctx>()).toEqual({
-    view: "dataSources",
-    listItem: 2,
-    listItems: [1, 2, 3],
-  });
-  updateFrameworkContext<Ctx>((ctx) => ({
-    listItem: 13,
-    listItems: [...ctx.listItems, 13],
-  }));
-  expect(getFrameworkContext<Ctx>()).toEqual({
-    view: "dataSources",
-    listItem: 13,
-    listItems: [1, 2, 3, 13],
-  });
-});
-
-test("get/setFrameworkContext", () => {
-  setFrameworkContext({ foo: 12 });
-  expect(getFrameworkContext()).toEqual({ foo: 12 });
-
-  setFrameworkContext(() => ({ bar: 2 }));
-  expect(getFrameworkContext()).toEqual({ bar: 2 });
-
-  setFrameworkContext((ctx) => ({ ...ctx, foo: 13 }));
-  expect(getFrameworkContext()).toEqual({ bar: 2, foo: 13 });
 });
 
 test("add and remove store record", () => {

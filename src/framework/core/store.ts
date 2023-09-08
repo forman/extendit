@@ -14,14 +14,11 @@ const LOG = new Logger("store");
  *
  * @category Framework API
  */
-export interface FrameworkState<
-  CTX extends Record<string, unknown> = Record<string, unknown>,
-> {
+export interface FrameworkState {
   extensions: Record<string, Extension>;
   extensionContexts: Record<string, ExtensionContextImpl>;
   contributionPoints: Record<string, ContributionPoint>;
   codeContributions: Record<string, unknown>;
-  context: CTX;
 }
 
 /**
@@ -35,7 +32,6 @@ export const frameworkStore = createStore<FrameworkState>()(() => ({
   extensionContexts: {},
   contributionPoints: {},
   codeContributions: {},
-  context: {},
 }));
 
 /**
@@ -208,49 +204,6 @@ export function getExtensionContext(
  */
 export function getContributionPoints(): ContributionPoint[] {
   return Object.values(frameworkStore.getState().contributionPoints);
-}
-
-/**
- * Get the framework's context object.
- * @category Framework API
- */
-export function getFrameworkContext<CTX extends object = object>(): CTX {
-  return frameworkStore.getState().context as CTX;
-}
-
-/**
- * Update the framework's context object.
- * `contextUpdate` is merged into current context at the root level
- * of the context object.
- *
- * @category Framework API
- * @param contextUpdate A partial context update.
- */
-export function updateFrameworkContext<
-  CTX extends Record<string, unknown> = Record<string, unknown>,
->(contextUpdate: Partial<CTX> | ((context: CTX) => Partial<CTX>)) {
-  if (contextUpdate instanceof Function) {
-    contextUpdate = contextUpdate(frameworkStore.getState().context as CTX);
-  }
-  frameworkStore.setState((state) => ({
-    context: { ...state.context, ...contextUpdate },
-  }));
-}
-
-/**
- * Set (replace) the framework's context object by a shallow copy of the
- * given new context object.
- *
- * @category Framework API
- * @param context The new context object.
- */
-export function setFrameworkContext<
-  CTX extends Record<string, unknown> = Record<string, unknown>,
->(context: CTX | ((context: CTX) => CTX)) {
-  if (context instanceof Function) {
-    context = context(frameworkStore.getState().context as CTX);
-  }
-  frameworkStore.setState({ context: { ...context } });
 }
 
 //////////////////////////////////////////////////
