@@ -13,7 +13,11 @@ const LOG = new log.Logger("contrib/when");
  *
  * @category Extension Contribution API
  */
-export type When = (ctx: Record<string, unknown>) => boolean;
+export interface When {
+  (ctx: Record<string, unknown>): boolean;
+  /** The source when-clause expression. */
+  clause: string;
+}
 
 /**
  * A compiler for when-clauses.
@@ -49,6 +53,7 @@ export class WhenClauseCompiler {
           return false;
         }
       };
+      whenFn["clause"] = whenClause;
       this.cache.set(whenClause, whenFn);
       return whenFn;
     }
