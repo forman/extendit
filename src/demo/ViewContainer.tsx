@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useViews, ViewComponent } from "@/contrib";
-import { useAppStore } from "./app-store";
+import { useAppContext, useAppStore } from "./app-store";
 
 function ViewContainer() {
-  const selectedViewId = useAppStore((s) => s.selectedViewId);
-  const views = useViews("main");
+  const selectedViewId = useAppStore((s) => s.viewId);
+  const views = useViews("main", useAppContext());
 
   const selectedView = useMemo(
     () => views.find((v) => v.id === selectedViewId) ?? null,

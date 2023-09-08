@@ -15,7 +15,7 @@ const manifest1: ExtensionManifest = {
       {
         command: "ex1.foo",
         title: "Show Foo 1",
-        enablement: "view != 'ex1.foo'",
+        enablement: "viewId != 'ex1.foo'",
       },
     ],
     menus: {
@@ -56,7 +56,7 @@ const manifest2: ExtensionManifest = {
       {
         command: "ex2.bar",
         title: "Show Bar 2",
-        enablement: "view != 'ex2.bar'",
+        enablement: "viewId != 'ex2.bar'",
       },
     ],
     menus: {
@@ -97,7 +97,7 @@ const manifest3: ExtensionManifest = {
       {
         command: "ex3.pippo",
         title: "Show Pippo 3",
-        enablement: "view != 'ex3.pippo'",
+        enablement: "viewId != 'ex3.pippo'",
       },
     ],
     menus: {

@@ -1,33 +1,33 @@
 import { create } from "zustand";
 import type { ExtensionContext, ExtensionManifest } from "@/core";
-import {
-  activateExtension,
-  getExtensionId,
-  registerExtension,
-  updateFrameworkContext,
-} from "@/core";
+import { activateExtension, getExtensionId, registerExtension } from "@/core";
 import { registerCommand } from "@/contrib";
 import { registerContributionPoints } from "@/contrib";
 import { updateFrameworkConfig } from "@/core/config";
 
-interface AppState {
-  selectedViewId: string | null;
-  // selectView(selectedViewId: string | null): void;
+export interface AppState {
+  viewId: string | null;
 }
 
-export const useAppStore = create<AppState>()(() => ({
-  selectedViewId: null,
-  // selectView: (selectedViewId: string | null) => set(() => ({ selectedViewId })),
+export interface AppMethods {
+  selectView(viewId: string | null): void;
+}
+
+export const useAppStore = create<AppState & AppMethods>()((set) => ({
+  viewId: null,
+  selectView: (viewId: string | null) => set({ viewId }),
 }));
 
-function selectView(selectedViewId: string | null) {
-  useAppStore.setState(() => ({ selectedViewId }));
-  updateFrameworkContext({ view: useAppStore.getState().selectedViewId });
+export function useAppContext(): Record<string, unknown> {
+  return useAppStore() as unknown as Record<string, unknown>;
+}
+
+function selectView(viewId: string | null) {
+  useAppStore.getState().selectView(viewId);
 }
 
 function clearView() {
-  useAppStore.setState(() => ({ selectedViewId: null }));
-  updateFrameworkContext({ view: null });
+  useAppStore.getState().selectView(null);
 }
 
 // The app's manifest.
@@ -68,10 +68,6 @@ function activate(ctx: ExtensionContext) {
   ctx.subscriptions.push(registerCommand("app.selectView", selectView));
 
   ctx.subscriptions.push(registerCommand("app.clearView", clearView));
-
-  ctx.subscriptions.push(
-    registerCommand("app.updateContext", updateFrameworkContext)
-  );
 }
 
 const pathResolver = (path: string) => {

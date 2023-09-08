@@ -6,7 +6,6 @@ import {
   getCodeContribution,
   registerCodeContribution,
   useContributions,
-  useFrameworkContext,
   whenClauseCompiler,
 } from "@/core";
 import { Disposable } from "@/util/disposable";
@@ -77,9 +76,11 @@ function processContribution(
   return processedContributions;
 }
 
-export function useViews(containerId: string): View[] {
+export function useViews(
+  containerId: string,
+  ctx: Record<string, unknown>
+): View[] {
   const views = useContributions<ProcessedView>(viewsPoint.id, containerId);
-  const ctx = useFrameworkContext();
   return useMemo(() => {
     LOG.debug("Hook 'useViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));

@@ -1,8 +1,9 @@
 import { executeCommand } from "@/contrib";
 import { useCommandPalette } from "@/contrib/command-palette";
+import { useAppContext } from "./app-store";
 
 function CommandPalette() {
-  const menuItems = useCommandPalette();
+  const menuItems = useCommandPalette(useAppContext());
 
   return (
     <div className="row2-item">

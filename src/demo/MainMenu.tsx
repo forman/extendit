@@ -1,7 +1,8 @@
 import { executeCommand, useMenu } from "@/contrib";
+import { useAppContext } from "./app-store";
 
 function MainMenu() {
-  const mainMenuItems = useMenu("main");
+  const mainMenuItems = useMenu("main", useAppContext());
 
   // console.log(mainMenuItems)
 
