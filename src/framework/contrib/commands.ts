@@ -110,5 +110,6 @@ export async function executeCommand<T, A extends unknown[]>(
     commandsPoint as CodeContributionPoint, // FIXME!
     commandId
   );
+  LOG.debug("executeCommand", commandId, args);
   return Promise.resolve(command(...args));
 }
