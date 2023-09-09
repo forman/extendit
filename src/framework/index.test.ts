@@ -11,6 +11,7 @@ test("Framework API is complete", () => {
     "addExtensionListener",
     "deactivateExtension",
     "getCodeContribution",
+    "getCodeContributionsMap",
     "getExtension",
     "getExtensionDisplayName",
     "getExtensionId",

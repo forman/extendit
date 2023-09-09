@@ -18,7 +18,7 @@ export interface FrameworkState {
   extensions: Record<string, Extension>;
   extensionContexts: Record<string, ExtensionContextImpl>;
   contributionPoints: Record<string, ContributionPoint>;
-  codeContributions: Record<string, unknown>;
+  codeContributions: Record<string, Map<string, unknown>>;
 }
 
 /**
@@ -214,7 +214,7 @@ type StateKeysWithoutContext = keyof Omit<FrameworkState, "context">;
 export function getStoreRecord<K extends StateKeysWithoutContext>(
   key: K,
   id: string
-): FrameworkState[K][string] {
+): FrameworkState[K][string] | undefined {
   return frameworkStore.getState()[key][id] as FrameworkState[K][string];
 }
 

@@ -57,14 +57,10 @@ test("setExtensionStatus", () => {
 });
 
 test("add and remove store record", () => {
-  const testCmd = () => 0;
-  expect(
-    getStoreRecord("codeContributions", "commands/testCmd")
-  ).toBeUndefined();
-  setStoreRecord("codeContributions", "commands/testCmd", testCmd);
-  expect(getStoreRecord("codeContributions", "commands/testCmd")).toBe(testCmd);
-  deleteStoreRecord("codeContributions", "commands/testCmd");
-  expect(
-    getStoreRecord("codeContributions", "commands/testCmd")
-  ).toBeUndefined();
+  const testCmd = new Map<string, unknown>();
+  expect(getStoreRecord("codeContributions", "commands")).toBeUndefined();
+  setStoreRecord("codeContributions", "commands", testCmd);
+  expect(getStoreRecord("codeContributions", "commands")).toBe(testCmd);
+  deleteStoreRecord("codeContributions", "commands");
+  expect(getStoreRecord("codeContributions", "commands")).toBeUndefined();
 });
