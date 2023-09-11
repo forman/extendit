@@ -8,6 +8,13 @@ export {
   commandsPoint,
 } from "./commands";
 
+export {
+  type JsonKeybinding,
+  type Keybinding,
+  useKeybindings,
+  keybindingsPoint,
+} from "./keybindings";
+
 export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
 
 export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
