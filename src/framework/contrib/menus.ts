@@ -10,6 +10,11 @@ import { type Submenu, useSubmenusMap } from "./submenus";
 import { newId } from "@/util/id";
 import * as log from "@/util/log";
 import type { JSONSchemaType } from "ajv";
+import {
+  type Keybinding,
+  findKeybindingForCommand,
+  useCommandToKeybindingsMap,
+} from "@/contrib/keybindings";
 
 const LOG = new log.Logger("contrib/menus");
 
@@ -45,6 +50,7 @@ export interface ProcessedMenuItem extends ResolvedMenuItem {
 export interface MenuItem extends ResolvedMenuItem {
   disabled?: boolean;
   checked?: boolean;
+  keybinding?: Keybinding;
 }
 
 type JsonMenusContrib = Record<string, JsonMenuItem[]>;
@@ -121,13 +127,16 @@ export function useMenu(menuId: string, ctx: Record<string, unknown>) {
   }
   const menuItems = useContributions<ProcessedMenuItem>(menusPoint.id, menuId);
   const commandsMap = useCommandsMap();
+  const keybindingsMap = useCommandToKeybindingsMap();
   const submenusMap = useSubmenusMap();
   return useMemo(() => {
     LOG.debug("Hook 'useMenu' is recomputing");
     return insertGroupSeparators(
-      sortMenuItems(newMenuItems(menuItems, commandsMap, submenusMap, ctx))
+      sortMenuItems(
+        newMenuItems(menuItems, commandsMap, keybindingsMap, submenusMap, ctx)
+      )
     );
-  }, [menuItems, commandsMap, submenusMap, ctx]);
+  }, [menuItems, commandsMap, keybindingsMap, submenusMap, ctx]);
 }
 
 //---------------------------------------------------------------
@@ -148,23 +157,32 @@ function processJsonMenuItem(jsonMenuItem: JsonMenuItem): ProcessedMenuItem {
 function newMenuItems(
   processedMenuItems: ProcessedMenuItem[],
   commandsMap: Map<string, Command>,
+  keybindingsMap: Map<string, Keybinding[]>,
   submenusMap: Map<string, Submenu>,
   ctx: Record<string, unknown>
 ): MenuItem[] {
   return processedMenuItems
     .filter((item) => (item.when ? item.when(ctx) : true))
-    .map((item) => newMenuItem(item, commandsMap, submenusMap, ctx));
+    .map((item) =>
+      newMenuItem(item, commandsMap, keybindingsMap, submenusMap, ctx)
+    );
 }
 
 function newMenuItem(
   processedMenuItem: ProcessedMenuItem,
   commandsMap: Map<string, Command>,
+  keybindingsMap: Map<string, Keybinding[]>,
   submenusMap: Map<string, Submenu>,
   ctx: Record<string, unknown>
 ): MenuItem {
   let command;
+  let keybinding;
   if (processedMenuItem.command) {
     command = commandsMap.get(processedMenuItem.command);
+    const keybindings = keybindingsMap.get(processedMenuItem.command);
+    keybinding = keybindings
+      ? findKeybindingForCommand(keybindings, processedMenuItem.command, ctx)
+      : undefined;
   }
   let submenu;
   if (processedMenuItem.submenu) {
@@ -203,6 +221,7 @@ function newMenuItem(
     order: processedMenuItem.order,
     disabled: command?.enablement ? !command.enablement(ctx) : undefined,
     checked: command?.checked ? command.checked(ctx) : undefined,
+    keybinding,
     label,
     icon,
   };
