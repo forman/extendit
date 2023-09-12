@@ -86,35 +86,43 @@ export const keybindingsPoint: ContributionPoint<
   processContribution,
 };
 
-export function useKeybindings(ctx: Record<string, unknown>) {
+export function useKeybindings(
+  ctx: Record<string, unknown>,
+  disabled?: boolean
+) {
   const keybindings = useContributions<Keybinding>(keybindingsPoint.id);
 
   const handleKeydown = useMemo(
-    () => (event: KeyboardEvent) => {
-      if (event.defaultPrevented) {
-        return; // Do nothing if the event was already processed
-      }
-      const key = encodeKeyboardEvent(event);
-      if (!key) {
-        return; // Meta key down
-      }
-      const keybinding = findKeybindingForKey(keybindings, key, ctx);
-      if (!keybinding) {
-        return;
-      }
-      event.preventDefault();
-      void executeCommand(keybinding.command, ...(keybinding.args || []));
-    },
-    [keybindings, ctx]
+    () =>
+      disabled
+        ? undefined
+        : (event: KeyboardEvent) => {
+            if (event.defaultPrevented) {
+              return; // Do nothing if the event was already processed
+            }
+            const key = encodeKeyboardEvent(event);
+            if (!key) {
+              return; // Meta key down
+            }
+            const keybinding = findKeybindingForKey(keybindings, key, ctx);
+            if (!keybinding) {
+              return;
+            }
+            event.preventDefault();
+            void executeCommand(keybinding.command, ...(keybinding.args || []));
+          },
+    [keybindings, ctx, disabled]
   );
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeydown, true);
-    LOG.debug("keydown listener installed.");
-    return () => {
-      document.removeEventListener("keydown", handleKeydown);
-      LOG.debug("keydown listener uninstalled.");
-    };
+    if (handleKeydown) {
+      document.addEventListener("keydown", handleKeydown, true);
+      LOG.debug("Global keybindings active.");
+      return () => {
+        document.removeEventListener("keydown", handleKeydown, true);
+        LOG.debug("Global keybindings inactive.");
+      };
+    }
   }, [handleKeydown]);
 }
 
