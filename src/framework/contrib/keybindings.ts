@@ -63,9 +63,10 @@ function processContribution(commands: JsonKeybinding[]): Keybinding[] {
 }
 
 function processKeybinding(keybinding: JsonKeybinding): Keybinding {
-  const { when, ...keybindingBase } = keybinding;
+  const { key, when, ...keybindingBase } = keybinding;
   return {
     ...keybindingBase,
+    key: normalizeKey(key),
     when: whenClauseCompiler.compile(when),
   } as Keybinding;
 }
@@ -162,32 +163,79 @@ export function findKeybindingForCommand(
   );
 }
 
-export function encodeKeyboardEvent(event: KeyboardEvent): string | undefined {
-  const key = event.key;
-  if (key === "Unidentified" || event.getModifierState(key)) {
+export interface DecodedKey {
+  key: string;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+  metaKey: boolean;
+  getModifierState(key: string): boolean;
+}
+
+export function encodeKeyboardEvent(
+  decodedKey: DecodedKey
+): string | undefined {
+  const key = decodedKey.key;
+  if (key === "Unidentified" || decodedKey.getModifierState(key)) {
     return undefined;
   }
   let k = "";
-  if (event.ctrlKey) {
+  if (decodedKey.ctrlKey) {
     k += "ctrl+";
   }
-  if (event.shiftKey) {
+  if (decodedKey.shiftKey) {
     k += "shift+";
   }
-  if (event.altKey) {
+  if (decodedKey.altKey) {
     k += "alt+";
   }
-  if (event.metaKey) {
+  if (decodedKey.metaKey) {
     k += "meta+";
   }
-  k += keyTranslationMap[key] ?? key.toLowerCase();
-  return k;
+  return k + (key === " " ? "space" : key.toLowerCase());
 }
 
-const keyTranslationMap: Record<string, string> = {
-  " ": "space",
-  ArrowDown: "down",
-  ArrowRight: "right",
-  ArrowLeft: "left",
-  ArrowUp: "up",
+export function normalizeKey(key: string): string {
+  // yes, we could make this a little faster
+  const trimmedParts = key
+    .toLowerCase()
+    .split("+")
+    .map((s) => s.trim());
+  for (const part of trimmedParts) {
+    if (part === "") {
+      throw new Error("Invalid keybinding, empty key.");
+    }
+  }
+  const normalizedParts = trimmedParts
+    .map((s) => (s in keyShortcuts ? keyShortcuts[s] : s))
+    .map((s) => s.toLowerCase());
+  const numParts = normalizedParts.length;
+  const modifiers = new Set<string>();
+  for (let i = 0; i < numParts - 1; i++) {
+    const modifier = normalizedParts[i];
+    if (allowedModifierSet.has(modifier)) {
+      modifiers.add(modifier);
+    } else {
+      throw new Error(
+        `Invalid keybinding "${key}", unknown modifier "${modifier}+".`
+      );
+    }
+  }
+  let normalizedKey = "";
+  for (const modifier of allowedModifiers) {
+    if (modifiers.has(modifier)) {
+      normalizedKey += modifier + "+";
+    }
+  }
+  return normalizedKey + normalizedParts[numParts - 1];
+}
+
+const allowedModifiers = ["ctrl", "shift", "alt", "meta"];
+const allowedModifierSet = new Set<string>(allowedModifiers);
+
+const keyShortcuts: Record<string, string> = {
+  down: "ArrowDown",
+  right: "ArrowRight",
+  left: "ArrowLeft",
+  up: "ArrowUp",
 };
