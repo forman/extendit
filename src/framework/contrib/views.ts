@@ -112,8 +112,8 @@ export function useViewComponent(
     LOG.debug("Hook 'useViewComponent' is recomputing");
     if (viewId) {
       if (viewId === state.viewId && (state.component || state.error)) {
-        // If we have component, ok
-        // If we have error, don't try again
+        // If we have a component, ok.
+        // If we have an error, don't try again.
         return;
       }
       getCodeContribution<React.JSX.Element>(
