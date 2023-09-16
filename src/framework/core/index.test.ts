@@ -20,6 +20,7 @@ test("Framework Core API is complete", () => {
     "registerContributionPoint",
     "registerExtension",
     "updateFrameworkConfig",
+    "useCodeContribution",
     "useContributionPoints",
     "useContributions",
     "useExtensions",
