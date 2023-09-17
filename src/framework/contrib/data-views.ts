@@ -50,7 +50,6 @@ export function useDataViews(): DataView[] {
 
 export function useDataView(viewType: string): DataView {
   const dataViews = useDataViews();
-  console.info("dataViews:", dataViews);
   const dataView = dataViews.find((dv) => dv.viewType === viewType);
   if (!dataView) {
     throw new Error(`Unknown data view type "${viewType}".`);
