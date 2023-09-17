@@ -97,10 +97,10 @@ export function registerViewComponent(
 export function useViewComponent(
   viewId: string | null | undefined
 ): React.JSX.Element | undefined {
-  const codeContribution = useCodeContribution<React.JSX.Element>(
-    viewsPoint as CodeContributionPoint,
-    viewId
-  );
+  const codeContribution = useCodeContribution<
+    React.JSX.Element,
+    Record<string, View[]>
+  >(viewsPoint, viewId);
   return (!codeContribution?.isLoading && codeContribution?.data) || undefined;
 }
 
