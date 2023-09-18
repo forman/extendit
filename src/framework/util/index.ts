@@ -1,6 +1,9 @@
-export * as assert from "./assert";
-export * as disposable from "./disposable";
 export * as expr from "./expr";
-export * as json from "./json";
 export * as log from "./log";
-export * as validator from "./validator";
+export * from "./assert";
+export * from "./capitalize";
+export * from "./disposable";
+export * from "./id";
+export * from "./json";
+export * from "./key";
+export * from "./validator";

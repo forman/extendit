@@ -211,6 +211,16 @@ export interface CodeContributionPoint<T = unknown, PT = T>
 }
 
 /**
+ * Represents a code contribution that is being loaded
+ * or that is already loaded.
+ */
+export interface CodeContribution<T> {
+  isLoading: boolean;
+  data?: T;
+  error?: unknown;
+}
+
+/**
  * Used to resolve module paths.
  * @category Framework API
  */

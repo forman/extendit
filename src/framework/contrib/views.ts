@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import {
   type CodeContributionPoint,
   type When,
-  getCodeContribution,
   registerCodeContribution,
   useContributions,
   whenClauseCompiler,
 } from "@/core";
+import { useCodeContribution } from "@/core/hooks";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
 
@@ -94,47 +94,14 @@ export function registerViewComponent(
   return registerCodeContribution(viewsPoint.id, viewId, component);
 }
 
-interface ViewComponentState {
-  viewId?: string | null;
-  component: React.JSX.Element | null;
-  error?: unknown;
-}
-
-const initState: ViewComponentState = {
-  viewId: null,
-  component: null,
-};
 export function useViewComponent(
-  viewId: string | null
-): React.JSX.Element | null {
-  const [state, setState] = useState<ViewComponentState>(initState);
-  useEffect(() => {
-    LOG.debug("Hook 'useViewComponent' is recomputing");
-    if (viewId) {
-      if (viewId === state.viewId && (state.component || state.error)) {
-        // If we have component, ok
-        // If we have error, don't try again
-        return;
-      }
-      getCodeContribution<React.JSX.Element>(
-        viewsPoint as CodeContributionPoint, // FIXME!
-        viewId
-      )
-        .then((component) => {
-          setState({ viewId, component });
-        })
-        .catch((error: unknown) => {
-          LOG.error(
-            "Hook 'useViewComponent' failed due to following error:",
-            error
-          );
-          setState({ viewId, component: null, error });
-        });
-    } else {
-      setState(initState);
-    }
-  }, [viewId, state.component, state.viewId, state.error]);
-  return viewId === state.viewId ? state.component : null;
+  viewId: string | null | undefined
+): React.JSX.Element | undefined {
+  const codeContribution = useCodeContribution<
+    React.JSX.Element,
+    Record<string, View[]>
+  >(viewsPoint, viewId);
+  return (!codeContribution?.isLoading && codeContribution?.data) || undefined;
 }
 
 export interface ViewComponentProps {

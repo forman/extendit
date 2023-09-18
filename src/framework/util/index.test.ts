@@ -5,11 +5,18 @@ test("Framework Util API is complete", () => {
   const api = Object.getOwnPropertyNames(expr);
   api.sort();
   expect(api).toEqual([
+    "AssertionError",
+    "Disposable",
+    "JsonValidationError",
     "assert",
-    "disposable",
+    "assertDefined",
+    "capitalize",
     "expr",
-    "json",
+    "keyFromArray",
+    "keyFromObject",
+    "keyFromValue",
     "log",
-    "validator",
+    "newId",
+    "validateJson",
   ]);
 });

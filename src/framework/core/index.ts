@@ -28,6 +28,7 @@ export {
   useExtensions,
   useContributions,
   useContributionPoints,
+  useCodeContribution,
 } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////

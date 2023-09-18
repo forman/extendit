@@ -3,7 +3,7 @@ import { emitActivationEvent } from "@/core/activation/emit";
 import type { CodeContributionPoint } from "@/core/types";
 
 /**
- * Gets a code contribution.
+ * Get registered code contribution data.
  * If the extension that provides the contribution
  * is not yet activated it will be activated using the
  * given contribPoint.activationEvent.
@@ -11,11 +11,12 @@ import type { CodeContributionPoint } from "@/core/types";
  * @category Extension Contribution API
  * @param contribPoint - The contribution point.
  * @param contribId - The contribution identifier.
+ * @returns A promise that resolves to the code contribution data.
  */
-export async function getCodeContribution<R>(
-  contribPoint: CodeContributionPoint,
+export async function getCodeContribution<Data, S = unknown, PS = S>(
+  contribPoint: CodeContributionPoint<S, PS>,
   contribId: string
-): Promise<R> {
+): Promise<Data> {
   const id = contribPoint.id;
   let contribMap = getStoreRecord("codeContributions", id);
   if (!contribMap || !contribMap.has(contribId)) {
@@ -27,7 +28,7 @@ export async function getCodeContribution<R>(
   if (!contribMap || !contribMap.has(contribId)) {
     throw new Error(`Unregistered code contribution '${id}/${contribId}'`);
   }
-  return Promise.resolve(contribMap.get(contribId) as R);
+  return Promise.resolve(contribMap.get(contribId) as Data);
 }
 
 /**

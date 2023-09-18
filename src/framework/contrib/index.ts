@@ -32,4 +32,14 @@ export {
   viewsPoint,
 } from "./views";
 
+export {
+  type DataView,
+  type DataViewInstance,
+  useDataViews,
+  useDataView,
+  registerDataViewProvider,
+  getDataViewProvider,
+  dataViewsPoint,
+} from "./data-views";
+
 export { registerContributionPoints } from "./register";
