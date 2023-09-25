@@ -10,7 +10,7 @@ import {
   getExtensionContext,
   setExtensionStatus,
 } from "@/core/store";
-import { validateJson } from "@/util/validator";
+import { type JsonValue, validateJson } from "@/util";
 import { Logger } from "@/util/log";
 
 const LOG = new Logger("contrib/process");
@@ -54,7 +54,7 @@ function processContributionsFromExtension(
     // Nothing to do
     return;
   }
-  const contrib = contributes[contribPoint.id];
+  const contrib = contributes[contribPoint.id] as JsonValue;
   if (!contrib) {
     // Nothing to do
     return;
@@ -77,7 +77,7 @@ function processContributionsFromExtension(
 
 function validateContrib(
   contribPoint: ContributionPoint,
-  contrib: unknown,
+  contrib: JsonValue,
   ctx: ExtensionContextImpl
 ) {
   validateJson(

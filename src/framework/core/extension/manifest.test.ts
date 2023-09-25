@@ -33,7 +33,7 @@ test("getExtensionId", () => {
 describe("getExtensionDisplayName", () => {
   test("from name", () => {
     const manifest = newTestManifest();
-    expect(getExtensionDisplayName(manifest)).toEqual("foo");
+    expect(getExtensionDisplayName(manifest)).toEqual("Foo");
   });
 
   test("from displayName", () => {

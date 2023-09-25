@@ -1,16 +1,7 @@
-import Ajv from "ajv";
-import type {
-  Schema as JsonSchema,
-  JSONSchemaType as JsonSchemaType,
-} from "ajv";
+import ajv from "./ajv";
 import { capitalize } from "@/util/capitalize";
-
-export type { JsonSchema, JsonSchemaType };
-
-/**
- * We currently use "Another JSON Validator".
- */
-const validator = new Ajv({});
+import type { JsonSchema, JsonTypedSchema } from "@/util/json/json-schema";
+import type { JsonValue } from "@/util";
 
 /**
  * The error type potentially thrown in {@link validateJson}.
@@ -32,12 +23,12 @@ export class JsonValidationError extends Error {
  * @param valueName A name or title for the value. Used in the error message.
  * @throws JsonValidationError - If a validation error occurs.
  */
-export function validateJson<T = unknown>(
-  schema: JsonSchema | JsonSchemaType<T>,
-  value: unknown,
+export function validateJson<T = JsonValue>(
+  schema: JsonSchema | JsonTypedSchema<T>,
+  value: JsonValue,
   valueName?: string
 ): T {
-  const validate = validator.compile(schema);
+  const validate = ajv.compile(schema);
   const success = validate(value);
   if (!success) {
     const message = "JSON validation failed";

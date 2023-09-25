@@ -6,4 +6,4 @@ export * from "./disposable";
 export * from "./id";
 export * from "./json";
 export * from "./key";
-export * from "./validator";
+export * from "./to-title";

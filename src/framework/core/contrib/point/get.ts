@@ -1,9 +1,5 @@
 import type { Extension } from "@/core/types";
 import { getExtensionContext } from "@/core/store";
-import type { ExtensionContextImpl } from "@/core/extension/context";
-import * as log from "@/util/log";
-
-const LOG = new log.Logger("contrib/point");
 
 /**
  * Get the processed contributions from the manifest (package.json)
@@ -18,30 +14,107 @@ const LOG = new log.Logger("contrib/point");
  * @category Extension Contribution API
  * @param contribPointId - The contribution point identifier.
  * @param extensions - All the extensions that contribute.
+ * @returns An array of all extension contributions.
+ *   If a contribution is an array, its flattened items are appended
+ *   to the return value.
+ */
+export function getContributionsFromExtensions<T>(
+  contribPointId: string,
+  extensions: Extension[]
+): T[];
+/**
+ * Get the processed contributions from the manifest (package.json)
+ * of the given extensions.
+ *
+ * Note, an extension does not need to be activated nor will it be
+ * activated while its contributions are collected.
+ *
+ * The function is used to implement React hooks that access
+ * a given contribution points.
+ *
+ * @category Extension Contribution API
+ * @param contribPointId - The contribution point identifier.
+ * @param extensions - All the extensions that contribute.
  * @param key - An optional key if the contribution
- *  is a key-value mapping.
+ *   is a key-value mapping.
+ * @returns An array of all extension contributions.
+ *   If a contribution is an array, its flattened items are appended
+ *   to the return value.
  */
 export function getContributionsFromExtensions<T>(
   contribPointId: string,
   extensions: Extension[],
-  key?: string
-) {
-  LOG.debug("getContributionsFromExtensions", contribPointId, key);
-
-  const items: T[] = [];
-  extensions.forEach((extension) => {
-    const ctx = getExtensionContext(extension.id, true);
-    collectContributionsFromExtension(ctx, contribPointId, key, items);
-  });
-  return items;
+  key?: string | undefined | null
+): T[];
+/**
+ * Get the processed contributions from the manifest (package.json)
+ * of the given extensions.
+ *
+ * Note, an extension does not need to be activated nor will it be
+ * activated while its contributions are collected.
+ *
+ * The function is used to implement React hooks that access
+ * a given contribution points.
+ *
+ * @category Extension Contribution API
+ * @param contribPointId - The contribution point identifier.
+ * @param extensions - All the extensions that contribute.
+ * @param key - An optional key if the contribution
+ *   is a key-value mapping.
+ * @param asMap - `true`.
+ * @returns A mapping of extension identifier to extension contribution.
+ */
+export function getContributionsFromExtensions<T>(
+  contribPointId: string,
+  extensions: Extension[],
+  key: string | undefined | null,
+  asMap: true
+): Map<string, T>;
+export function getContributionsFromExtensions<T>(
+  contribPointId: string,
+  extensions: Extension[],
+  key?: string | undefined | null,
+  asMap?: true | undefined
+): T[] | Map<string, T> {
+  if (!asMap) {
+    const items: T[] = [];
+    extensions.forEach((extension) => {
+      const contrib = getContributionFromExtension<T>(
+        extension.id,
+        contribPointId,
+        key
+      );
+      if (contrib) {
+        if (Array.isArray(contrib)) {
+          items.push(...(contrib as T[]));
+        } else {
+          items.push(contrib);
+        }
+      }
+    });
+    return items;
+  } else {
+    const map = new Map<string, T>();
+    extensions.forEach((extension) => {
+      const contrib = getContributionFromExtension<T>(
+        extension.id,
+        contribPointId,
+        key
+      );
+      if (contrib) {
+        map.set(extension.id, contrib);
+      }
+    });
+    return map;
+  }
 }
 
-function collectContributionsFromExtension<T>(
-  ctx: ExtensionContextImpl,
+function getContributionFromExtension<T>(
+  extensionId: string,
   contribPointId: string,
-  key: string | undefined,
-  items: T[]
-) {
+  key: string | undefined | null
+): T | undefined {
+  const ctx = getExtensionContext(extensionId, true);
   let contrib = ctx.processedContributions.get(contribPointId);
   if (!contrib) {
     return;
@@ -49,7 +122,7 @@ function collectContributionsFromExtension<T>(
   if (typeof key === "string") {
     if (typeof contrib !== "object") {
       throw new Error(
-        `Internal error: extension '${ctx.extensionId}': ` +
+        `Extension '${ctx.extensionId}': ` +
           `contributions to point '${contribPointId}' ` +
           `must be given as an object.`
       );
@@ -59,12 +132,5 @@ function collectContributionsFromExtension<T>(
       return;
     }
   }
-  if (!Array.isArray(contrib)) {
-    throw new Error(
-      `Internal error: extension '${ctx.extensionId}': ` +
-        `contributions to point '${contribPointId}${key ? "/" + key : ""}' ` +
-        `must be given as an array.`
-    );
-  }
-  items.push(...contrib);
+  return contrib as T;
 }

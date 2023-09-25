@@ -13,21 +13,20 @@ export type JsonValue =
   | JsonArray;
 
 /**
- * A utility type representing a JSON property value.
- *
- * Note, this type exists to model a missing JSON property,
- * not the value `undefined` which does not exist in JSON!
- */
-export type JsonPropertyValue = JsonValue | undefined;
-
-/**
  * A utility type representing a JSON object.
  */
 export interface JsonObject {
-  [p: string]: JsonPropertyValue;
+  /**
+   * A JSON property.
+   *
+   * Note, we must add `undefined` type to the property value's type
+   * to model a missing JSON property, not an assigned value `undefined`
+   * which does not exist in JSON.
+   */
+  [propertyName: string]: JsonValue | undefined;
 }
 
 /**
  * A utility type representing a JSON array.
  */
-export type JsonArray = JsonValue[];
+export type JsonArray = JsonValue[] | [JsonValue, ...JsonValue[]];

@@ -64,6 +64,10 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     this._moduleResolver = moduleResolver;
   }
 
+  get builtIn(): boolean {
+    return !this._modulePath;
+  }
+
   get modulePath(): string {
     return this._modulePath ?? "";
   }

@@ -37,7 +37,11 @@ export {
 // provide specific contribution point APIs that can be
 // used by extensions.
 
-export type { ContributionPoint, CodeContributionPoint } from "./types";
+export type {
+  CodeContribution,
+  ContributionPoint,
+  CodeContributionPoint,
+} from "./types";
 export { registerContributionPoint } from "./contrib/point/register";
 export { registerCodeContribution } from "./contrib/code/register";
 export {
