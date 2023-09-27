@@ -19,9 +19,21 @@ export type Configuration = ConfigurationCategory | ConfigurationCategory[];
 export interface ConfigurationNode {
   id: string;
   title: string;
-  order?: number;
+  order: number;
   category?: ConfigurationCategory;
   children?: ConfigurationNode[];
+}
+
+export interface ConfigurationLeaveNode extends ConfigurationNode {
+  category: ConfigurationCategory;
+}
+
+export interface ConfigurationBranchNode extends ConfigurationNode {
+  children: ConfigurationNode[];
+}
+
+export interface ConfigurationTree extends ConfigurationBranchNode {
+  id: "root";
 }
 
 const configurationCategorySchema = {
@@ -71,15 +83,22 @@ export function useConfigurations(): Map<string, Configuration> {
   );
 }
 
-export function useConfigurationNodes(
+export function useConfigurationTree(
   familyTitles: string[]
-): ConfigurationNode[] {
+): ConfigurationTree {
   const configurations = useConfigurations();
   return useMemo(
-    () => categoriesToNodes(configurations, familyTitles),
+    () => ({
+      id: "root",
+      title: "Root",
+      order: 0,
+      children: categoriesToNodes(configurations, familyTitles),
+    }),
     [configurations, familyTitles]
   );
 }
+
+const defaultOrder = 1e6;
 
 // export for local test only
 export function categoriesToNodes(
@@ -89,7 +108,7 @@ export function categoriesToNodes(
   const familyNodes = new Map<string, ConfigurationNode>(
     familyTitles.map((familyTitle, familyOrder) => [
       familyTitle,
-      nodeFromChildren(familyTitle, [], familyOrder),
+      nodeFromChildren(familyTitle, familyOrder, []),
     ])
   );
   configurations.forEach((categoryOrArrayOf, extensionId) => {
@@ -121,7 +140,9 @@ function collectCategory(
     familyNode.children!.push(nodeFromCategory(category));
   } else {
     if (familyTitle) {
-      familyNode = nodeFromChildren(familyTitle, [nodeFromCategory(category)]);
+      familyNode = nodeFromChildren(familyTitle, defaultOrder, [
+        nodeFromCategory(category),
+      ]);
     } else {
       familyNode = nodeFromCategory(category);
       familyTitle = category.title;
@@ -134,15 +155,15 @@ function nodeFromCategory(category: ConfigurationCategory): ConfigurationNode {
   return {
     id: newId(),
     title: category.title,
-    order: category.order,
+    order: typeof category.order === "number" ? category.order : defaultOrder,
     category: category,
   };
 }
 
 function nodeFromChildren(
   title: string,
-  children: ConfigurationNode[],
-  order?: number
+  order: number,
+  children: ConfigurationNode[]
 ): ConfigurationNode {
   return {
     id: newId(),
@@ -172,11 +193,104 @@ function compareNodes(
   node1: ConfigurationNode,
   node2: ConfigurationNode
 ): number {
-  const order1 = typeof node1.order === "number" ? node1.order : 1e9;
-  const order2 = typeof node2.order === "number" ? node2.order : 1e9;
-  const delta = order1 - order2;
+  const delta = node1.order - node2.order;
   if (delta !== 0) {
     return delta;
   }
   return node1.title.localeCompare(node2.title);
+}
+
+export interface ConfigurationItemBase {
+  type: "header" | "property";
+  id: string;
+  titlePath: string[];
+}
+
+export interface ConfigurationHeaderItem extends ConfigurationItemBase {
+  type: "header";
+}
+
+export interface ConfigurationPropertyItem extends ConfigurationItemBase {
+  type: "property";
+  schema: UiSchema;
+}
+
+export type ConfigurationItem =
+  | ConfigurationHeaderItem
+  | ConfigurationPropertyItem;
+
+export function useConfigurationItems(
+  configurationTree: ConfigurationTree
+): ConfigurationItem[] {
+  return useMemo(
+    () => getConfigurationItems(configurationTree),
+    [configurationTree]
+  );
+}
+
+function getConfigurationItems(
+  configurationTree: ConfigurationTree
+): ConfigurationItem[] {
+  const items: ConfigurationItem[] = [];
+  collectConfigurationItems(configurationTree.children, [], items);
+  return items;
+}
+
+function collectConfigurationItems(
+  nodes: ConfigurationNode[],
+  titlePath: string[],
+  items: ConfigurationItem[]
+) {
+  nodes.forEach((node) => {
+    if (node.category) {
+      items.push({
+        type: "header",
+        id: node.id,
+        titlePath: [...titlePath, node.title],
+      });
+      Object.entries(node.category.properties)
+        .sort(compareCategoryProperties)
+        .forEach(([propertyName, propertySchema]) => {
+          items.push({
+            type: "property",
+            id: propertyName,
+            titlePath: getCategoryPropertyTitlePath(node.title, propertyName),
+            schema: propertySchema,
+          });
+        });
+    } else if (node.children) {
+      collectConfigurationItems(
+        node.children,
+        [...titlePath, node.title],
+        items
+      );
+    }
+  });
+}
+
+function compareCategoryProperties(
+  [propertyName1, propertySchema1]: [string, UiSchema],
+  [propertyName2, propertySchema2]: [string, UiSchema]
+): number {
+  const order1 =
+    typeof propertySchema1.order === "number"
+      ? propertySchema1.order
+      : defaultOrder;
+  const order2 =
+    typeof propertySchema2.order === "number"
+      ? propertySchema2.order
+      : defaultOrder;
+  const delta = order1 - order2;
+  return delta !== 0 ? delta : propertyName1.localeCompare(propertyName2);
+}
+
+function getCategoryPropertyTitlePath(
+  categoryTitle: string,
+  propertyName: string
+) {
+  const titlePath = propertyName.split(".").map((name) => toTitle(name));
+  if (titlePath.length > 1 && titlePath[0] === categoryTitle) {
+    return titlePath.slice(1);
+  }
+  return titlePath;
 }

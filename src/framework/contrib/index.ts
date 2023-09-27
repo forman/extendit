@@ -46,8 +46,13 @@ export {
   type Configuration,
   type ConfigurationCategory,
   type ConfigurationNode,
+  type ConfigurationTree,
+  type ConfigurationHeaderItem,
+  type ConfigurationPropertyItem,
+  type ConfigurationItem,
   useConfigurations,
-  useConfigurationNodes,
+  useConfigurationTree,
+  useConfigurationItems,
   configurationPoint,
 } from "./configuration";
 
