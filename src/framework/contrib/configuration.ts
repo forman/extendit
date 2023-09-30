@@ -55,7 +55,6 @@ const configurationSchema = {
       type: "array",
       items: configurationCategorySchema,
       minItems: 1,
-      additionalItems: false,
     },
   ],
 };

@@ -198,9 +198,9 @@ export class Logger {
    * @param data - Data to log
    */
   log(level: LogLevel, ...data: unknown[]): void;
-  log(levelOrData: LogLevel, ...data: unknown[]): void {
+  log(levelOrData: LogLevel | unknown, ...data: unknown[]): void {
     let level: LogLevel;
-    if ((levelOrData as unknown) instanceof LogLevel) {
+    if (levelOrData instanceof LogLevel) {
       level = levelOrData;
     } else {
       level = this.getLevel();
