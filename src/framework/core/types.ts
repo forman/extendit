@@ -1,5 +1,5 @@
 import type { DisposableLike } from "@/util/disposable";
-import type { JSONSchemaType } from "ajv";
+import type { JsonSchema, JsonTypedSchema } from "@/util";
 
 /**
  * Represents the content of an extension's `package.json` file.
@@ -168,7 +168,7 @@ export interface ContributionPoint<T = unknown, PT = T> {
   /**
    * The JSON schema of a contribution.
    */
-  schema: JSONSchemaType<T>;
+  schema: JsonTypedSchema<T> | JsonSchema;
   /**
    * Used to convert raw JSON contributions from the manifest.
    * Defaults to identity.

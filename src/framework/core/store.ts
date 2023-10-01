@@ -2,7 +2,7 @@ import { createStore } from "zustand/vanilla";
 import type { ContributionPoint, Extension, ExtensionStatus } from "./types";
 import type { ExtensionContextImpl } from "./extension/context";
 import { assertDefined } from "@/util/assert";
-import { Logger } from "@/util/log";
+import { Logger, LogLevel } from "@/util/log";
 
 const LOG = new Logger("store");
 
@@ -142,7 +142,11 @@ export function setExtensionStatus(
     };
   }
   setStoreRecord("extensions", extensionId, nextExtension);
-  LOG.debug("setExtensionStatus", extensionId, status, ...args);
+  LOG.log(
+    nextExtension.status === "rejected" ? LogLevel.ERROR : LogLevel.DEBUG,
+    "setExtensionStatus",
+    nextExtension
+  );
   return nextExtension;
 }
 

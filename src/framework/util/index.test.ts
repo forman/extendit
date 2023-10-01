@@ -12,11 +12,13 @@ test("Framework Util API is complete", () => {
     "assertDefined",
     "capitalize",
     "expr",
+    "jsonMetaSchema",
     "keyFromArray",
     "keyFromObject",
     "keyFromValue",
     "log",
     "newId",
+    "toTitle",
     "validateJson",
   ]);
 });

@@ -64,6 +64,9 @@ export default defineConfig({
     coverage: {
       exclude: ["src/demo", "src/framework/test/extensions/**"],
     },
+    onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
+      console.log(_log, _type);
+    },
   },
 });
 

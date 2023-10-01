@@ -1,7 +1,8 @@
 import type { ExtensionManifest, ExtensionPathResolver } from "@/core/types";
-import { type JsonSchemaType, validateJson } from "@/util/validator";
+import { type JsonTypedSchema, type JsonValue, validateJson } from "@/util";
+import { toTitle } from "@/util/to-title";
 
-const manifestSchema: JsonSchemaType<ExtensionManifest> = {
+const manifestSchema: JsonTypedSchema<ExtensionManifest> = {
   type: "object",
   properties: {
     name: { type: "string" },
@@ -41,7 +42,7 @@ export async function readExtensionManifest(
     string,
     unknown
   >;
-  const manifestJson = manifestModule.default;
+  const manifestJson = manifestModule.default as JsonValue;
   const manifest = validateJson(
     manifestSchema,
     manifestJson,
@@ -78,5 +79,5 @@ export function getExtensionId(manifest: ExtensionManifest): string {
  * @param manifest - the application manifest
  */
 export function getExtensionDisplayName(manifest: ExtensionManifest): string {
-  return manifest.displayName ?? manifest.name;
+  return manifest.displayName ?? toTitle(manifest.name);
 }

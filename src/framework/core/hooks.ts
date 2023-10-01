@@ -41,11 +41,33 @@ export function useExtensions(): Extension[] {
  * @param key - An optional key
  * @returns An array comprising all contributions points
  */
-export function useContributions<T>(contribPointId: string, key?: string): T[] {
+export function useContributions<T>(contribPointId: string, key?: string): T[];
+/**
+ * A React hook that provides all registered contributions for the given
+ * contribution point identifier `contribPointId` and optional `key`.
+ *
+ * @category React Hooks
+ * @param contribPointId - The contribution point identifier
+ * @param key - An optional key
+ * @param asMap - `true`, if given
+ * @returns A mapping from extension identifier to extension contribution.
+ */
+export function useContributions<T>(
+  contribPointId: string,
+  key: string | undefined | null,
+  asMap: true
+): Map<string, T>;
+export function useContributions<T>(
+  contribPointId: string,
+  key?: string | undefined | null,
+  asMap?: true
+): T[] | Map<string, T> {
   const extensions = useExtensions();
   return useMemo(() => {
-    return getContributionsFromExtensions(contribPointId, extensions, key);
-  }, [contribPointId, key, extensions]);
+    return asMap
+      ? getContributionsFromExtensions(contribPointId, extensions, key, true)
+      : getContributionsFromExtensions(contribPointId, extensions, key);
+  }, [contribPointId, extensions, key, asMap]);
 }
 
 /**

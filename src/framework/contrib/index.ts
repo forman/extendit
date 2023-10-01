@@ -42,4 +42,18 @@ export {
   dataViewsPoint,
 } from "./data-views";
 
+export {
+  type Configuration,
+  type ConfigurationCategory,
+  type ConfigurationNode,
+  type ConfigurationTree,
+  type ConfigurationHeaderItem,
+  type ConfigurationPropertyItem,
+  type ConfigurationItem,
+  useConfigurations,
+  useConfigurationTree,
+  useConfigurationItems,
+  configurationPoint,
+} from "./configuration";
+
 export { registerContributionPoints } from "./register";
