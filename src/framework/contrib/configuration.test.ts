@@ -116,7 +116,7 @@ describe("categoriesToNodes", () => {
     expect(node0.children!.length).toEqual(1);
     const node00 = node0.children![0];
     expect(node00.title).toEqual("View");
-    expect(node00.order).toBeUndefined();
+    expect(node00.order).toEqual(1000000);
     expect(node00.children).toBeUndefined();
     expect(node00.category).toBe(viewCategoryWithFamily);
   });
@@ -129,7 +129,7 @@ describe("categoriesToNodes", () => {
     expect(nodes.length).toEqual(1);
     const node0 = nodes[0];
     expect(node0.title).toEqual("View");
-    expect(node0.order).toBeUndefined();
+    expect(node0.order).toEqual(1000000);
     expect(node0.children).toBeUndefined();
     expect(node0.category).toBe(viewCategory);
   });
