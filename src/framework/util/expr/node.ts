@@ -192,3 +192,51 @@ export class IndexRef extends Node {
     return `idx(${obj}, ${index})`;
   }
 }
+
+/**
+ * Assigns a value to a property or index reference.
+ *
+ * The assigment only works, if the target is a mutable object or array such
+ * as the draft object used by an [immer](https://immerjs.github.io) producer.
+ */
+export class Assign extends Node {
+  constructor(
+    readonly target: NameRef | PropertyRef | IndexRef,
+    readonly value: Node
+  ) {
+    super();
+  }
+
+  eval(ctx: EvalContext): unknown {
+    const value = this.value.eval(ctx);
+    let target: unknown;
+    let index: string | number;
+    if (this.target instanceof NameRef) {
+      target = ctx;
+      index = this.target.name;
+    } else if (this.target instanceof PropertyRef) {
+      target = this.target.obj.eval(ctx);
+      index = this.target.name;
+    } else {
+      target = this.target.obj.eval(ctx);
+      const indexValue = this.target.index.eval(ctx);
+      if (typeof indexValue === "string" || typeof indexValue === "number") {
+        index = indexValue;
+      } else {
+        throw new Error(
+          'An array index must have type "number" or "string", ' +
+            `was type "${typeof indexValue}": ${indexValue}`
+        );
+      }
+    }
+    const obj = target as Record<string, unknown>;
+    obj[index] = value;
+    return value;
+  }
+
+  toString(): string {
+    const target = this.target.toString();
+    const value = this.value.toString();
+    return `assign(${target}, ${value})`;
+  }
+}

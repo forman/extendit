@@ -1,8 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
-  type EvalContext,
+  Assign,
   Binary,
   Conditional,
+  type EvalContext,
   FunctionCall,
   IndexRef,
   Literal,
@@ -124,4 +125,58 @@ test("PropertyRef", () => {
   const node = new PropertyRef(new NameRef("data"), "id");
   expect(node.eval(ctx)).toEqual("X78");
   expect(node.toString()).toEqual("prop(data, id)");
+});
+
+describe("Assign", () => {
+  test("wíth NameRef", () => {
+    const ctx: EvalContext = {
+      value: 13,
+    };
+    const assignNode = new Assign(new NameRef("value"), new Literal(14));
+    expect(assignNode.toString()).toEqual("assign(value, number(14))");
+    expect(assignNode.eval(ctx)).toEqual(14);
+    expect(ctx).toEqual({ value: 14 });
+  });
+  test("wíth PropertyRef", () => {
+    const ctx: EvalContext = {
+      obj: {
+        value: 13,
+      },
+    };
+    const assignNode = new Assign(
+      new PropertyRef(new NameRef("obj"), "value"),
+      new Literal(14)
+    );
+    expect(assignNode.toString()).toEqual(
+      "assign(prop(obj, value), number(14))"
+    );
+    expect(assignNode.eval(ctx)).toEqual(14);
+    expect(ctx).toEqual({ obj: { value: 14 } });
+  });
+  test("wíth IndexRef", () => {
+    const ctx: EvalContext = {
+      arr: [10, 11, 12, 13],
+    };
+    const assignNode = new Assign(
+      new IndexRef(new NameRef("arr"), new Literal(3)),
+      new Literal(14)
+    );
+    expect(assignNode.toString()).toEqual(
+      "assign(idx(arr, number(3)), number(14))"
+    );
+    expect(assignNode.eval(ctx)).toEqual(14);
+    expect(ctx).toEqual({ arr: [10, 11, 12, 14] });
+  });
+  test("wíth IndexRef using illegal index", () => {
+    const ctx: EvalContext = {
+      arr: [10, 11, 12, 13],
+    };
+    const assignNode = new Assign(
+      new IndexRef(new NameRef("arr"), new Literal(null)),
+      new Literal(14)
+    );
+    expect(() => assignNode.eval(ctx)).toThrowError(
+      'An array index must have type "number" or "string", was type "object": null'
+    );
+  });
 });
