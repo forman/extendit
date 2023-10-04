@@ -12,6 +12,7 @@ test("Framework Util API is complete", () => {
     "assertDefined",
     "capitalize",
     "expr",
+    "getUiSchemaDefaultValue",
     "jsonMetaSchema",
     "keyFromArray",
     "keyFromObject",
