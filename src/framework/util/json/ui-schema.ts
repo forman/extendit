@@ -34,6 +34,7 @@ export interface UiSchemaBase<Value> {
   enumDescriptions?: string[];
   markdownEnumDescriptions?: string[];
   order?: number;
+  hidden?: boolean;
 
   [keyword: string]: unknown;
 }

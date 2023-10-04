@@ -300,6 +300,7 @@ function collectConfigurationItems(
         titlePath: [...titlePath, node.title],
       });
       Object.entries(node.category.properties)
+        .filter(([_, propertySchema]) => !propertySchema.hidden)
         .sort(compareCategoryProperties)
         .forEach(([propertyName, propertySchema]) => {
           items.push({
