@@ -24,10 +24,6 @@ export interface ConfigurationNode {
   children?: ConfigurationNode[];
 }
 
-export interface ConfigurationLeaveNode extends ConfigurationNode {
-  category: ConfigurationCategory;
-}
-
 export interface ConfigurationBranchNode extends ConfigurationNode {
   children: ConfigurationNode[];
 }
@@ -74,12 +70,60 @@ export const configurationPoint: ContributionPoint<Configuration> = {
   schema: configurationSchema as unknown as JSONSchemaType<Configuration>,
 };
 
+/**
+ * Returns a mapping from extension identifier to the configuration
+ * provided by that extension.
+ */
 export function useConfigurations(): Map<string, Configuration> {
   return useContributions<Configuration>(
     configurationPoint.id,
     undefined,
     true
   );
+}
+
+/**
+ * Returns a mapping from configuration property name to the UI schema used by
+ * that property.
+ */
+export function useConfigurationSchemas(): Map<string, UiSchema> {
+  const configurations = useConfigurations();
+  return useMemo(
+    () => getSchemasFromConfigurations(configurations),
+    [configurations]
+  );
+}
+
+function getSchemasFromConfigurations(
+  configurations: Map<string, Configuration>
+): Map<string, UiSchema> {
+  const schemas = new Map<string, UiSchema>();
+  collectSchemasFromConfigurations(configurations, schemas);
+  return schemas;
+}
+
+function collectSchemasFromConfigurations(
+  configurations: Map<string, Configuration>,
+  schemas: Map<string, UiSchema>
+) {
+  configurations.forEach((categoryOrArrayOf) => {
+    if (Array.isArray(categoryOrArrayOf)) {
+      categoryOrArrayOf.forEach((category) => {
+        collectSchemasFromCategory(category, schemas);
+      });
+    } else {
+      collectSchemasFromCategory(categoryOrArrayOf, schemas);
+    }
+  });
+}
+
+function collectSchemasFromCategory(
+  category: ConfigurationCategory,
+  schemas: Map<string, UiSchema>
+) {
+  Object.entries(category.properties).forEach(([name, schema]) => {
+    schemas.set(name, schema);
+  });
 }
 
 export function useConfigurationTree(
@@ -91,7 +135,7 @@ export function useConfigurationTree(
       id: "root",
       title: "Root",
       order: 0,
-      children: categoriesToNodes(configurations, familyTitles),
+      children: getNodesFromConfigurations(configurations, familyTitles),
     }),
     [configurations, familyTitles]
   );
@@ -100,7 +144,7 @@ export function useConfigurationTree(
 const defaultOrder = 1e6;
 
 // export for local test only
-export function categoriesToNodes(
+export function getNodesFromConfigurations(
   configurations: Map<string, Configuration>,
   familyTitles: string[]
 ): ConfigurationNode[] {
@@ -115,10 +159,18 @@ export function categoriesToNodes(
     const defaultFamilyTitle = !ctx.builtIn ? toTitle(extensionId) : undefined;
     if (Array.isArray(categoryOrArrayOf)) {
       categoryOrArrayOf.forEach((category) => {
-        collectCategory(category, defaultFamilyTitle, familyNodes);
+        collectFamilyNodesFromCategory(
+          category,
+          defaultFamilyTitle,
+          familyNodes
+        );
       });
     } else {
-      collectCategory(categoryOrArrayOf, defaultFamilyTitle, familyNodes);
+      collectFamilyNodesFromCategory(
+        categoryOrArrayOf,
+        defaultFamilyTitle,
+        familyNodes
+      );
     }
   });
   return sortNodes(
@@ -128,7 +180,7 @@ export function categoriesToNodes(
   );
 }
 
-function collectCategory(
+function collectFamilyNodesFromCategory(
   category: ConfigurationCategory,
   defaultFamilyTitle: string | undefined,
   familyNodes: Map<string, ConfigurationNode>
@@ -248,6 +300,7 @@ function collectConfigurationItems(
         titlePath: [...titlePath, node.title],
       });
       Object.entries(node.category.properties)
+        .filter(([_, propertySchema]) => !propertySchema.hidden)
         .sort(compareCategoryProperties)
         .forEach(([propertyName, propertySchema]) => {
           items.push({

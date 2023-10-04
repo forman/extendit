@@ -53,6 +53,7 @@ export {
   useConfigurations,
   useConfigurationTree,
   useConfigurationItems,
+  useConfigurationSchemas,
   configurationPoint,
 } from "./configuration";
 

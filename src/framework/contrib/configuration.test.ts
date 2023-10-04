@@ -2,7 +2,7 @@ import { describe, expect, test, beforeAll, afterAll } from "vitest";
 import {
   type Configuration,
   type ConfigurationCategory,
-  categoriesToNodes,
+  getNodesFromConfigurations,
 } from "@/contrib/configuration";
 import { registerExtension } from "@/core";
 import { newTestManifest } from "@/test/testing";
@@ -103,7 +103,7 @@ describe("categoriesToNodes", () => {
   };
 
   test("category with familyTitle", () => {
-    const nodes = categoriesToNodes(
+    const nodes = getNodesFromConfigurations(
       new Map([["forman.xcube-ui", viewCategoryWithFamily]]),
       ["Appearance", "I/O"]
     );
@@ -122,7 +122,7 @@ describe("categoriesToNodes", () => {
   });
 
   test("category without familyTitle", () => {
-    const nodes = categoriesToNodes(
+    const nodes = getNodesFromConfigurations(
       new Map([["forman.xcube-ui", viewCategory]]),
       ["Appearance", "Map"]
     );
@@ -139,7 +139,7 @@ describe("categoriesToNodes", () => {
       ["forman.xcube-ui", [viewCategory, mapCategory]],
       ["forman.geo-db", geoDbCategory],
     ]);
-    const nodes = categoriesToNodes(configurations, []);
+    const nodes = getNodesFromConfigurations(configurations, []);
     expect(nodes.length).toEqual(3);
     expect(nodes.map((n) => n.title)).toEqual(["geoDB", "Map", "View"]);
     expect(nodes.map((n) => n.category)).toEqual([
@@ -165,7 +165,7 @@ describe("categoriesToNodes", () => {
       ],
       ["forman.geo-db", { ...geoDbCategory, order: 10 }],
     ]);
-    const nodes = categoriesToNodes(configurations, []);
+    const nodes = getNodesFromConfigurations(configurations, []);
     expect(nodes.length).toEqual(3);
     expect(nodes.map((n) => n.title)).toEqual(["View", "Map", "geoDB"]);
   });

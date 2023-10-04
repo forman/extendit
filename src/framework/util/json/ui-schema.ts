@@ -1,16 +1,18 @@
-type PrimitiveUiValue = boolean | number | string;
+import type { JsonValue } from "@/util";
 
 /**
- * A simple object.
- * Simple objects are objects whose keys are always names
- * and whose values are primitive, i.e., either boolean, number, or strings.
+ * A primitive UI value is either a boolean, number or string.
+ */
+export type PrimitiveUiValue = boolean | number | string;
+
+/**
+ * An object UI value is an object comprising primitive UI values.
  */
 export type ObjectUiValue = Record<string, PrimitiveUiValue>;
 
 /**
- * A simple array.
- * Simple arrays are arrays whose items are
- * either all boolean, number, strings, simple objects
+ * A UI array is an array whose items are
+ * either all of type boolean, number, string, UI object,
  * or a fixed-length tuple of possibly different primitives.
  */
 export type ArrayUiValue =
@@ -18,13 +20,13 @@ export type ArrayUiValue =
   | number[]
   | string[]
   | ObjectUiValue[]
-  | [PrimitiveUiValue, ...PrimitiveUiValue[]];
+  | TupleUiValues;
 
-export interface UiSchemaBase<T> {
+export interface UiSchemaBase<Value> {
   // If we allow nullable, we need to support null/undefined values.
   // nullable?: boolean;
-  default?: T;
-  enum?: T[];
+  default?: Value;
+  enum?: Value[];
   description?: string;
   // extras
   markdownDescription?: string;
@@ -32,6 +34,8 @@ export interface UiSchemaBase<T> {
   enumDescriptions?: string[];
   markdownEnumDescriptions?: string[];
   order?: number;
+  hidden?: boolean;
+
   [keyword: string]: unknown;
 }
 
@@ -74,19 +78,21 @@ export interface ObjectUiSchema
   additionalProperties: false;
 }
 
-export type ItemUiSchema =
-  | BooleanUiSchema
-  | NumberUiSchema
-  | StringUiSchema
-  | ObjectUiSchema;
+export type ItemUiSchema = PrimitiveUiSchema | ObjectUiSchema;
+export type TupleUiSchemas = [PrimitiveUiSchema, ...PrimitiveUiSchema[]];
+export type TupleUiValues = [PrimitiveUiValue, ...PrimitiveUiValue[]];
 
 export interface ArrayUiSchema extends UiSchemaBase<ArrayUiValue> {
   type: "array";
   // Either pure items or tuple of primitives.
-  items: ItemUiSchema | [PrimitiveUiSchema, ...PrimitiveUiSchema[]];
+  items: ItemUiSchema | TupleUiSchemas;
+  minItems?: number;
+  maxItems?: number;
   // In JSON Schema, additionalItems is optional and defaults to true.
   // We don't support this. Any items must be defined.
-  additionalItems: false;
+  // In new JSON Schema versions, additionalItems is only valid for
+  // non-tuple items. So we have to make it optional.
+  additionalItems?: false;
 }
 
 export type UiSchema =
@@ -95,3 +101,48 @@ export type UiSchema =
   | StringUiSchema
   | ObjectUiSchema
   | ArrayUiSchema;
+
+export function getUiSchemaDefaultValue(schema: UiSchema): JsonValue {
+  if (schema.default !== undefined) {
+    return schema.default;
+  } else if (schema.enum && schema.enum.length) {
+    return schema.enum[0];
+  } else if (schema.type === "boolean") {
+    return false;
+  } else if (schema.type === "number" || schema.type === "integer") {
+    if (typeof schema.minimum === "number") {
+      return schema.minimum;
+    }
+    if (typeof schema.maximum === "number") {
+      return schema.maximum;
+    }
+    return 0;
+  } else if (schema.type === "string") {
+    // TODO: respect minLength and format
+    return "";
+  } else if (schema.type === "object") {
+    const object: Record<string, JsonValue> = {};
+    Object.entries(schema.properties).forEach(
+      ([propertyName, propertySchema]) => {
+        object[propertyName] = getUiSchemaDefaultValue(propertySchema);
+      }
+    );
+    return object;
+  } else {
+    if (Array.isArray(schema.items)) {
+      const itemSchemas = schema.items as TupleUiSchemas;
+      return itemSchemas.map((itemSchema) =>
+        getUiSchemaDefaultValue(itemSchema)
+      );
+    } else {
+      const itemSchema = schema.items as ItemUiSchema;
+      const numItems =
+        typeof schema.minItems === "number" ? schema.minItems : 0;
+      return Array<JsonValue>(numItems).fill(
+        // This cast is actually wrong, but I have no idea how to satisfy
+        // the TS compiler. Just try: getDefaultValue(items)
+        getUiSchemaDefaultValue(itemSchema as unknown as ObjectUiSchema)
+      );
+    }
+  }
+}
