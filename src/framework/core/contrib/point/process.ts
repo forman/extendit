@@ -39,9 +39,13 @@ const idRef = "${id}";
 export const contributionProcessor: ExtensionListener = {
   onExtensionRegistered(extension: Extension) {
     const extensionContext = getExtensionContext(extension.id, true);
-    getContributionPoints().forEach((contribPoint) => {
-      processContributionsFromExtension(contribPoint, extensionContext);
-    });
+    getContributionPoints()
+      // If there is no schema, then a contribution point is not supposed to
+      // provide a JSON entry in manifest.contributes.
+      .filter((contribPoint) => contribPoint.schema)
+      .forEach((contribPoint) => {
+        processContributionsFromExtension(contribPoint, extensionContext);
+      });
   },
 };
 
@@ -66,7 +70,7 @@ function processContributionsFromExtension(
   );
   try {
     validateContrib(contribPoint, contrib, ctx);
-    if (isCodeContributionPoint(contribPoint)) {
+    if (requiresActivation(contribPoint)) {
       registerActivationEvents(contribPoint, contrib, ctx);
     }
     registerProcessedContrib(contribPoint, contrib, ctx);
@@ -81,7 +85,7 @@ function validateContrib(
   ctx: ExtensionContextImpl
 ) {
   validateJson(
-    contribPoint.schema,
+    contribPoint.schema!,
     contrib,
     "contribution to point " +
       `'${contribPoint.id}' from extension '${ctx.extensionId}'`
@@ -94,7 +98,10 @@ function registerActivationEvents(
   ctx: ExtensionContextImpl
 ) {
   const activationEvent = contribPoint.activationEvent;
-  if (!activationEvent || !activationEvent.includes(idRef)) {
+  if (!activationEvent) {
+    return;
+  }
+  if (!activationEvent.includes(idRef)) {
     ctx.activationEvents.add(activationEvent);
     return;
   }
@@ -128,7 +135,7 @@ function registerProcessedContrib(
   ctx.processedContributions.set(contribPoint.id, processedContrib);
 }
 
-function isCodeContributionPoint(
+function requiresActivation(
   contribPoint: ContributionPoint
 ): contribPoint is CodeContributionPoint {
   const activationEvent = (contribPoint as CodeContributionPoint)

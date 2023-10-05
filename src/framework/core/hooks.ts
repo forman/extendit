@@ -7,7 +7,10 @@ import type {
 } from "./types";
 import { frameworkStore, type FrameworkState } from "./store";
 import { getContributionsFromExtensions } from "./contrib/point/get";
-import { getCodeContribution } from "@/core/contrib/code/get";
+import {
+  getCodeContribution,
+  getCodeContributionsMap,
+} from "@/core/contrib/code/get";
 
 /**
  * A React hook that gets data from the framework's store.
@@ -91,7 +94,7 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
   contribId: string | null | undefined
 ): CodeContribution<Data> | undefined {
   // TODO: Check, if we'd need to put this state into our frameworkStore.
-  //   Otherwise, the state is only available until unmount of the owning
+  //   Otherwise, the state is only available until unmount of the
   //   component that owns this state.
   const [state, setState] = useState<Record<string, CodeContribution>>({});
   const contribKey = contribId && `${contribPoint.id}/${contribId}`;
@@ -120,4 +123,13 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
   return contribKey
     ? (state[contribKey] as CodeContribution<Data> | undefined)
     : undefined;
+}
+
+export function useCodeContributionsMap<Data = unknown>(
+  contribPointId: string
+) {
+  return useMemo(
+    () => getCodeContributionsMap<Data>(contribPointId),
+    [contribPointId]
+  );
 }

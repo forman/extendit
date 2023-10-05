@@ -160,21 +160,42 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
 
 /**
  * Represents a contribution point.
+ *
+ * Contribution points are the primary mechanism how extensions contribute
+ * new data and functionality to applications.
+ *
+ * An extension contributes data to existing contribution points via
+ * JSON entries in `manifest/contributes/${contribPoint.id}`.
+ * The format of such entries must follow the contribution point's JSON Schema
+ * given by its {@link schema} property.
+ *
  * @category Extension Contribution API
  * @see registerContributionPoint
  */
 export interface ContributionPoint<T = unknown, PT = T> {
+  /**
+   * Unique contribution point identifier.
+   */
   id: string;
   /**
-   * The JSON schema of a contribution.
+   * Optional JSON schema used to validate JSON entries from the manifest.
+   * If not provided, contributions to this contribution point are not
+   * expected to be JSON entries.
    */
-  schema: JsonTypedSchema<T> | JsonSchema;
+  schema?: JsonTypedSchema<T> | JsonSchema;
   /**
-   * Used to convert raw JSON contributions from the manifest.
+   * Optional function used to process JSON entries from the manifest.
+   * Ignored if a {@link schema} is not provided.
    * Defaults to identity.
    */
   processContribution?: (contrib: T) => PT;
+  /**
+   * Optional description of this contribution point.
+   */
   description?: string;
+  /**
+   * Optional URL providing a detailed description of this contribution point,
+   */
   docUrl?: string;
 }
 
@@ -194,7 +215,7 @@ export interface CodeContributionPoint<T = unknown, PT = T>
   idKey?: KeyOfObjOrArrayItem<T>;
 
   /**
-   * The activation event used to activate the extension,
+   * Optional activation event used to activate the extension,
    * i.e., let it register its code contribution, so it can be
    * later loaded from code. Usually takes the forms
    *
@@ -204,10 +225,11 @@ export interface CodeContributionPoint<T = unknown, PT = T>
    *    unconditionally.
    *
    * `<PointId>` usually names a single contribution.
+   *
    * Example: For a contribution point identifier `"commands"` the
    * `activationEvent` would be `"onCommand"` or `"onCommand:${id}"`.
    */
-  activationEvent: string;
+  activationEvent?: string;
 }
 
 /**

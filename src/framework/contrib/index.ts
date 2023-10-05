@@ -8,39 +8,7 @@ export {
   commandsPoint,
 } from "./commands";
 
-export {
-  type JsonKeybinding,
-  type Keybinding,
-  useKeybindings,
-  keybindingsPoint,
-} from "./keybindings";
-
-export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
-
-export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
-
 export { type CommandMenuItem, useCommandPalette } from "./command-palette";
-
-export {
-  type JsonView,
-  type View,
-  type ViewComponentProps,
-  ViewComponent,
-  useViews,
-  useViewComponent,
-  registerViewComponent,
-  viewsPoint,
-} from "./views";
-
-export {
-  type DataView,
-  type DataViewInstance,
-  useDataViews,
-  useDataView,
-  registerDataViewProvider,
-  getDataViewProvider,
-  dataViewsPoint,
-} from "./data-views";
 
 export {
   type Configuration,
@@ -56,5 +24,44 @@ export {
   useConfigurationSchemas,
   configurationPoint,
 } from "./configuration";
+
+export {
+  type DataView,
+  type DataViewInstance,
+  useDataViews,
+  useDataView,
+  registerDataViewProvider,
+  getDataViewProvider,
+  dataViewsPoint,
+} from "./data-views";
+
+export {
+  type JsonKeybinding,
+  type Keybinding,
+  useKeybindings,
+  keybindingsPoint,
+} from "./keybindings";
+
+export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
+
+export {
+  type StatusBarItem,
+  statusBarItemsPoint,
+  registerStatusBarItem,
+  useStatusBarItems,
+} from "./status-bar-items";
+
+export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
+
+export {
+  type JsonView,
+  type View,
+  type ViewComponentProps,
+  ViewComponent,
+  useViews,
+  useViewComponent,
+  registerViewComponent,
+  viewsPoint,
+} from "./views";
 
 export { registerContributionPoints } from "./register";

@@ -4,6 +4,7 @@ import {
   dataViewsPoint,
   keybindingsPoint,
   menusPoint,
+  statusBarItemsPoint,
   submenusPoint,
   viewsPoint,
 } from "./index";
@@ -32,6 +33,7 @@ export function registerContributionPoints(): Disposable {
     registerContributionPoint(keybindingsPoint),
     registerContributionPoint(menusPoint),
     registerContributionPoint(submenusPoint),
+    registerContributionPoint(statusBarItemsPoint),
     registerContributionPoint(viewsPoint)
   );
 }

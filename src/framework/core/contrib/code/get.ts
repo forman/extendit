@@ -19,7 +19,10 @@ export async function getCodeContribution<Data, S = unknown, PS = S>(
 ): Promise<Data> {
   const id = contribPoint.id;
   let contribMap = getStoreRecord("codeContributions", id);
-  if (!contribMap || !contribMap.has(contribId)) {
+  if (
+    contribPoint.activationEvent &&
+    (!contribMap || !contribMap.has(contribId))
+  ) {
     await emitActivationEvent(
       contribPoint.activationEvent.replace("${id}", contribId)
     );
@@ -41,9 +44,9 @@ export async function getCodeContribution<Data, S = unknown, PS = S>(
  * @returns A read-only map of code contributions or `undefined`
  *   if it does not (yet) exist.
  */
-export function getCodeContributionsMap<R>(
+export function getCodeContributionsMap<Data>(
   contribPointId: string
-): ReadonlyMap<string, R> | undefined {
+): ReadonlyMap<string, Data> | undefined {
   const storeRecord = getStoreRecord("codeContributions", contribPointId);
-  return storeRecord ? (storeRecord as ReadonlyMap<string, R>) : undefined;
+  return storeRecord ? (storeRecord as ReadonlyMap<string, Data>) : undefined;
 }
