@@ -29,6 +29,7 @@ export {
   useContributions,
   useContributionPoints,
   useCodeContribution,
+  useCodeContributionsMap,
 } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
