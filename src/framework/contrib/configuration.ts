@@ -22,14 +22,7 @@ export interface ConfigurationNode {
   order: number;
   category?: ConfigurationCategory;
   children?: ConfigurationNode[];
-}
-
-export interface ConfigurationBranchNode extends ConfigurationNode {
-  children: ConfigurationNode[];
-}
-
-export interface ConfigurationTree extends ConfigurationBranchNode {
-  id: "root";
+  numProperties: number;
 }
 
 const configurationCategorySchema = {
@@ -126,18 +119,18 @@ function collectSchemasFromCategory(
   });
 }
 
-export function useConfigurationTree(
-  familyTitles: string[]
-): ConfigurationTree {
+export function useConfigurationNodes(
+  familyTitles: string[],
+  searchPattern?: string
+): ConfigurationNode[] {
   const configurations = useConfigurations();
+  if (searchPattern) {
+    searchPattern = searchPattern.toLowerCase();
+  }
   return useMemo(
-    () => ({
-      id: "root",
-      title: "Root",
-      order: 0,
-      children: getNodesFromConfigurations(configurations, familyTitles),
-    }),
-    [configurations, familyTitles]
+    () =>
+      getNodesFromConfigurations(configurations, familyTitles, searchPattern),
+    [configurations, familyTitles, searchPattern]
   );
 }
 
@@ -146,7 +139,8 @@ const defaultOrder = 1e6;
 // export for local test only
 export function getNodesFromConfigurations(
   configurations: Map<string, Configuration>,
-  familyTitles: string[]
+  familyTitles: string[],
+  searchPattern?: string
 ): ConfigurationNode[] {
   const familyNodes = new Map<string, ConfigurationNode>(
     familyTitles.map((familyTitle, familyOrder) => [
@@ -162,6 +156,7 @@ export function getNodesFromConfigurations(
         collectFamilyNodesFromCategory(
           category,
           defaultFamilyTitle,
+          searchPattern,
           familyNodes
         );
       });
@@ -169,6 +164,7 @@ export function getNodesFromConfigurations(
       collectFamilyNodesFromCategory(
         categoryOrArrayOf,
         defaultFamilyTitle,
+        searchPattern,
         familyNodes
       );
     }
@@ -183,32 +179,84 @@ export function getNodesFromConfigurations(
 function collectFamilyNodesFromCategory(
   category: ConfigurationCategory,
   defaultFamilyTitle: string | undefined,
+  searchPattern: string | undefined,
   familyNodes: Map<string, ConfigurationNode>
 ) {
+  if (searchPattern) {
+    const filteredCategory = filterCategory(category, searchPattern);
+    if (!filteredCategory) {
+      return;
+    }
+    category = filteredCategory;
+  }
+  const categoryNode = nodeFromCategory(category);
   let familyTitle = category.familyTitle || defaultFamilyTitle;
   let familyNode = familyTitle ? familyNodes.get(familyTitle) : undefined;
   if (familyNode) {
-    familyNode.children!.push(nodeFromCategory(category));
+    familyNode.children!.push(categoryNode);
+    familyNode.numProperties += categoryNode.numProperties;
   } else {
     if (familyTitle) {
-      familyNode = nodeFromChildren(familyTitle, defaultOrder, [
-        nodeFromCategory(category),
-      ]);
+      familyNode = nodeFromChildren(familyTitle, defaultOrder, [categoryNode]);
     } else {
-      familyNode = nodeFromCategory(category);
+      familyNode = categoryNode;
       familyTitle = category.title;
     }
     familyNodes.set(familyTitle, familyNode);
   }
 }
 
+function filterCategory(
+  category: ConfigurationCategory,
+  searchPattern: string
+): ConfigurationCategory | undefined {
+  const unfilteredProps = Object.entries(category.properties);
+  const filteredProps = unfilteredProps.filter((prop) =>
+    matchProperty(prop, searchPattern)
+  );
+  if (filteredProps.length === 0) {
+    return undefined;
+  }
+  if (filteredProps.length === unfilteredProps.length) {
+    return category;
+  }
+  const properties: Record<string, UiSchema> = {};
+  filteredProps.forEach(([name, schema]) => {
+    properties[name] = schema;
+  });
+  return { ...category, properties };
+}
+
+function matchProperty(
+  [name, schema]: [string, UiSchema],
+  searchPattern: string
+): boolean {
+  return (
+    textMatches(name, searchPattern) ||
+    textMatches(schema.description, searchPattern) ||
+    textMatches(schema.markdownDescription, searchPattern) ||
+    (schema.type === "object" &&
+      Object.entries(schema.properties).some((prop) =>
+        matchProperty(prop, searchPattern)
+      ))
+  );
+}
+
+function textMatches(text: string | undefined, searchPattern: string) {
+  if (!text) {
+    return false;
+  }
+  return text.toLowerCase().indexOf(searchPattern) >= 0;
+}
+
 function nodeFromCategory(category: ConfigurationCategory): ConfigurationNode {
-  return {
-    id: newId(),
-    title: category.title,
-    order: typeof category.order === "number" ? category.order : defaultOrder,
-    category: category,
-  };
+  const title = category.title;
+  const order =
+    typeof category.order === "number" ? category.order : defaultOrder;
+  const numProperties = Object.values(category.properties)
+    .filter((schema) => !schema.hidden)
+    .reduce((n: number) => n + 1, 0);
+  return { id: newId(), title, order, category, numProperties };
 }
 
 function nodeFromChildren(
@@ -216,12 +264,11 @@ function nodeFromChildren(
   order: number,
   children: ConfigurationNode[]
 ): ConfigurationNode {
-  return {
-    id: newId(),
-    title,
-    order,
-    children,
-  };
+  const numProperties = children.reduce(
+    (n: number, node) => n + node.numProperties,
+    0
+  );
+  return { id: newId(), title, order, children, numProperties };
 }
 
 function sortNodes(
@@ -271,19 +318,19 @@ export type ConfigurationItem =
   | ConfigurationPropertyItem;
 
 export function useConfigurationItems(
-  configurationTree: ConfigurationTree
+  configurationNodes: ConfigurationNode[]
 ): ConfigurationItem[] {
   return useMemo(
-    () => getConfigurationItems(configurationTree),
-    [configurationTree]
+    () => getConfigurationItems(configurationNodes),
+    [configurationNodes]
   );
 }
 
 function getConfigurationItems(
-  configurationTree: ConfigurationTree
+  configurationNodes: ConfigurationNode[]
 ): ConfigurationItem[] {
   const items: ConfigurationItem[] = [];
-  collectConfigurationItems(configurationTree.children, [], items);
+  collectConfigurationItems(configurationNodes, [], items);
   return items;
 }
 
@@ -300,6 +347,7 @@ function collectConfigurationItems(
         titlePath: [...titlePath, node.title],
       });
       Object.entries(node.category.properties)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .filter(([_, propertySchema]) => !propertySchema.hidden)
         .sort(compareCategoryProperties)
         .forEach(([propertyName, propertySchema]) => {
