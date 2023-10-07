@@ -5,7 +5,7 @@ import {
   keybindingsPoint,
   menusPoint,
   statusBarItemsPoint,
-  storeProvidersPoint,
+  storesPoint,
   submenusPoint,
   viewsPoint,
 } from "./index";
@@ -21,6 +21,7 @@ import { Disposable } from "@/util";
  * - `"keybindings"`
  * - `"menus"`
  * - `"submenus"`
+ * - `"stores"`
  * - `"views"`
  *
  * @category UI Contributions API
@@ -35,7 +36,7 @@ export function registerContributionPoints(): Disposable {
     registerContributionPoint(menusPoint),
     registerContributionPoint(submenusPoint),
     registerContributionPoint(statusBarItemsPoint),
-    registerContributionPoint(storeProvidersPoint),
+    registerContributionPoint(storesPoint),
     registerContributionPoint(viewsPoint)
   );
 }

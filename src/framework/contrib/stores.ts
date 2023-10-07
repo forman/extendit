@@ -12,21 +12,20 @@ export interface StoreProvider<T = unknown> {
   getSnapshot(): T;
 }
 
-export const storeProvidersPoint: CodeContributionPoint = {
-  id: "storeProviders",
+export const storesPoint: CodeContributionPoint = {
+  id: "stores",
 };
 
 export function registerStoreProvider(storeProvider: StoreProvider) {
   return registerCodeContribution(
-    storeProvidersPoint.id,
+    storesPoint.id,
     storeProvider.id,
     storeProvider
   );
 }
 
-export function useStoreStates() {
-  const storeProviders =
-    useCodeContributions<StoreProvider>(storeProvidersPoint);
+export function useStores() {
+  const storeProviders = useCodeContributions<StoreProvider>(storesPoint);
   const subscribe = useCallback(
     (onStoreChange: () => void) => {
       const unsubscribes: (() => void)[] = [];
@@ -53,5 +52,5 @@ function getStores(): Record<string, unknown> {
 }
 
 function getStoreProviders() {
-  return getCodeContributions<StoreProvider>(storeProvidersPoint);
+  return getCodeContributions<StoreProvider>(storesPoint);
 }

@@ -52,10 +52,10 @@ export {
 
 export {
   type StoreProvider,
-  storeProvidersPoint,
+  storesPoint,
   registerStoreProvider,
-  useStoreStates,
-} from "./store-provider";
+  useStores,
+} from "./stores";
 
 export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
 
