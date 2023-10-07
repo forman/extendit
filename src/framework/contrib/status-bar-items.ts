@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import {
   type CodeContributionPoint,
   registerCodeContribution,
-  useCodeContributionsMap,
+  useCodeContributions,
 } from "@/core";
 import { Disposable } from "@/util";
 
@@ -36,14 +36,10 @@ export function registerStatusBarItem(
 }
 
 export function useStatusBarItems() {
-  const statusBarItems = useCodeContributionsMap<StatusBarItem>(
-    statusBarItemsPoint.id
-  );
+  const statusBarItems =
+    useCodeContributions<StatusBarItem>(statusBarItemsPoint);
   return useMemo(
-    () =>
-      processStatusBarItems(
-        statusBarItems ? Array.from(statusBarItems.values()) : []
-      ),
+    () => processStatusBarItems([...statusBarItems.values()]),
     [statusBarItems]
   );
 }

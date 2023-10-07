@@ -29,7 +29,7 @@ export {
   useContributions,
   useContributionPoints,
   useCodeContribution,
-  useCodeContributionsMap,
+  useCodeContributions,
 } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,10 +45,8 @@ export type {
 } from "./types";
 export { registerContributionPoint } from "./contrib/point/register";
 export { registerCodeContribution } from "./contrib/code/register";
-export {
-  getCodeContribution,
-  getCodeContributionsMap,
-} from "./contrib/code/get";
+export { getCodeContributions } from "./contrib/code/get";
+export { loadCodeContribution } from "./contrib/code/load";
 export {
   type When,
   WhenClauseCompiler,

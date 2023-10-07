@@ -1,16 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore as useZustandStore } from "zustand";
+import { getContributionsFromExtensions } from "@/core/contrib/point/get";
+import { getCodeContributions } from "@/core/contrib/code/get";
+import { loadCodeContribution } from "@/core/contrib/code/load";
 import type {
   CodeContributionPoint,
   ContributionPoint,
   Extension,
 } from "./types";
 import { frameworkStore, type FrameworkState } from "./store";
-import { getContributionsFromExtensions } from "./contrib/point/get";
-import {
-  getCodeContribution,
-  getCodeContributionsMap,
-} from "@/core/contrib/code/get";
 
 /**
  * A React hook that gets data from the framework's store.
@@ -89,6 +87,7 @@ export interface CodeContribution<T = unknown> {
   error?: unknown;
 }
 
+// TODO: rename into useLoadCodeContribution
 export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
   contribPoint: CodeContributionPoint<S, PS>,
   contribId: string | null | undefined
@@ -108,7 +107,7 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
       return;
     }
     setState((s) => ({ ...s, [contribKey]: { isLoading: true } }));
-    getCodeContribution(contribPoint, contribId!)
+    loadCodeContribution(contribPoint, contribId!)
       .then((data) => {
         setState((s) => ({ ...s, [contribKey]: { isLoading: false, data } }));
       })
@@ -125,11 +124,11 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
     : undefined;
 }
 
-export function useCodeContributionsMap<Data = unknown>(
-  contribPointId: string
+export function useCodeContributions<Data = unknown>(
+  contribPoint: CodeContributionPoint
 ) {
   return useMemo(
-    () => getCodeContributionsMap<Data>(contribPointId),
-    [contribPointId]
+    () => getCodeContributions<Data>(contribPoint),
+    [contribPoint]
   );
 }

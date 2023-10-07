@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import { getCodeContribution } from "./get";
+import { getCodeContributions } from "./get";
 
-test("getCodeContribution", () => {
+test("getCodeContributions", () => {
   // TODO: replace smoke test by unit test
-  expect(getCodeContribution).toBeInstanceOf(Function);
+  expect(getCodeContributions).toBeInstanceOf(Function);
 });

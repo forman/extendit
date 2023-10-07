@@ -2,7 +2,7 @@ import React from "react";
 import type { JSONSchemaType } from "ajv";
 import {
   type CodeContributionPoint,
-  getCodeContribution,
+  loadCodeContribution,
   registerCodeContribution,
   useContributions,
 } from "@/core";
@@ -78,7 +78,7 @@ export function registerDataViewProvider(
 }
 
 export async function getDataViewProvider(viewType: string) {
-  return getCodeContribution<DataViewProvider, DataView[]>(
+  return loadCodeContribution<DataViewProvider, DataView[]>(
     dataViewsPoint,
     viewType
   );

@@ -50,6 +50,13 @@ export {
   useStatusBarItems,
 } from "./status-bar-items";
 
+export {
+  type StoreProvider,
+  storeProvidersPoint,
+  registerStoreProvider,
+  useStoreStates,
+} from "./store-provider";
+
 export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
 
 export {

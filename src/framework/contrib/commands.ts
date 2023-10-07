@@ -4,7 +4,7 @@ import {
   type CodeContributionPoint,
   type When,
   useContributions,
-  getCodeContribution,
+  loadCodeContribution,
   registerCodeContribution,
   whenClauseCompiler,
 } from "@/core";
@@ -106,8 +106,9 @@ export async function executeCommand<T, A extends unknown[]>(
   commandId: string,
   ...args: A
 ): Promise<T> {
-  const command = await getCodeContribution<CommandFn<T>>(
-    commandsPoint as CodeContributionPoint, // FIXME!
+  const command = await loadCodeContribution<CommandFn<T>>(
+    // FIXME: TS: the cast should not be required
+    commandsPoint as CodeContributionPoint,
     commandId
   );
   LOG.debug("executeCommand", commandId, args);
