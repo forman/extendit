@@ -14,9 +14,11 @@ import type { CodeContributionPoint } from "@/core/types";
 export function getCodeContributions<Data>(
   contribPoint: CodeContributionPoint
 ): ReadonlyMap<string, Data> {
-  const storeRecord = getStoreRecord("codeContributions", contribPoint.id);
+  let storeRecord = getStoreRecord("codeContributions", contribPoint.id);
   if (!storeRecord) {
-    throw new Error(`Unregistered contribution point "${contribPoint.id}".`);
+    // It is ok not to have any registrations yet.
+    // We are returning a snapshot.
+    storeRecord = new Map<string, Data>();
   }
   return storeRecord as ReadonlyMap<string, Data>;
 }
