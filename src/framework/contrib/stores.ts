@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import {
   type CodeContributionPoint,
   registerCodeContribution,
@@ -47,46 +47,51 @@ export function useStores() {
     [storeProviders]
   );
 
-  const prevSnapshotsRef = useRef<Record<string, unknown>>();
+  const [prevStoreStates, setPrevStoreStates] = useState<
+    Record<string, unknown>
+  >(getNextStoreStates(storeProviders));
   // Get the nextSnapshots state
-  const nextSnapshots = getNextSnapshots(
-    storeProviders,
-    prevSnapshotsRef.current
-  );
-  prevSnapshotsRef.current = nextSnapshots;
+  const nextStoreStates = getNextStoreStates(storeProviders, prevStoreStates);
+  // TODO: Check if we need useEffect() here.
+  // TODO: Prevent infinite recursion if one of the store provider's
+  //   getSnapshot() return values is not stable. Compare with
+  //   React useSyncExternalStore() implementation code.
+  if (nextStoreStates !== prevStoreStates) {
+    setPrevStoreStates(nextStoreStates);
+  }
 
   // Get the cached getSnapshot() function, based on whether
   // nextSnapshots state changed.
   const getSnapshot = useCallback(() => {
-    return nextSnapshots;
-  }, [nextSnapshots]);
+    return nextStoreStates;
+  }, [nextStoreStates]);
 
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
-function getNextSnapshots(
+function getNextStoreStates(
   storeProviders: StoreProvider[],
-  prevSnapshots: Record<string, unknown> | undefined
+  prevStoreStates?: Record<string, unknown>
 ): Record<string, unknown> {
-  if (!prevSnapshots) {
-    const nextSnapshots: Record<string, unknown> = {};
+  if (!prevStoreStates) {
+    const nextStoreStates: Record<string, unknown> = {};
     storeProviders.forEach((storeProvider) => {
-      nextSnapshots[storeProvider.id] = storeProvider.getSnapshot();
+      nextStoreStates[storeProvider.id] = storeProvider.getSnapshot();
     });
-    return nextSnapshots;
+    return nextStoreStates;
   } else {
-    let nextSnapshots: Record<string, unknown> | undefined = undefined;
+    let nextStoreStates: Record<string, unknown> | undefined = undefined;
     storeProviders.forEach((storeProvider) => {
       const storeId = storeProvider.id;
-      const prevSnapshot = prevSnapshots[storeId];
-      const newSnapshot = storeProvider.getSnapshot();
-      if (prevSnapshot !== newSnapshot) {
-        if (!nextSnapshots) {
-          nextSnapshots = { ...prevSnapshots };
+      const prevStoreState = prevStoreStates[storeId];
+      const newStoreState = storeProvider.getSnapshot();
+      if (prevStoreState !== newStoreState) {
+        if (!nextStoreStates) {
+          nextStoreStates = { ...prevStoreStates };
         }
-        nextSnapshots[storeId] = newSnapshot;
+        nextStoreStates[storeId] = newStoreState;
       }
     });
-    return nextSnapshots || prevSnapshots;
+    return nextStoreStates || prevStoreStates;
   }
 }
