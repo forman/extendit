@@ -103,6 +103,8 @@ export interface TupleUiSchema extends UiSchemaBase<TupleUiValue> {
   // to constrain additional items on a tuple.
   // It works the same as "items", only the name has changed.
   additionalItems?: false; // We do not support additional items for tuples
+  // Extra properties:
+  tupleItemLabels?: string[];
 }
 
 export interface ListUiSchema extends UiSchemaBase<ListUiValue> {
