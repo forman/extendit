@@ -1,56 +1,100 @@
 import { describe, expect, test } from "vitest";
 import {
-  type ArrayUiSchema,
+  type ListUiSchema,
   type ObjectUiSchema,
-  getUiSchemaDefaultValue,
+  type TupleUiSchema,
+  getDefaultUiValue,
+  isBooleanUiSchema,
+  isNumberUiSchema,
+  isStringUiSchema,
+  isTupleUiSchema,
+  isListUiSchema,
+  isObjectUiSchema,
 } from "./ui-schema";
 
-describe("getUiSchemaDefaultValue", () => {
+describe("type guards", () => {
   test("boolean", () => {
-    expect(getUiSchemaDefaultValue({ type: "boolean", default: true })).toEqual(
-      true
-    );
-    expect(getUiSchemaDefaultValue({ type: "boolean" })).toEqual(false);
+    expect(isBooleanUiSchema({ type: "boolean" })).toEqual(true);
+    expect(isBooleanUiSchema({ type: "string" })).toEqual(false);
+  });
+  test("number", () => {
+    expect(isNumberUiSchema({ type: "number" })).toEqual(true);
+    expect(isNumberUiSchema({ type: "integer" })).toEqual(true);
+    expect(isNumberUiSchema({ type: "string" })).toEqual(false);
+  });
+  test("string", () => {
+    expect(isStringUiSchema({ type: "string" })).toEqual(true);
+    expect(isStringUiSchema({ type: "integer" })).toEqual(false);
+  });
+  test("tuple", () => {
+    expect(
+      isTupleUiSchema({
+        type: "array",
+        items: [{ type: "integer" }, { type: "string" }],
+      })
+    ).toEqual(true);
+    expect(
+      isTupleUiSchema({ type: "array", items: { type: "integer" } })
+    ).toEqual(false);
+    expect(isTupleUiSchema({ type: "integer" })).toEqual(false);
+  });
+  test("list", () => {
+    expect(
+      isListUiSchema({ type: "array", items: { type: "integer" } })
+    ).toEqual(true);
+    expect(
+      isListUiSchema({
+        type: "array",
+        items: [{ type: "integer" }, { type: "string" }],
+      })
+    ).toEqual(false);
+    expect(isListUiSchema({ type: "integer" })).toEqual(false);
+  });
+  test("object", () => {
+    expect(
+      isObjectUiSchema({
+        type: "object",
+        properties: {
+          age: { type: "integer" },
+          name: { type: "string" },
+        },
+        additionalProperties: false,
+      })
+    ).toEqual(true);
+    expect(isObjectUiSchema({ type: "integer" })).toEqual(false);
+  });
+});
+
+describe("getDefaultUiValue", () => {
+  test("boolean", () => {
+    expect(getDefaultUiValue({ type: "boolean", default: true })).toEqual(true);
+    expect(getDefaultUiValue({ type: "boolean" })).toEqual(false);
   });
 
   test("integer", () => {
-    expect(getUiSchemaDefaultValue({ type: "integer", default: 10 })).toEqual(
-      10
-    );
-    expect(getUiSchemaDefaultValue({ type: "integer", enum: [3, 4] })).toEqual(
-      3
-    );
-    expect(getUiSchemaDefaultValue({ type: "integer", minimum: 1 })).toEqual(1);
-    expect(getUiSchemaDefaultValue({ type: "integer", maximum: 100 })).toEqual(
-      100
-    );
-    expect(getUiSchemaDefaultValue({ type: "integer" })).toEqual(0);
+    expect(getDefaultUiValue({ type: "integer", default: 10 })).toEqual(10);
+    expect(getDefaultUiValue({ type: "integer", enum: [3, 4] })).toEqual(3);
+    expect(getDefaultUiValue({ type: "integer", minimum: 1 })).toEqual(1);
+    expect(getDefaultUiValue({ type: "integer", maximum: 100 })).toEqual(100);
+    expect(getDefaultUiValue({ type: "integer" })).toEqual(0);
   });
 
   test("number", () => {
-    expect(getUiSchemaDefaultValue({ type: "number", default: 0.1 })).toEqual(
-      0.1
+    expect(getDefaultUiValue({ type: "number", default: 0.1 })).toEqual(0.1);
+    expect(getDefaultUiValue({ type: "number", enum: [0.3, 0.4] })).toEqual(
+      0.3
     );
-    expect(
-      getUiSchemaDefaultValue({ type: "number", enum: [0.3, 0.4] })
-    ).toEqual(0.3);
-    expect(getUiSchemaDefaultValue({ type: "number", minimum: 0.2 })).toEqual(
-      0.2
-    );
-    expect(getUiSchemaDefaultValue({ type: "number", maximum: 0.9 })).toEqual(
-      0.9
-    );
-    expect(getUiSchemaDefaultValue({ type: "number" })).toEqual(0);
+    expect(getDefaultUiValue({ type: "number", minimum: 0.2 })).toEqual(0.2);
+    expect(getDefaultUiValue({ type: "number", maximum: 0.9 })).toEqual(0.9);
+    expect(getDefaultUiValue({ type: "number" })).toEqual(0);
   });
 
   test("string", () => {
-    expect(getUiSchemaDefaultValue({ type: "string", default: "A!" })).toEqual(
-      "A!"
+    expect(getDefaultUiValue({ type: "string", default: "A!" })).toEqual("A!");
+    expect(getDefaultUiValue({ type: "string", enum: ["X", "Y"] })).toEqual(
+      "X"
     );
-    expect(
-      getUiSchemaDefaultValue({ type: "string", enum: ["X", "Y"] })
-    ).toEqual("X");
-    expect(getUiSchemaDefaultValue({ type: "string" })).toEqual("");
+    expect(getDefaultUiValue({ type: "string" })).toEqual("");
   });
 
   test("object", () => {
@@ -64,7 +108,7 @@ describe("getUiSchemaDefaultValue", () => {
       additionalProperties: false,
     };
     expect(
-      getUiSchemaDefaultValue({
+      getDefaultUiValue({
         ...schema,
         default: { theme: "dark", limit: 20, show: true },
       })
@@ -73,7 +117,7 @@ describe("getUiSchemaDefaultValue", () => {
       limit: 20,
       show: true,
     });
-    expect(getUiSchemaDefaultValue(schema)).toEqual({
+    expect(getDefaultUiValue(schema)).toEqual({
       theme: "system",
       limit: 10,
       show: false,
@@ -81,35 +125,31 @@ describe("getUiSchemaDefaultValue", () => {
   });
 
   test("tuple", () => {
-    const schema: ArrayUiSchema = {
+    const schema: TupleUiSchema = {
       type: "array",
       items: [
         { type: "string", enum: ["system", "dark", "light"] },
         { type: "integer", default: 10 },
         { type: "boolean" },
       ],
-      additionalItems: false,
     };
     expect(
-      getUiSchemaDefaultValue({
+      getDefaultUiValue({
         ...schema,
         default: ["dark", 20, true],
       })
     ).toEqual(["dark", 20, true]);
-    expect(getUiSchemaDefaultValue(schema)).toEqual(["system", 10, false]);
+    expect(getDefaultUiValue(schema)).toEqual(["system", 10, false]);
   });
 
   test("array", () => {
-    const schema: ArrayUiSchema = {
+    const schema: ListUiSchema = {
       type: "array",
       items: { type: "integer", default: -1 },
+      additionalItems: false,
     };
-    expect(getUiSchemaDefaultValue({ ...schema, default: [1, 2] })).toEqual([
-      1, 2,
-    ]);
-    expect(getUiSchemaDefaultValue({ ...schema, minItems: 3 })).toEqual([
-      -1, -1, -1,
-    ]);
-    expect(getUiSchemaDefaultValue(schema)).toEqual([]);
+    expect(getDefaultUiValue({ ...schema, default: [1, 2] })).toEqual([1, 2]);
+    expect(getDefaultUiValue({ ...schema, minItems: 3 })).toEqual([-1, -1, -1]);
+    expect(getDefaultUiValue(schema)).toEqual([]);
   });
 });

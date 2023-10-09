@@ -1,31 +1,45 @@
-import type { JsonValue } from "@/util";
-
 /**
  * A primitive UI value is either a boolean, number or string.
  */
 export type PrimitiveUiValue = boolean | number | string;
 
 /**
- * An object UI value is an object comprising primitive UI values.
+ * An object UI value is an object comprising properties whose values are
+ * only primitive UI values.
  */
 export type ObjectUiValue = Record<string, PrimitiveUiValue>;
 
 /**
- * A UI array is an array whose items are
- * either all of type boolean, number, string, UI object,
- * or a fixed-length tuple of possibly different primitives.
+ * A tuple UI value is a fixed-length array whose items are
+ * only primitive UI values.
  */
-export type ArrayUiValue =
+export type TupleUiValue = [PrimitiveUiValue, ...PrimitiveUiValue[]];
+
+/**
+ * A list UI value is a variable-length array of either boolean, number,
+ * string, tuple, or object UI values.
+ */
+export type ListUiValue =
   | boolean[]
   | number[]
   | string[]
-  | ObjectUiValue[]
-  | TupleUiValues;
+  | TupleUiValue[]
+  | ObjectUiValue[];
+
+/**
+ * A UI value is either a primitive, object, tuple, or list UI value.
+ */
+export type UiValue =
+  | PrimitiveUiValue
+  | ObjectUiValue
+  | TupleUiValue
+  | ListUiValue;
 
 export interface UiSchemaBase<Value> {
   // If we allow nullable, we need to support null/undefined values.
   // nullable?: boolean;
   default?: Value;
+  const?: Value;
   enum?: Value[];
   description?: string;
   // extras
@@ -36,7 +50,9 @@ export interface UiSchemaBase<Value> {
   order?: number;
   hidden?: boolean;
 
-  [keyword: string]: unknown;
+  // Check: shall we support custom properties or arbitrary other
+  // JSON Schema / OpenAPI properties?
+  // [keyword: string]: unknown;
 }
 
 export interface BooleanUiSchema extends UiSchemaBase<boolean> {
@@ -78,71 +94,100 @@ export interface ObjectUiSchema
   additionalProperties: false;
 }
 
-export type ItemUiSchema = PrimitiveUiSchema | ObjectUiSchema;
-export type TupleUiSchemas = [PrimitiveUiSchema, ...PrimitiveUiSchema[]];
-export type TupleUiValues = [PrimitiveUiValue, ...PrimitiveUiValue[]];
-
-export interface ArrayUiSchema extends UiSchemaBase<ArrayUiValue> {
+export interface TupleUiSchema extends UiSchemaBase<TupleUiValue> {
   type: "array";
-  // Either pure items or tuple of primitives.
-  items: ItemUiSchema | TupleUiSchemas;
+  // Up to Draft 6 - 2019-09 uses "items"
+  // Draft 2020-12 uses "prefixItems".
+  items: [PrimitiveUiSchema, ...PrimitiveUiSchema[]];
+  // Before to Draft 2020-12, you would use the "additionalItems" keyword
+  // to constrain additional items on a tuple.
+  // It works the same as "items", only the name has changed.
+  additionalItems?: false; // We do not support additional items for tuples
+}
+
+export interface ListUiSchema extends UiSchemaBase<ListUiValue> {
+  type: "array";
+  items: PrimitiveUiSchema | ObjectUiSchema | TupleUiSchema;
   minItems?: number;
   maxItems?: number;
-  // In JSON Schema, additionalItems is optional and defaults to true.
-  // We don't support this. Any items must be defined.
-  // In new JSON Schema versions, additionalItems is only valid for
-  // non-tuple items. So we have to make it optional.
-  additionalItems?: false;
+  // In Draft 6 - 2019-09, the "additionalItems" keyword is ignored
+  additionalItems?: false; // We do not support additional items for lists
 }
 
 export type UiSchema =
-  | BooleanUiSchema
-  | NumberUiSchema
-  | StringUiSchema
+  | PrimitiveUiSchema
   | ObjectUiSchema
-  | ArrayUiSchema;
+  | TupleUiSchema
+  | ListUiSchema;
 
-export function getUiSchemaDefaultValue(schema: UiSchema): JsonValue {
-  if (schema.default !== undefined) {
-    return schema.default;
-  } else if (schema.enum && schema.enum.length) {
+export function isBooleanUiSchema(schema: UiSchema): schema is BooleanUiSchema {
+  return schema.type === "boolean";
+}
+export function isNumberUiSchema(schema: UiSchema): schema is NumberUiSchema {
+  return schema.type === "number" || schema.type === "integer";
+}
+export function isStringUiSchema(schema: UiSchema): schema is StringUiSchema {
+  return schema.type === "string";
+}
+export function isTupleUiSchema(schema: UiSchema): schema is TupleUiSchema {
+  return schema.type === "array" && Array.isArray(schema.items);
+}
+export function isListUiSchema(schema: UiSchema): schema is ListUiSchema {
+  return schema.type === "array" && !Array.isArray(schema.items);
+}
+export function isObjectUiSchema(schema: UiSchema): schema is ObjectUiSchema {
+  return schema.type === "object";
+}
+
+export function getDefaultUiValue(schema: BooleanUiSchema): boolean;
+export function getDefaultUiValue(schema: NumberUiSchema): number;
+export function getDefaultUiValue(schema: StringUiSchema): string;
+export function getDefaultUiValue(schema: TupleUiSchema): TupleUiValue;
+export function getDefaultUiValue(schema: ListUiSchema): ListUiValue;
+export function getDefaultUiValue(schema: ObjectUiSchema): ObjectUiValue;
+export function getDefaultUiValue(schema: UiSchema): UiValue;
+export function getDefaultUiValue(schema: UiSchema): UiValue {
+  // Derive default value from generic schema properties
+  if (schema.const !== undefined) {
+    return schema.const;
+  } else if (schema.enum && schema.enum.length === 1) {
+    // Same as const
     return schema.enum[0];
-  } else if (schema.type === "boolean") {
+  } else if (schema.default !== undefined) {
+    return schema.default;
+  } else if (schema.enum && schema.enum.length > 1) {
+    return schema.enum[0];
+  }
+
+  // Derive default value from schema types and type-specific schema properties
+  if (isBooleanUiSchema(schema)) {
     return false;
-  } else if (schema.type === "number" || schema.type === "integer") {
+  } else if (isNumberUiSchema(schema)) {
     if (typeof schema.minimum === "number") {
       return schema.minimum;
-    }
-    if (typeof schema.maximum === "number") {
+    } else if (typeof schema.maximum === "number") {
       return schema.maximum;
     }
     return 0;
-  } else if (schema.type === "string") {
-    // TODO: respect minLength and format
+  } else if (isStringUiSchema(schema)) {
     return "";
-  } else if (schema.type === "object") {
-    const object: Record<string, JsonValue> = {};
+  } else if (isTupleUiSchema(schema)) {
+    const itemSchemas = schema.items;
+    return itemSchemas.map((itemSchema) =>
+      getDefaultUiValue(itemSchema)
+    ) as TupleUiValue;
+  } else if (isListUiSchema(schema)) {
+    const itemSchema = schema.items;
+    const numItems = typeof schema.minItems === "number" ? schema.minItems : 0;
+    return Array(numItems).fill(getDefaultUiValue(itemSchema)) as ListUiValue;
+  } else {
+    // isObjectUiSchema(schema)
+    const object: Record<string, unknown> = {};
     Object.entries(schema.properties).forEach(
       ([propertyName, propertySchema]) => {
-        object[propertyName] = getUiSchemaDefaultValue(propertySchema);
+        object[propertyName] = getDefaultUiValue(propertySchema);
       }
     );
-    return object;
-  } else {
-    if (Array.isArray(schema.items)) {
-      const itemSchemas = schema.items as TupleUiSchemas;
-      return itemSchemas.map((itemSchema) =>
-        getUiSchemaDefaultValue(itemSchema)
-      );
-    } else {
-      const itemSchema = schema.items as ItemUiSchema;
-      const numItems =
-        typeof schema.minItems === "number" ? schema.minItems : 0;
-      return Array<JsonValue>(numItems).fill(
-        // This cast is actually wrong, but I have no idea how to satisfy
-        // the TS compiler. Just try: getDefaultValue(items)
-        getUiSchemaDefaultValue(itemSchema as unknown as ObjectUiSchema)
-      );
-    }
+    return object as ObjectUiValue;
   }
 }
