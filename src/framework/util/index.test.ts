@@ -14,6 +14,7 @@ test("Framework Util API is complete", () => {
     "expr",
     "getDefaultUiValue",
     "isBooleanUiSchema",
+    "isIntegerUiSchema",
     "isListUiSchema",
     "isNumberUiSchema",
     "isObjectUiSchema",

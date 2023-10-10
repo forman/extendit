@@ -125,6 +125,9 @@ export type UiSchema =
 export function isBooleanUiSchema(schema: UiSchema): schema is BooleanUiSchema {
   return schema.type === "boolean";
 }
+export function isIntegerUiSchema(schema: UiSchema): schema is NumberUiSchema {
+  return schema.type === "integer";
+}
 export function isNumberUiSchema(schema: UiSchema): schema is NumberUiSchema {
   return schema.type === "number" || schema.type === "integer";
 }
