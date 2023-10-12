@@ -1,4 +1,5 @@
 import { createStore } from "zustand/vanilla";
+import memoizeOne from "memoize-one";
 import type { ContributionPoint, Extension, ExtensionStatus } from "./types";
 import type { ExtensionContextImpl } from "./extension/context";
 import { assertDefined } from "@/util/assert";
@@ -151,14 +152,37 @@ export function setExtensionStatus(
 }
 
 /**
- * Get the extension context for given extension identifier.
+ * Returns a stable snapshot of the installed extensions.
+ *
+ * See {@link useExtensions}
+ */
+export function getExtensions(): Extension[] {
+  return getMemoizedExtensions(frameworkStore.getState().extensions);
+}
+const getMemoizedExtensions = memoizeOne(
+  (extensions: Record<string, Extension>): Extension[] => {
+    return Object.values(extensions);
+  }
+);
+
+/**
+ * Returns a stable snapshot of the current extension contexts.
  *
  * @internal
  * @category Extension API
  */
 export function getExtensionContexts(): ExtensionContextImpl[] {
-  return Object.values(frameworkStore.getState().extensionContexts);
+  return getMemoizedExtensionContexts(
+    frameworkStore.getState().extensionContexts
+  );
 }
+const getMemoizedExtensionContexts = memoizeOne(
+  (
+    extensionContexts: Record<string, ExtensionContextImpl>
+  ): ExtensionContextImpl[] => {
+    return Object.values(extensionContexts);
+  }
+);
 
 /**
  * Get the extension context for given extension identifier.
@@ -202,13 +226,22 @@ export function getExtensionContext(
 }
 
 /**
- * Gets the framework's contribution points.
+ * Returns a stable snapshot of the framework's contribution points.
  *
  * @category Extension Contributions API
  */
 export function getContributionPoints(): ContributionPoint[] {
-  return Object.values(frameworkStore.getState().contributionPoints);
+  return getMemoizedContributionPoints(
+    frameworkStore.getState().contributionPoints
+  );
 }
+const getMemoizedContributionPoints = memoizeOne(
+  (
+    contributionPoints: Record<string, ContributionPoint>
+  ): ContributionPoint[] => {
+    return Object.values(contributionPoints);
+  }
+);
 
 //////////////////////////////////////////////////
 // Utilities

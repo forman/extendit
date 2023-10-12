@@ -3,6 +3,7 @@ import { registerExtension } from "@/core/extension/register";
 import { newTestManifest } from "@/test/testing";
 import {
   getExtension,
+  getExtensions,
   getExtensionContext,
   getStoreRecord,
   deleteStoreRecord,
@@ -52,6 +53,19 @@ test("setExtensionStatus", () => {
   expect(extension.exports).toBe(exports);
   expect(extension.reasons).toHaveLength(1);
   expect(extension.reasons![0]).toBe(error);
+
+  disposable.dispose();
+});
+
+test("getExtensions", () => {
+  expect(getExtensions()).toEqual([]);
+  expect(getExtensions()).toBe(getExtensions());
+
+  const disposable = registerExtension(newTestManifest());
+  const extension = getExtension("pippo.foo", true);
+
+  expect(getExtensions()).toEqual([extension]);
+  expect(getExtensions()).toBe(getExtensions());
 
   disposable.dispose();
 });
