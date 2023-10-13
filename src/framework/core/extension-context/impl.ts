@@ -6,8 +6,8 @@ import type {
 } from "@/core/types";
 import type { DisposableLike } from "@/util/disposable";
 import { frameworkConfig } from "@/core/config";
-import { getExtension } from "@/core/store";
 import { Logger } from "@/util/log";
+import { getExtension } from "@/core";
 
 const LOG = new Logger("extension/context");
 

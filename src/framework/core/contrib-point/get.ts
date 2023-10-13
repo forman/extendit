@@ -1,5 +1,41 @@
-import type { Extension } from "@/core/types";
-import { getExtensionContext } from "@/core/store";
+import memoizeOne from "memoize-one";
+import type { ContributionPoint, Extension } from "@/core/types";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { frameworkStore } from "@/core/store";
+
+/**
+ * Gets the contribution point for the given contribution point identifier.
+ *
+ * @category Extension Contributions API
+ * @param contribPointId - The contribution point identifier.
+ * @returns A read-only map of code contributions or `undefined`
+ *   if it cannot be found.
+ */
+export function getContributionPoint<TM = unknown, TS = TM>(
+  contribPointId: string
+): ContributionPoint<TM, TS> | undefined {
+  return frameworkStore.getState().contributionPoints[
+    contribPointId
+  ] as ContributionPoint<TM, TS>;
+}
+
+/**
+ * Gets a stable snapshot of the framework's contribution points.
+ *
+ * @category Extension Contributions API
+ */
+export function getContributionPoints(): ContributionPoint[] {
+  return getMemoizedContributionPoints(
+    frameworkStore.getState().contributionPoints
+  );
+}
+const getMemoizedContributionPoints = memoizeOne(
+  (
+    contributionPoints: Record<string, ContributionPoint>
+  ): ContributionPoint[] => {
+    return Object.values(contributionPoints);
+  }
+);
 
 /**
  * Get the processed contributions from the manifest (package.json)

@@ -5,13 +5,11 @@ import type {
   ExtensionListener,
 } from "@/core/types";
 import type { ExtensionContextImpl } from "@/core/extension-context/impl";
-import {
-  getContributionPoints,
-  getExtensionContext,
-  setExtensionStatus,
-} from "@/core/store";
+import { getContributionPoints } from "@/core/contrib-point/get";
 import { type JsonValue, validateJson } from "@/util";
 import { Logger } from "@/util/log";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { setExtensionStatus } from "@/core/extension/set";
 
 const LOG = new Logger("contrib/process");
 

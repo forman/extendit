@@ -1,9 +1,10 @@
 import { expect, test } from "vitest";
-import { getExtensionContext, setExtensionStatus } from "@/core/store";
 import { newTestManifest, readTestManifest } from "@/test/testing";
 import { registerExtension } from "./register";
 import { activateExtension } from "./activate";
 import { deactivateExtension } from "./deactivate";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { setExtensionStatus } from "@/core/extension/set";
 
 test("deactivateExtension that exports Foo API", async () => {
   const manifest = newTestManifest();

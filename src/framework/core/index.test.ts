@@ -7,6 +7,8 @@ export const expectedExports = [
   "addExtensionListener",
   "deactivateExtension",
   "getCodeContributions",
+  "getContributionPoint",
+  "getContributionPoints",
   "getExtension",
   "getExtensionDisplayName",
   "getExtensionId",

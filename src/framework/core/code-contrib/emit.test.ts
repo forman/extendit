@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { emitActivationEvent } from "@/core/code-contrib/emit";
 import { readTestManifest } from "@/test/testing";
-import { registerExtension } from "@/core";
+import { getExtension, registerExtension } from "@/core";
 import { Disposable } from "@/util/disposable";
-import { getExtension, getExtensionContext } from "@/core/store";
+import { getExtensionContext } from "@/core/extension-context/get";
 
 test("emitActivationEvent", async () => {
   const { manifest, pathResolver } = readTestManifest("exports-foo-api");

@@ -6,8 +6,9 @@ import { registerExtension } from "@/core/extension/register";
 import { registerContributionPoint } from "@/core/contrib-point/register";
 import type { CodeContributionPoint, ContributionPoint } from "@/core/types";
 import { Disposable } from "@/util/disposable";
-import { getExtension, getExtensionContext } from "@/core/store";
 import { contributionProcessor } from "./process";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { getExtension } from "@/core";
 
 test("contributionProcessor is a value", () => {
   expect(contributionProcessor).toBeInstanceOf(Object);

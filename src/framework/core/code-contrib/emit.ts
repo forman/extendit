@@ -1,6 +1,6 @@
-import { getExtensionContexts } from "@/core/store";
 import { activateExtension } from "@/core/extension/activate";
 import { Logger } from "@/util/log";
+import { getExtensionContexts } from "@/core/extension-context/get";
 
 const LOG = new Logger("activation/emit");
 

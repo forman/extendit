@@ -1,8 +1,8 @@
 import { type ContributionPoint, useContributions } from "@/core";
 import type { JSONSchemaType } from "ajv";
-import { getExtensionContext } from "@/core/store";
 import { jsonMetaSchema, newId, toTitle, type UiSchema } from "@/util";
 import { useMemo } from "react";
+import { getExtensionContext } from "@/core/extension-context/get";
 //import * as log from "@/util/log";
 
 //const LOG = new log.Logger("contrib/configurations");

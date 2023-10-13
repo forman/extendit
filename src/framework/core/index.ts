@@ -1,4 +1,9 @@
 //////////////////////////////////////////////////////////////////////////
+// Framework API:
+export type { FrameworkOptions } from "./types";
+export { updateFrameworkConfig } from "./config";
+
+//////////////////////////////////////////////////////////////////////////
 // Extension API:
 // Use this API in your application to manage extensions.
 
@@ -11,17 +16,15 @@ export type {
   ExtensionStatus,
   ExtensionPathResolver,
   ExtensionOptions,
-  FrameworkOptions,
 } from "./types";
 export {
   getExtensionId,
   getExtensionDisplayName,
   readExtensionManifest,
 } from "./extension/manifest";
-export { getExtension } from "./store";
-export { updateFrameworkConfig } from "./config";
-export { registerExtension } from "./extension/register";
 export { activateExtension } from "./extension/activate";
+export { getExtension } from "@/core/extension/get";
+export { registerExtension } from "./extension/register";
 export { deactivateExtension } from "./extension/deactivate";
 export { addExtensionListener } from "./extension/listeners";
 export {
@@ -44,10 +47,14 @@ export type {
   CodeContributionPoint,
   When,
 } from "./types";
+export {
+  getContributionPoint,
+  getContributionPoints,
+} from "./contrib-point/get";
 export { registerContributionPoint } from "./contrib-point/register";
-export { registerCodeContribution } from "./code-contrib/register";
 export { getCodeContributions } from "./code-contrib/get";
 export { loadCodeContribution } from "./code-contrib/load";
+export { registerCodeContribution } from "./code-contrib/register";
 export {
   WhenClauseCompiler,
   whenClauseCompiler,
