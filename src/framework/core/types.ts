@@ -44,7 +44,8 @@ export type ExtensionStatus =
 /**
  * Represents an extension.
  *
- * To get an instance of an `Extension` use {@link getExtension}.
+ * To get a snapshot of an extension for a
+ * given extension identifier use {@link getExtension}.
  *
  * @category Extension API
  */
@@ -55,20 +56,20 @@ export interface Extension<T = unknown> {
   readonly id: string;
 
   /**
-   * The parsed contents of the extension's `package.json`.
+   * The contents of the extension's `package.json`.
    */
   readonly manifest: ExtensionManifest;
-
-  /**
-   * Current status of the extension.
-   */
-  readonly status: ExtensionStatus;
 
   /**
    * The public API exported by this extension (return value of `activateExtension`).
    * It is an invalid action to access this field before this extension has been activated.
    */
   readonly exports: T;
+
+  /**
+   * Current status of the extension.
+   */
+  readonly status: ExtensionStatus;
 
   /**
    * One or more reasons for extension rejection, if status === "rejected"
