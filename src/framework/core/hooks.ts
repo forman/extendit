@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore as useZustandStore } from "zustand";
-import { getContributionsFromExtensions } from "@/core/contrib/point/get";
-import { getCodeContributions } from "@/core/contrib/code/get";
-import { loadCodeContribution } from "@/core/contrib/code/load";
+import { getContributionsFromExtensions } from "@/core/contrib-point/get";
+import { getCodeContributions } from "@/core/code-contrib/get";
+import { loadCodeContribution } from "@/core/code-contrib/load";
 import type {
+  CodeContribution,
   CodeContributionPoint,
   ContributionPoint,
   Extension,
@@ -79,12 +80,6 @@ export function useContributions<T>(
 export function useContributionPoints(): ContributionPoint[] {
   const contributionPoints = useStore((state) => state.contributionPoints);
   return useMemo(() => Object.values(contributionPoints), [contributionPoints]);
-}
-
-export interface CodeContribution<T = unknown> {
-  isLoading: boolean;
-  data?: T;
-  error?: unknown;
 }
 
 // TODO: rename into useLoadCodeContribution

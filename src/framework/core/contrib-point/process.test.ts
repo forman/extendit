@@ -3,7 +3,7 @@ import type { JSONSchemaType } from "ajv";
 import { addExtensionListener } from "@/core/extension/listeners";
 import { newTestManifest } from "@/test/testing";
 import { registerExtension } from "@/core/extension/register";
-import { registerContributionPoint } from "@/core/contrib/point/register";
+import { registerContributionPoint } from "@/core/contrib-point/register";
 import type { CodeContributionPoint, ContributionPoint } from "@/core/types";
 import { Disposable } from "@/util/disposable";
 import { getExtension, getExtensionContext } from "@/core/store";

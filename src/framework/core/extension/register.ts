@@ -1,19 +1,19 @@
-import { Disposable } from "@/util/disposable";
 import type {
   Extension,
   ExtensionManifest,
   ExtensionOptions,
 } from "@/core/types";
 import { deleteStoreRecord, setStoreRecord } from "@/core/store";
-import { getExtensionId } from "./manifest";
 import {
   emitExtensionRegistered,
   emitExtensionUnregistered,
   emitExtensionWillUnregister,
 } from "./listeners";
-import { ExtensionContextImpl } from "./context";
-import { deactivateExtension } from "./deactivate";
+import { ExtensionContextImpl } from "@/core/extension-context/impl";
+import { Disposable } from "@/util/disposable";
 import { Logger } from "@/util/log";
+import { deactivateExtension } from "./deactivate";
+import { getExtensionId } from "./manifest";
 
 const LOG = new Logger("extension/register");
 

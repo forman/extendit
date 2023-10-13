@@ -4,7 +4,7 @@ import type {
   Extension,
   ExtensionListener,
 } from "@/core/types";
-import type { ExtensionContextImpl } from "@/core/extension/context";
+import type { ExtensionContextImpl } from "@/core/extension-context/impl";
 import {
   getContributionPoints,
   getExtensionContext,

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { emitActivationEvent } from "@/core/activation/emit";
+import { emitActivationEvent } from "@/core/code-contrib/emit";
 import { readTestManifest } from "@/test/testing";
 import { registerExtension } from "@/core";
 import { Disposable } from "@/util/disposable";

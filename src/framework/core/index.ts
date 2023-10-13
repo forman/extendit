@@ -42,22 +42,22 @@ export type {
   CodeContribution,
   ContributionPoint,
   CodeContributionPoint,
+  When,
 } from "./types";
-export { registerContributionPoint } from "./contrib/point/register";
-export { registerCodeContribution } from "./contrib/code/register";
-export { getCodeContributions } from "./contrib/code/get";
-export { loadCodeContribution } from "./contrib/code/load";
+export { registerContributionPoint } from "./contrib-point/register";
+export { registerCodeContribution } from "./code-contrib/register";
+export { getCodeContributions } from "./code-contrib/get";
+export { loadCodeContribution } from "./code-contrib/load";
 export {
-  type When,
   WhenClauseCompiler,
   whenClauseCompiler,
-} from "./contrib/when/compiler";
+} from "./contrib-point/compiler";
 
 //////////////////////////////////////////////////////////////////////////
 // Add extension listener that processes extension contributions
 // on extension registration.
 
-import { contributionProcessor } from "./contrib/point/process";
+import { contributionProcessor } from "./contrib-point/process";
 import { addExtensionListener } from "./extension/listeners";
 
 addExtensionListener(contributionProcessor);

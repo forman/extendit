@@ -1,23 +1,8 @@
+import type { When } from "@/core/types";
 import { Parser } from "@/util/expr";
 import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/when");
-
-/**
- * A compiled when-clause.
- *
- * The function takes a single argument `ctx`, e.g. the context
- * returned by {@link getContext} or the React hook {@link useContext},
- * and returns a Boolean that indicates whether the when-condition
- * is fulfilled.
- *
- * @category Extension Contribution API
- */
-export interface When {
-  (ctx: Record<string, unknown>): boolean;
-  /** The source when-clause expression. */
-  clause: string;
-}
 
 /**
  * A compiler for when-clauses.
@@ -59,6 +44,8 @@ export class WhenClauseCompiler {
     }
   }
 }
+
+// TODO: make whenClauseCompiler local, add global compileWhenClause()
 
 /**
  * The framework's when-clause compiler (singleton).

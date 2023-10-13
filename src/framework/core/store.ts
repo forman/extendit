@@ -3,21 +3,23 @@ import memoizeOne from "memoize-one";
 import { assertDefined } from "@/util/assert";
 import { Logger, LogLevel } from "@/util/log";
 import type {
+  CodeContributionPoint,
   ContributionPoint,
   Extension,
   ExtensionStatus,
-  CodeContributionPoint,
 } from "./types";
-import type { ExtensionContextImpl } from "./extension/context";
+import type { ExtensionContextImpl } from "./extension-context/impl";
 
 const LOG = new Logger("store");
 
 /**
- * Represents the framework's reactive state.
+ * Represents the framework's current state.
  *
- * This is unstable API, it may change any time.
- * use at your own risk.
+ * Note, this type is defined here and not in `./types.ts`, because of
+ * its dependency on class {@link ExtensionContextImpl}. `./types.ts` defines
+ * defines just its interface {@link ExtensionContext}.
  *
+ * @internal
  * @category Framework API
  */
 export interface FrameworkState {
@@ -28,7 +30,7 @@ export interface FrameworkState {
 }
 
 /**
- * The framework's store instance.
+ * The framework's reactive store instance.
  *
  * @internal
  * @category Framework API
@@ -39,6 +41,8 @@ export const frameworkStore = createStore<FrameworkState>()(() => ({
   contributionPoints: {},
   codeContributions: {},
 }));
+
+// TODO: move to extension/get.ts
 
 /**
  * Get the extension for the given extension identifier.
@@ -158,6 +162,8 @@ const getMemoizedExtensions = memoizeOne(
   }
 );
 
+// TODO: move to extension-context/get.ts
+
 /**
  * Returns a stable snapshot of the current extension contexts.
  *
@@ -218,6 +224,8 @@ export function getExtensionContext(
   return extensionContext;
 }
 
+// TODO: move to contrib-point/get.ts
+
 /**
  * Gets a stable snapshot of the framework's contribution points.
  *
@@ -251,6 +259,8 @@ export function getContributionPoint<S = unknown, PS = S>(
     contribPointId
   ] as ContributionPoint<S, PS>;
 }
+
+// TODO: move to code-contrib/get.ts
 
 /**
  * Gets a stable snapshot of the current code contribution registrations

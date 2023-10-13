@@ -1,5 +1,5 @@
-import type { ContributionPoint } from "@/core/types";
-import { Disposable } from "@/util/disposable";
+import type { ContributionPoint }            from "@/core/types";
+import { Disposable }                        from "@/util/disposable";
 import { deleteStoreRecord, setStoreRecord } from "@/core/store";
 
 /**

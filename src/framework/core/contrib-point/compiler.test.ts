@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
-import { type When, WhenClauseCompiler } from "./compiler";
+import type { When } from "@/core/types";
+import { WhenClauseCompiler } from "./compiler";
 
 test("WhenClauseCompiler returns functions", () => {
   const compiler = new WhenClauseCompiler();

@@ -1,6 +1,6 @@
 import type { Extension, ExtensionModule } from "@/core/types";
 import { getExtensionContext, setExtensionStatus } from "@/core/store";
-import type { ExtensionContextImpl } from "./context";
+import type { ExtensionContextImpl } from "../extension-context/impl";
 import { Logger } from "@/util/log";
 
 const LOG = new Logger("extension/activate");

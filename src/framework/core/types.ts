@@ -236,11 +236,29 @@ export interface CodeContributionPoint<T = unknown, PT = T>
 /**
  * Represents a code contribution that is being loaded
  * or that is already loaded.
+ *
+ * @category Extension Contribution API
  */
-export interface CodeContribution<T> {
+export interface CodeContribution<T = unknown> {
   isLoading: boolean;
   data?: T;
   error?: unknown;
+}
+
+/**
+ * A compiled when-clause.
+ *
+ * The function takes a single argument `ctx`, e.g. the context
+ * returned by {@link getContext} or the React hook {@link useContext},
+ * and returns a Boolean that indicates whether the when-condition
+ * is fulfilled.
+ *
+ * @category Extension Contribution API
+ */
+export interface When {
+  (ctx: Record<string, unknown>): boolean;
+  /** The source when-clause expression. */
+  clause: string;
 }
 
 /**

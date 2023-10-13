@@ -58,4 +58,21 @@ Now the following scripts are available:
 * `npm run coverage` - generate project coverage report in `./coverage`
 * `npm run typedoc` - generate project API docs in `./docs/api`
 
+### Coding style
 
+Most of the code is formatted to default settings of
+[prettier](https://prettier.io/), see its [configuration](./.prettierrc.json).
+Since `prettier` is un-opinionated regarding the order of imports, we try to 
+stick to the following order: 
+
+1. React dependencies
+2. Other 3rd party dependencies
+3. Dependencies on our own packages
+4. Dependencies on our own modules higher up in the hierarchy 
+   using source prefix `@`
+5. Dependencies on sub-modules that are in the same module folder 
+   further down the hierarchy using source prefix `./`
+
+If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
+we first import import TypeScript source dependencies, then separated by a 
+newline, insert resource dependencies in the same order as source dependencies.

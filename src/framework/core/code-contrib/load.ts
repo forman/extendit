@@ -1,5 +1,5 @@
 import { getStoreRecord } from "@/core/store";
-import { emitActivationEvent } from "@/core/activation/emit";
+import { emitActivationEvent } from "@/core/code-contrib/emit";
 import type { CodeContributionPoint } from "@/core/types";
 
 /**
