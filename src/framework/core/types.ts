@@ -48,8 +48,9 @@ export type ExtensionStatus =
  * given extension identifier use {@link getExtension}.
  *
  * @category Extension API
+ * @typeParam ExportedApi - Type of the exported API
  */
-export interface Extension<T = unknown> {
+export interface Extension<ExportedApi = unknown> {
   /**
    * The canonical extension identifier in the form of `publisher.name`.
    */
@@ -61,10 +62,12 @@ export interface Extension<T = unknown> {
   readonly manifest: ExtensionManifest;
 
   /**
-   * The public API exported by this extension (return value of `activateExtension`).
-   * It is an invalid action to access this field before this extension has been activated.
+   * The public API exported by this extension
+   * (return value of `activateExtension`).
+   * It is an invalid action to access this field before this extension
+   * has been activated.
    */
-  readonly exports: T;
+  readonly exports: ExportedApi;
 
   /**
    * Current status of the extension.
@@ -117,12 +120,13 @@ export interface ExtensionContext {
  * synchronously.
  *
  * @category Extension API
+ * @typeParam ExportedApi - Type of the exported API
  */
-export interface ExtensionModule<T = unknown> {
+export interface ExtensionModule<ExportedApi = unknown> {
   activate?: (
     extensionContext: ExtensionContext,
     ...dependencies: unknown[]
-  ) => T;
+  ) => ExportedApi;
 
   deactivate?: (extensionContext: ExtensionContext) => Promise<void> | void;
 }
@@ -171,9 +175,11 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
  * given by its {@link schema} property.
  *
  * @category Extension Contribution API
+ * @typeParam TM - Type of JSON entry in manifest
+ * @typeParam TS - Type of contribution in framework store
  * @see registerContributionPoint
  */
-export interface ContributionPoint<T = unknown, PT = T> {
+export interface ContributionPoint<TM = unknown, TS = TM> {
   /**
    * Unique contribution point identifier.
    */
@@ -183,13 +189,14 @@ export interface ContributionPoint<T = unknown, PT = T> {
    * If not provided, contributions to this contribution point are not
    * expected to be JSON entries.
    */
-  schema?: JsonTypedSchema<T> | JsonSchema;
+  schema?: JsonTypedSchema<TM> | JsonSchema;
   /**
-   * Optional function used to process JSON entries from the manifest.
+   * Optional function used to process JSON entries from the manifest
+   * to entries in the framework store.
    * Ignored if a {@link schema} is not provided.
    * Defaults to identity.
    */
-  processContribution?: (contrib: T) => PT;
+  processContribution?: (contrib: TM) => TS;
   /**
    * Optional description of this contribution point.
    */
@@ -205,15 +212,17 @@ export interface ContributionPoint<T = unknown, PT = T> {
  * require loading and executing JavaScript code.
  *
  * @category Extension Contribution API
+ * @typeParam TM - Type of JSON entry in manifest
+ * @typeParam TS - Type of contribution in framework store
  */
-export interface CodeContributionPoint<T = unknown, PT = T>
-  extends ContributionPoint<T, PT> {
+export interface CodeContributionPoint<TM = unknown, TS = TM>
+  extends ContributionPoint<TM, TS> {
   /**
    * This property is used to generate activation keys
    * from contributions with an ID-property named by `idKey`.
    * Defaults to `"id"`.
    */
-  idKey?: KeyOfObjOrArrayItem<T>;
+  idKey?: KeyOfObjOrArrayItem<TS>;
 
   /**
    * Optional activation event used to activate the extension,
@@ -238,12 +247,28 @@ export interface CodeContributionPoint<T = unknown, PT = T>
  * or that is already loaded.
  *
  * @category Extension Contribution API
+ * @typeParam Data - Type of the loaded code contribution data
  */
-export interface CodeContribution<T = unknown> {
-  isLoading: boolean;
-  data?: T;
+export interface CodeContribution<Data = unknown> {
+  /**
+   * While `true` the code contribution data is being loaded.
+   * Then {@link data} and {@link error} are undefined.
+   * If `false`, loading code contribution data either succeeded or failed.
+   */
+  loading: boolean;
+  /**
+   * The loaded code contribution data or `undefined`
+   * while {@link loading} is `true` or if an {@link error} occurred.
+   */
+  data?: Data;
+  /**
+   * If defined, loading of code contribution data failed.
+   */
   error?: unknown;
 }
+
+// TODO: Let When return also undefined in case an error occurred during
+//   execution
 
 /**
  * A compiled when-clause.
@@ -254,6 +279,9 @@ export interface CodeContribution<T = unknown> {
  * is fulfilled.
  *
  * @category Extension Contribution API
+ * @param ctx - A context object that provides the namespace in which the
+ *   when-clause is executed.
+ * @returns The result of the when-clause execution.
  */
 export interface When {
   (ctx: Record<string, unknown>): boolean;

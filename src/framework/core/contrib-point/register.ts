@@ -1,5 +1,5 @@
-import type { ContributionPoint }            from "@/core/types";
-import { Disposable }                        from "@/util/disposable";
+import type { ContributionPoint } from "@/core/types";
+import { Disposable } from "@/util/disposable";
 import { deleteStoreRecord, setStoreRecord } from "@/core/store";
 
 /**
@@ -9,8 +9,8 @@ import { deleteStoreRecord, setStoreRecord } from "@/core/store";
  * @param contribPoint - The contribution point.
  * @returns Disposable A disposable that unregisters the contribution point.
  */
-export function registerContributionPoint<T = unknown, PT = T>(
-  contribPoint: ContributionPoint<T, PT>
+export function registerContributionPoint<TM = unknown, TS = TM>(
+  contribPoint: ContributionPoint<TM, TS>
 ): Disposable {
   const id = contribPoint.id;
   setStoreRecord("contributionPoints", id, contribPoint as ContributionPoint);

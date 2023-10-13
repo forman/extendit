@@ -252,12 +252,12 @@ const getMemoizedContributionPoints = memoizeOne(
  * @returns A read-only map of code contributions or `undefined`
  *   if it cannot be found.
  */
-export function getContributionPoint<S = unknown, PS = S>(
+export function getContributionPoint<TM = unknown, TS = TM>(
   contribPointId: string
-): ContributionPoint<S, PS> | undefined {
+): ContributionPoint<TM, TS> | undefined {
   return frameworkStore.getState().contributionPoints[
     contribPointId
-  ] as ContributionPoint<S, PS>;
+  ] as ContributionPoint<TM, TS>;
 }
 
 // TODO: move to code-contrib/get.ts
@@ -271,8 +271,8 @@ export function getContributionPoint<S = unknown, PS = S>(
  * @param contribPoint - The code contribution point.
  * @returns A read-only map of code contributions.
  */
-export function getCodeContributions<Data, S = unknown, PS = S>(
-  contribPoint: CodeContributionPoint<S, PS>
+export function getCodeContributions<Data, TM = unknown, TS = TM>(
+  contribPoint: CodeContributionPoint<TM, TS>
 ): ReadonlyMap<string, Data> {
   return getMemoizedCodeContributions(contribPoint.id) as ReadonlyMap<
     string,
