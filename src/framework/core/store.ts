@@ -13,9 +13,21 @@ import type { ExtensionContextImpl } from "./extension-context/impl";
  * @category Framework API
  */
 export interface FrameworkState {
+  /**
+   * Record<ExtensionId, Extension>
+   */
   extensions: Record<string, Extension>;
+  /**
+   * Record<ExtensionId, ExtensionContextImpl>
+   */
   extensionContexts: Record<string, ExtensionContextImpl>;
+  /**
+   * Record<ContribPointId, ContributionPoint>
+   */
   contributionPoints: Record<string, ContributionPoint>;
+  /**
+   * Record<ContribPointId, Map<ContribKey, ContribData>>
+   */
   codeContributions: Record<string, Map<string, unknown>>;
 }
 

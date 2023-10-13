@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore as useZustandStore } from "zustand";
-import { getContributionsFromExtensions } from "@/core/contrib-point/get";
+import {
+  getContributionPointsMemo,
+  getContributionsMemo,
+  getExtensionContributionsMemo,
+} from "@/core/contrib-point/get";
 import { getCodeContributions } from "@/core/code-contrib/get";
 import { loadCodeContribution } from "@/core/code-contrib/load";
 import type {
@@ -10,6 +14,19 @@ import type {
   Extension,
 } from "./types";
 import { frameworkStore, type FrameworkState } from "./store";
+import { getExtensionsMemo } from "@/core/extension/get";
+
+// Reactive hook: use<Name>(args)
+// Snapshot getter: get<Name>(args)
+// Memoized getter: get<Name>Memo(deps)
+//
+// use<Name>(args) implementation pattern:
+// 1. Collect reactive deps, e.g., use hooks & selectors into framework store
+// 2. Return result of get<Name>Memo(deps + args) - no need to use useMemo()
+//
+// get<Name>(args) implementation pattern:
+// 1. Collect snapshot deps, e.g., use getters & selectors into framework store
+// 2. Return result of get<Name>Memo(deps + args)
 
 /**
  * A React hook that gets data from the framework's store.
@@ -31,45 +48,50 @@ export function useStore<U>(selector: (state: FrameworkState) => U): U {
  */
 export function useExtensions(): Extension[] {
   const extensions = useStore((state) => state.extensions);
-  return useMemo(() => Object.values(extensions), [extensions]);
+  return getExtensionsMemo(extensions);
+}
+
+/**
+ * A React hook that provides all registered contributions for the given
+ * contribution point identifier `contribPointId` and optional `contribKey`.
+ *
+ * @category React Hooks
+ * @param contribPointId - The contribution point identifier
+ * @param contribKey - An optional key
+ * @returns An array of all extension contributions.
+ *   If a contribution is an array, its flattened items are appended
+ *   to the return value.
+ */
+export function useContributions<T>(
+  contribPointId: string,
+  contribKey?: string | undefined | null
+): T[] {
+  const extensions = useExtensions();
+  return getContributionsMemo(extensions, contribPointId, contribKey) as T[];
 }
 
 /**
  * A React hook that provides all registered contributions for the given
  * contribution point identifier `contribPointId` and optional `key`.
  *
- * @category React Hooks
- * @param contribPointId - The contribution point identifier
- * @param key - An optional key
- * @returns An array comprising all contributions points
- */
-export function useContributions<T>(contribPointId: string, key?: string): T[];
-/**
- * A React hook that provides all registered contributions for the given
- * contribution point identifier `contribPointId` and optional `key`.
+ * The contributions are returned as a mapping from extension identifier
+ * to extension contribution.
  *
  * @category React Hooks
  * @param contribPointId - The contribution point identifier
- * @param key - An optional key
- * @param asMap - `true`, if given
+ * @param contribKey - An optional contribution key
  * @returns A mapping from extension identifier to extension contribution.
  */
-export function useContributions<T>(
+export function useExtensionContributions<T>(
   contribPointId: string,
-  key: string | undefined | null,
-  asMap: true
-): Map<string, T>;
-export function useContributions<T>(
-  contribPointId: string,
-  key?: string | undefined | null,
-  asMap?: true
-): T[] | Map<string, T> {
+  contribKey?: string | undefined | null
+): ReadonlyMap<string, T> {
   const extensions = useExtensions();
-  return useMemo(() => {
-    return asMap
-      ? getContributionsFromExtensions(contribPointId, extensions, key, true)
-      : getContributionsFromExtensions(contribPointId, extensions, key);
-  }, [contribPointId, extensions, key, asMap]);
+  return getExtensionContributionsMemo(
+    extensions,
+    contribPointId,
+    contribKey
+  ) as ReadonlyMap<string, T>;
 }
 
 /**
@@ -79,7 +101,7 @@ export function useContributions<T>(
  */
 export function useContributionPoints(): ContributionPoint[] {
   const contributionPoints = useStore((state) => state.contributionPoints);
-  return useMemo(() => Object.values(contributionPoints), [contributionPoints]);
+  return getContributionPointsMemo(contributionPoints);
 }
 
 export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(

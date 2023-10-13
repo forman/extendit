@@ -2,6 +2,7 @@ import memoizeOne from "memoize-one";
 import type { ContributionPoint, Extension } from "@/core/types";
 import { getExtensionContext } from "@/core/extension-context/get";
 import { frameworkStore } from "@/core/store";
+import { getExtensions } from "@/core/extension/get";
 
 /**
  * Gets the contribution point for the given contribution point identifier.
@@ -25,11 +26,16 @@ export function getContributionPoint<TM = unknown, TS = TM>(
  * @category Extension Contributions API
  */
 export function getContributionPoints(): ContributionPoint[] {
-  return getMemoizedContributionPoints(
+  return getContributionPointsMemo(
     frameworkStore.getState().contributionPoints
   );
 }
-const getMemoizedContributionPoints = memoizeOne(
+
+/**
+ * Memoized implementation helper for hooks.
+ * @internal
+ */
+export const getContributionPointsMemo = memoizeOne(
   (
     contributionPoints: Record<string, ContributionPoint>
   ): ContributionPoint[] => {
@@ -37,90 +43,48 @@ const getMemoizedContributionPoints = memoizeOne(
   }
 );
 
-// TODO: memoize getContributionsFromExtensions!
+/**
+ * Gets a stable snapshot of the processed contributions from
+ * the manifest (package.json) of the registered extensions.
+ *
+ * Note, an extension does not need to be activated nor will it be
+ * activated while its contributions are collected.
+ *
+ * @category Extension Contribution API
+ * @param contribPointId - The contribution point identifier.
+ * @param contribKey - An optional key if the contribution
+ *   is a key-value mapping.
+ * @returns An array of all extension contributions.
+ *   If a contribution is an array, its flattened items are appended
+ *   to the return value.
+ */
+export function getContributions<T>(
+  contribPointId: string,
+  contribKey?: string | undefined | null
+): T[] {
+  return getContributionsMemo(
+    getExtensions(),
+    contribPointId,
+    contribKey
+  ) as T[];
+}
 
 /**
- * Get the processed contributions from the manifest (package.json)
- * of the given extensions.
- *
- * Note, an extension does not need to be activated nor will it be
- * activated while its contributions are collected.
- *
- * The function is used to implement React hooks that access
- * a given contribution points.
- *
- * @category Extension Contribution API
- * @param contribPointId - The contribution point identifier.
- * @param extensions - All the extensions that contribute.
- * @returns An array of all extension contributions.
- *   If a contribution is an array, its flattened items are appended
- *   to the return value.
+ * Memoized implementation helper.
+ * @internal
  */
-export function getContributionsFromExtensions<T>(
-  contribPointId: string,
-  extensions: Extension[]
-): T[];
-/**
- * Get the processed contributions from the manifest (package.json)
- * of the given extensions.
- *
- * Note, an extension does not need to be activated nor will it be
- * activated while its contributions are collected.
- *
- * The function is used to implement React hooks that access
- * a given contribution points.
- *
- * @category Extension Contribution API
- * @param contribPointId - The contribution point identifier.
- * @param extensions - All the extensions that contribute.
- * @param key - An optional key if the contribution
- *   is a key-value mapping.
- * @returns An array of all extension contributions.
- *   If a contribution is an array, its flattened items are appended
- *   to the return value.
- */
-export function getContributionsFromExtensions<T>(
-  contribPointId: string,
-  extensions: Extension[],
-  key?: string | undefined | null
-): T[];
-/**
- * Get the processed contributions from the manifest (package.json)
- * of the given extensions.
- *
- * Note, an extension does not need to be activated nor will it be
- * activated while its contributions are collected.
- *
- * The function is used to implement React hooks that access
- * a given contribution points.
- *
- * @category Extension Contribution API
- * @param contribPointId - The contribution point identifier.
- * @param extensions - All the extensions that contribute.
- * @param key - An optional key if the contribution
- *   is a key-value mapping.
- * @param asMap - `true`.
- * @returns A mapping of extension identifier to extension contribution.
- */
-export function getContributionsFromExtensions<T>(
-  contribPointId: string,
-  extensions: Extension[],
-  key: string | undefined | null,
-  asMap: true
-): Map<string, T>;
-export function getContributionsFromExtensions<T>(
-  contribPointId: string,
-  extensions: Extension[],
-  key?: string | undefined | null,
-  asMap?: true | undefined
-): T[] | Map<string, T> {
-  if (!asMap) {
+export const getContributionsMemo = memoizeOne(
+  <T>(
+    extensions: Extension[],
+    contribPointId: string,
+    contribKey?: string | undefined | null
+  ): T[] => {
     const items: T[] = [];
     extensions.forEach((extension) => {
-      const contrib = getContributionFromExtension<T>(
+      const contrib = getExtensionContribution<T>(
         extension.id,
         contribPointId,
-        key
+        contribKey
       );
       if (contrib) {
         if (Array.isArray(contrib)) {
@@ -131,33 +95,70 @@ export function getContributionsFromExtensions<T>(
       }
     });
     return items;
-  } else {
+  }
+);
+
+/**
+ * Gets a snapshot of the processed contributions from the
+ * manifest (package.json) of the registered extensions as a
+ * mapping of extension identifiers to extension contributions.
+ *
+ * Note, an extension does not need to be activated nor will it be
+ * activated while its contributions are collected.
+ *
+ * @category Extension Contribution API
+ * @param contribPointId - The contribution point identifier.
+ * @param contribKey - An optional key if the contribution
+ *   is a key-value mapping.
+ * @returns A mapping of extension identifier to extension contribution.
+ */
+export function getExtensionContributions<T>(
+  contribPointId: string,
+  contribKey?: string | undefined | null
+): ReadonlyMap<string, T> {
+  return getExtensionContributionsMemo(
+    getExtensions(),
+    contribPointId,
+    contribKey
+  ) as ReadonlyMap<string, T>;
+}
+
+/**
+ * Memoized implementation helper.
+ * @internal
+ */
+export const getExtensionContributionsMemo = memoizeOne(
+  <T>(
+    extensions: Extension[],
+    contribPointId: string,
+    contribKey?: string | undefined | null
+  ): ReadonlyMap<string, T> => {
     const map = new Map<string, T>();
     extensions.forEach((extension) => {
-      const contrib = getContributionFromExtension<T>(
+      const contrib = getExtensionContribution<T>(
         extension.id,
         contribPointId,
-        key
+        contribKey
       );
-      if (contrib) {
+      if (contrib !== undefined) {
         map.set(extension.id, contrib);
       }
     });
     return map;
   }
-}
+);
 
-function getContributionFromExtension<T>(
+function getExtensionContribution<T>(
   extensionId: string,
   contribPointId: string,
-  key: string | undefined | null
+  contribKey: string | undefined | null
 ): T | undefined {
   const ctx = getExtensionContext(extensionId, true);
   let contrib = ctx.contributions.get(contribPointId);
   if (!contrib) {
     return;
   }
-  if (typeof key === "string") {
+  if (typeof contribKey === "string") {
     if (typeof contrib !== "object") {
       throw new Error(
         `Extension '${ctx.extensionId}': ` +
@@ -165,7 +166,7 @@ function getContributionFromExtension<T>(
           `must be given as an object.`
       );
     }
-    contrib = (contrib as Record<string, unknown>)[key];
+    contrib = (contrib as Record<string, unknown>)[contribKey];
     if (!contrib) {
       return;
     }

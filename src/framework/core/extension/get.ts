@@ -4,7 +4,7 @@ import { frameworkStore } from "@/core/store";
 import { assertDefined } from "@/util";
 
 /**
- * Get the extension for the given extension identifier.
+ * Gets the extension for the given extension identifier.
  *
  * @category Extension API
  * @param extensionId - The extension identifier
@@ -12,7 +12,7 @@ import { assertDefined } from "@/util";
  */
 export function getExtension(extensionId: string): Extension | undefined;
 /**
- * Get the extension for the given extension identifier.
+ * Gets the extension for the given extension identifier.
  *
  * @category Extension API
  * @param extensionId - The extension identifier
@@ -34,15 +34,20 @@ export function getExtension(
 }
 
 /**
- * Returns a stable snapshot of the installed extensions.
+ * Gets a stable snapshot of the registered extensions.
  *
+ * @category Extension API
  * See {@link useExtensions}
  */
 export function getExtensions(): Extension[] {
-  return getMemoizedExtensions(frameworkStore.getState().extensions);
+  return getExtensionsMemo(frameworkStore.getState().extensions);
 }
 
-const getMemoizedExtensions = memoizeOne(
+/**
+ * Memoized implementation helper.
+ * @internal
+ */
+export const getExtensionsMemo = memoizeOne(
   (extensions: Record<string, Extension>): Extension[] => {
     return Object.values(extensions);
   }
