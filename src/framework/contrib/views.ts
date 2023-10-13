@@ -3,9 +3,9 @@ import type { JSONSchemaType } from "ajv";
 import {
   type CodeContributionPoint,
   type When,
+  compileWhenClause,
   registerCodeContribution,
   useContributions,
-  whenClauseCompiler,
 } from "@/core";
 import { useLoadCodeContribution } from "@/core/hooks";
 import { Disposable } from "@/util/disposable";
@@ -58,7 +58,7 @@ const schema: JSONSchemaType<Record<string, JsonView[]>> = {
 export const viewsPoint: CodeContributionPoint<Record<string, View[]>> = {
   id: "views",
   schema,
-  processContribution,
+  processManifestEntry: processContribution,
   idKey: "id",
   activationEvent: "onView:${id}",
 };
@@ -70,7 +70,7 @@ function processContribution(
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
-      return { ...rest, when: whenClauseCompiler.compile(whenClause) };
+      return { ...rest, when: compileWhenClause(whenClause) };
     });
   });
   return processedContributions;

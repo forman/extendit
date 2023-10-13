@@ -2,9 +2,9 @@ import { expect, test } from "vitest";
 import * as core from "./index";
 
 export const expectedExports = [
-  "WhenClauseCompiler",
   "activateExtension",
   "addExtensionListener",
+  "compileWhenClause",
   "deactivateExtension",
   "getCodeContributions",
   "getContributionPoint",
@@ -23,7 +23,6 @@ export const expectedExports = [
   "useContributions",
   "useExtensions",
   "useLoadCodeContribution",
-  "whenClauseCompiler",
 ];
 
 test("Framework Core API is complete", () => {

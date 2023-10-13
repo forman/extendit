@@ -27,7 +27,7 @@ const idRef = "${id}";
  *    form "${activationEvent}:${contrib[contribId]}",
  *    if the point defines an `activationEvent` string.
  * 3. Processing/transformation of the contribution, if the point defines
- *    a `processContribution` function. Registration of the processed or
+ *    a `processManifestEntry` function. Registration of the processed or
  *    existing contribution in the extension context.
  *
  * If any of the above steps fail, the extension is set into error state.
@@ -124,13 +124,13 @@ function registerProcessedContrib(
   contrib: unknown,
   ctx: ExtensionContextImpl
 ) {
-  let processedContrib;
-  if (contribPoint.processContribution) {
-    processedContrib = contribPoint.processContribution(contrib);
+  let storeEntry;
+  if (contribPoint.processManifestEntry) {
+    storeEntry = contribPoint.processManifestEntry(contrib);
   } else {
-    processedContrib = contrib;
+    storeEntry = contrib;
   }
-  ctx.processedContributions.set(contribPoint.id, processedContrib);
+  ctx.contributions.set(contribPoint.id, storeEntry);
 }
 
 function requiresActivation(

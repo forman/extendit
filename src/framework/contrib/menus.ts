@@ -2,7 +2,7 @@ import {
   type ContributionPoint,
   type When,
   useContributions,
-  whenClauseCompiler,
+  compileWhenClause,
 } from "@/core";
 import { useMemo } from "react";
 import { type Command, useCommandsMap } from "./commands";
@@ -115,7 +115,7 @@ export const menusPoint: ContributionPoint<
 > = {
   id: "menus",
   schema,
-  processContribution,
+  processManifestEntry: processContribution,
 };
 
 export function useMenu(menuId: string, ctx: Record<string, unknown>) {
@@ -147,7 +147,7 @@ function processJsonMenuItem(jsonMenuItem: JsonMenuItem): ProcessedMenuItem {
   return {
     ...jsonMenuItem,
     id: newId(),
-    when: whenClauseCompiler.compile(jsonMenuItem.when),
+    when: compileWhenClause(jsonMenuItem.when),
     label,
     group,
     order,

@@ -37,6 +37,8 @@ const getMemoizedContributionPoints = memoizeOne(
   }
 );
 
+// TODO: memoize getContributionsFromExtensions!
+
 /**
  * Get the processed contributions from the manifest (package.json)
  * of the given extensions.
@@ -151,7 +153,7 @@ function getContributionFromExtension<T>(
   key: string | undefined | null
 ): T | undefined {
   const ctx = getExtensionContext(extensionId, true);
-  let contrib = ctx.processedContributions.get(contribPointId);
+  let contrib = ctx.contributions.get(contribPointId);
   if (!contrib) {
     return;
   }

@@ -27,7 +27,7 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
    * registerView(id, comp) will register `"onView:${id}"`.
    */
   readonly activationEvents = new Set<string>();
-  readonly processedContributions = new Map<string, unknown>();
+  readonly contributions = new Map<string, unknown>();
   private _subscriptions: DisposableLike[] = [];
   private _module: ExtensionModule | undefined = undefined;
   private _modulePath: string | undefined = undefined;

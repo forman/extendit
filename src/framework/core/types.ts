@@ -194,9 +194,12 @@ export interface ContributionPoint<TM = unknown, TS = TM> {
    * Optional function used to process JSON entries from the manifest
    * to entries in the framework store.
    * Ignored if a {@link schema} is not provided.
-   * Defaults to identity.
+   * Defaults to the identity function.
+   *
+   * @param entry - A JSON entry from the manifest.
+   * @returns An entry for the framework store.
    */
-  processContribution?: (contrib: TM) => TS;
+  processManifestEntry?: (entry: TM) => TS;
   /**
    * Optional description of this contribution point.
    */
@@ -267,9 +270,6 @@ export interface CodeContribution<Data = unknown> {
   error?: unknown;
 }
 
-// TODO: Let When return also undefined in case an error occurred during
-//   execution
-
 /**
  * A compiled when-clause.
  *
@@ -284,7 +284,7 @@ export interface CodeContribution<Data = unknown> {
  * @returns The result of the when-clause execution.
  */
 export interface When {
-  (ctx: Record<string, unknown>): boolean;
+  (ctx: Record<string, unknown>): boolean | undefined;
   /** The source when-clause expression. */
   clause: string;
 }

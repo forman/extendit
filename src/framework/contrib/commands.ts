@@ -6,7 +6,7 @@ import {
   useContributions,
   loadCodeContribution,
   registerCodeContribution,
-  whenClauseCompiler,
+  compileWhenClause,
 } from "@/core";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
@@ -59,8 +59,8 @@ function processCommand(command: JsonCommand): Command {
   const { enablement, checked, ...commandBase } = command;
   return {
     ...commandBase,
-    enablement: whenClauseCompiler.compile(enablement),
-    checked: whenClauseCompiler.compile(checked),
+    enablement: compileWhenClause(enablement),
+    checked: compileWhenClause(checked),
   } as Command;
 }
 
@@ -76,7 +76,7 @@ export const commandsPoint: CodeContributionPoint<JsonCommand[], Command[]> = {
   schema,
   idKey: "command",
   activationEvent: "onCommand:${id}",
-  processContribution,
+  processManifestEntry: processContribution,
 };
 
 export type CommandFn<T = unknown, A extends unknown[] = unknown[]> = (

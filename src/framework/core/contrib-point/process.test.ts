@@ -61,7 +61,7 @@ describe("static data contributions", () => {
     const disposable1 = registerContributionPoint(colorsPoint);
     const disposable2 = registerExtension(manifest);
     const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.processedContributions.has("colors")).toBe(false);
+    expect(ctx.contributions.has("colors")).toBe(false);
     Disposable.from(disposable1, disposable2).dispose();
   });
 
@@ -70,8 +70,8 @@ describe("static data contributions", () => {
     const disposable1 = registerContributionPoint(colorsPoint);
     const disposable2 = registerExtension(manifest);
     const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.processedContributions.has("colors")).toBe(true);
-    expect(ctx.processedContributions.get("colors")).toEqual([
+    expect(ctx.contributions.has("colors")).toBe(true);
+    expect(ctx.contributions.get("colors")).toEqual([
       { name: "red", rgb: [1, 0, 0] },
       { name: "yellow", rgb: [1, 1, 0] },
       { name: "blue", rgb: [0, 0, 1] },
@@ -97,7 +97,7 @@ describe("static data contributions", () => {
       },
     });
     const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.processedContributions.has("colors")).toBe(false);
+    expect(ctx.contributions.has("colors")).toBe(false);
     const extension = getExtension("pippo.foo", true);
     expect(extension.status).toEqual("rejected");
     expect(Array.isArray(extension.reasons)).toBe(true);
@@ -143,7 +143,7 @@ describe("processed data contributions", () => {
       type: "array",
       items: colorSchema,
     },
-    processContribution: (contrib: Color[]): ProcessedColor[] => {
+    processManifestEntry: (contrib: Color[]): ProcessedColor[] => {
       return contrib.map((c) => ({
         ...c,
         rgb: [
@@ -170,8 +170,8 @@ describe("processed data contributions", () => {
     const disposable1 = registerContributionPoint(colorsPoint);
     const disposable2 = registerExtension(manifest);
     const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.processedContributions.has("colors")).toBe(true);
-    expect(ctx.processedContributions.get("colors")).toEqual([
+    expect(ctx.contributions.has("colors")).toBe(true);
+    expect(ctx.contributions.get("colors")).toEqual([
       { name: "red", rgb: [1, 0, 0] },
       { name: "yellow", rgb: [1, 1, 0] },
       { name: "blue", rgb: [0, 0, 1] },
@@ -224,8 +224,8 @@ describe("code contributions", () => {
     const disposable1 = registerContributionPoint(commandsPoint);
     const disposable2 = registerExtension(manifest);
     const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.processedContributions.has("commands")).toBe(true);
-    expect(ctx.processedContributions.get("commands")).toEqual([
+    expect(ctx.contributions.has("commands")).toBe(true);
+    expect(ctx.contributions.get("commands")).toEqual([
       { command: "showBgLayer", title: "Show BG Layer" },
       { command: "hideBgLayer", title: "Hide BG Layer" },
     ]);

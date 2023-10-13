@@ -55,10 +55,7 @@ export { registerContributionPoint } from "./contrib-point/register";
 export { getCodeContributions } from "./code-contrib/get";
 export { loadCodeContribution } from "./code-contrib/load";
 export { registerCodeContribution } from "./code-contrib/register";
-export {
-  WhenClauseCompiler,
-  whenClauseCompiler,
-} from "./contrib-point/compiler";
+export { compileWhenClause } from "./contrib-point/when";
 
 //////////////////////////////////////////////////////////////////////////
 // Add extension listener that processes extension contributions

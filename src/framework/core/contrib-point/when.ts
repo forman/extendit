@@ -6,21 +6,10 @@ const LOG = new log.Logger("contrib/when");
 
 /**
  * A compiler for when-clauses.
- *
- * @category Extension Contribution API
  */
-export class WhenClauseCompiler {
+class WhenClauseCompiler {
   private cache = new Map<string, When>();
 
-  /**
-   * Compile a when-clause into a function.
-   *
-   * Compiled when-functions are cached; the method will return
-   * the same functions for equal when-clauses.
-   *
-   * @param whenClause The when-clause / expression
-   * @returns a function that executes the when-clause
-   */
   compile(whenClause: string | undefined | null): When | undefined {
     if (!whenClause) {
       return undefined;
@@ -30,12 +19,11 @@ export class WhenClauseCompiler {
       return cachedWhenFn;
     } else {
       const node = Parser.parse(whenClause, { evalMissingNameTo: "name" });
-      const whenFn = (ctx: Record<string, unknown>) => {
+      const whenFn = (ctx: Record<string, unknown>): boolean | undefined => {
         try {
           return Boolean(node.eval(ctx));
         } catch (e) {
           LOG.warnOnce(`Runtime error in when-clause "${whenClause}":`, e);
-          return false;
         }
       };
       whenFn["clause"] = whenClause;
@@ -45,11 +33,25 @@ export class WhenClauseCompiler {
   }
 }
 
-// TODO: make whenClauseCompiler local, add global compileWhenClause()
-
 /**
  * The framework's when-clause compiler (singleton).
- *
- * @category Extension Contribution API
  */
-export const whenClauseCompiler = new WhenClauseCompiler();
+const whenClauseCompiler = new WhenClauseCompiler();
+
+/**
+ * Compiles a when-clause into a when-function.
+ *
+ * This utility functions is used by contribution points' `processContr
+ *
+ * Compiled when-functions are cached; the method will return
+ * the same functions for equal when-clauses.
+ *
+ * @param whenClause The when-clause / expression
+ * @returns a function that executes the when-clause, or `undefined`
+ *   if an error occurs during compilation
+ */
+export function compileWhenClause(
+  whenClause: string | undefined | null
+): When | undefined {
+  return whenClauseCompiler.compile(whenClause);
+}
