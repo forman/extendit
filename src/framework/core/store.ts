@@ -1,9 +1,14 @@
 import { createStore } from "zustand/vanilla";
 import memoizeOne from "memoize-one";
-import type { ContributionPoint, Extension, ExtensionStatus } from "./types";
-import type { ExtensionContextImpl } from "./extension/context";
 import { assertDefined } from "@/util/assert";
 import { Logger, LogLevel } from "@/util/log";
+import type {
+  ContributionPoint,
+  Extension,
+  ExtensionStatus,
+  CodeContributionPoint,
+} from "./types";
+import type { ExtensionContextImpl } from "./extension/context";
 
 const LOG = new Logger("store");
 
@@ -34,18 +39,6 @@ export const frameworkStore = createStore<FrameworkState>()(() => ({
   contributionPoints: {},
   codeContributions: {},
 }));
-
-/**
- * Gets a snapshot of the framework's state.
- *
- * This is unstable API, it may change any time.
- * use at your own risk.
- *
- * @category Framework API
- */
-export function getFrameworkState(): FrameworkState {
-  return frameworkStore.getState();
-}
 
 /**
  * Get the extension for the given extension identifier.
@@ -226,7 +219,7 @@ export function getExtensionContext(
 }
 
 /**
- * Returns a stable snapshot of the framework's contribution points.
+ * Gets a stable snapshot of the framework's contribution points.
  *
  * @category Extension Contributions API
  */
@@ -243,19 +236,64 @@ const getMemoizedContributionPoints = memoizeOne(
   }
 );
 
-//////////////////////////////////////////////////
-// Utilities
+/**
+ * Gets the contribution point for the given contribution point identifier.
+ *
+ * @category Extension Contributions API
+ * @param contribPointId - The contribution point identifier.
+ * @returns A read-only map of code contributions or `undefined`
+ *   if it cannot be found.
+ */
+export function getContributionPoint<S = unknown, PS = S>(
+  contribPointId: string
+): ContributionPoint<S, PS> | undefined {
+  return frameworkStore.getState().contributionPoints[
+    contribPointId
+  ] as ContributionPoint<S, PS>;
+}
 
-type StateKeysWithoutContext = keyof Omit<FrameworkState, "context">;
+/**
+ * Gets a stable snapshot of the current code contribution registrations
+ * as a read-only map. If there are no contributions for the given point,
+ * an empty map is returned.
+ *
+ * @category Extension Contribution API
+ * @param contribPoint - The code contribution point.
+ * @returns A read-only map of code contributions.
+ */
+export function getCodeContributions<Data, S = unknown, PS = S>(
+  contribPoint: CodeContributionPoint<S, PS>
+): ReadonlyMap<string, Data> {
+  return getMemoizedCodeContributions(contribPoint.id) as ReadonlyMap<
+    string,
+    Data
+  >;
+}
+const getMemoizedCodeContributions = memoizeOne(
+  (contribPointId: string): Map<string, unknown> => {
+    const contributions =
+      frameworkStore.getState().codeContributions[contribPointId];
+    if (contributions) {
+      return contributions;
+    } else {
+      // It is ok to not have any registrations yet.
+      // We are returning a snapshot.
+      return new Map<string, unknown>();
+    }
+  }
+);
 
-export function getStoreRecord<K extends StateKeysWithoutContext>(
+//////////////////////////////////////////////////////////////////////////////
+// Store record management
+
+export function getStoreRecord<K extends keyof FrameworkState>(
   key: K,
   id: string
 ): FrameworkState[K][string] | undefined {
   return frameworkStore.getState()[key][id] as FrameworkState[K][string];
 }
 
-export function setStoreRecord<K extends StateKeysWithoutContext>(
+export function setStoreRecord<K extends keyof FrameworkState>(
   key: K,
   id: string,
   value: FrameworkState[K][string]
@@ -263,14 +301,17 @@ export function setStoreRecord<K extends StateKeysWithoutContext>(
   frameworkStore.setState((state) => setStateRecord(state, key, id, value));
 }
 
-export function deleteStoreRecord<K extends StateKeysWithoutContext>(
+export function deleteStoreRecord<K extends keyof FrameworkState>(
   key: K,
   id: string
 ) {
   frameworkStore.setState((state) => deleteStateRecord(state, key, id));
 }
 
-function setStateRecord<K extends StateKeysWithoutContext>(
+//////////////////////////////////////////////////////////////////////////////
+// Store record management helpers
+
+function setStateRecord<K extends keyof FrameworkState>(
   state: FrameworkState,
   key: K,
   id: string,
@@ -279,7 +320,7 @@ function setStateRecord<K extends StateKeysWithoutContext>(
   return { [key]: { ...state[key], [id]: value } };
 }
 
-function deleteStateRecord<K extends StateKeysWithoutContext>(
+function deleteStateRecord<K extends keyof FrameworkState>(
   state: FrameworkState,
   key: K,
   id: string
