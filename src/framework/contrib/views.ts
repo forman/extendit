@@ -7,7 +7,7 @@ import {
   useContributions,
   whenClauseCompiler,
 } from "@/core";
-import { useCodeContribution } from "@/core/hooks";
+import { useLoadCodeContribution } from "@/core/hooks";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
 
@@ -97,11 +97,11 @@ export function registerViewComponent(
 export function useViewComponent(
   viewId: string | null | undefined
 ): React.JSX.Element | undefined {
-  const codeContribution = useCodeContribution<
+  const codeContribution = useLoadCodeContribution<
     React.JSX.Element,
     Record<string, View[]>
   >(viewsPoint, viewId);
-  return (!codeContribution?.isLoading && codeContribution?.data) || undefined;
+  return (!codeContribution?.loading && codeContribution?.data) || undefined;
 }
 
 export interface ViewComponentProps {

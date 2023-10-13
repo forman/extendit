@@ -16,11 +16,11 @@ export const expectedExports = [
   "registerContributionPoint",
   "registerExtension",
   "updateFrameworkConfig",
-  "useCodeContribution",
   "useCodeContributions",
   "useContributionPoints",
   "useContributions",
   "useExtensions",
+  "useLoadCodeContribution",
   "whenClauseCompiler",
 ];
 

@@ -82,8 +82,7 @@ export function useContributionPoints(): ContributionPoint[] {
   return useMemo(() => Object.values(contributionPoints), [contributionPoints]);
 }
 
-// TODO: rename into useLoadCodeContribution
-export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
+export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(
   contribPoint: CodeContributionPoint<S, PS>,
   contribId: string | null | undefined
 ): CodeContribution<Data> | undefined {
@@ -96,22 +95,22 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
     // LOG.debug("Hook 'useViewComponent' is recomputing");
     if (!contribKey || state[contribKey]) {
       // Either contribId is not given or
-      // useCodeContribution() has already been called for given contribKey.
+      // useLoadCodeContribution() has already been called for given contribKey.
       // In the latter case, if we now have data, ok.
       // If we have an error, don't try again.
       return;
     }
-    setState((s) => ({ ...s, [contribKey]: { isLoading: true } }));
+    setState((s) => ({ ...s, [contribKey]: { loading: true } }));
     loadCodeContribution(contribPoint, contribId!)
       .then((data) => {
-        setState((s) => ({ ...s, [contribKey]: { isLoading: false, data } }));
+        setState((s) => ({ ...s, [contribKey]: { loading: false, data } }));
       })
       .catch((error: unknown) => {
         // LOG.error(
-        //   "Hook 'useViewComponent' failed due to following error:",
+        //   "Hook 'useLoadCodeContribution' failed due to following error:",
         //   error
         // );
-        setState((s) => ({ ...s, [contribKey]: { isLoading: false, error } }));
+        setState((s) => ({ ...s, [contribKey]: { loading: false, error } }));
       });
   }, [contribKey, contribPoint, contribId, state]);
   return contribKey
