@@ -17,14 +17,14 @@ import { Disposable } from "@/util/disposable";
  * @param codeContribution - The code contribution.
  * @returns Disposable A disposable that unregisters the code contribution.
  */
-export function registerCodeContribution<T>(
+export function registerCodeContribution<Data>(
   contribPointId: string,
   contribId: string,
-  codeContribution: T
+  codeContribution: Data
 ): Disposable {
   let codeContribMap = getStoreRecord("codeContributions", contribPointId);
   if (!codeContribMap) {
-    codeContribMap = new Map<string, unknown>();
+    codeContribMap = new Map<string, Data>();
     setStoreRecord("codeContributions", contribPointId, codeContribMap);
   }
   codeContribMap.set(contribId, codeContribution);
