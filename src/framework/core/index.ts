@@ -45,7 +45,8 @@ export {
 export type {
   CodeContribution,
   ContributionPoint,
-  CodeContributionPoint,
+  CodeContributionInfo,
+  ManifestContributionInfo,
   When,
 } from "./types";
 export {

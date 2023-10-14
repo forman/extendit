@@ -1,13 +1,17 @@
 import { expect, test } from "vitest";
 import { registerContributionPoint } from "@/core/contrib-point/register";
-import type { CodeContributionPoint } from "@/core/types";
+import type { ContributionPoint } from "@/core/types";
 import { registerCodeContribution } from "./register";
 
 test("registerCodeContribution", () => {
-  const contribPoint: CodeContributionPoint<string> = {
+  const contribPoint: ContributionPoint<string> = {
     id: "test",
-    schema: { type: "string" },
-    activationEvent: "onTest",
+    manifestInfo: {
+      schema: { type: "string" },
+    },
+    codeInfo: {
+      activationEvent: "onTest",
+    },
   };
   const disposable1 = registerContributionPoint<string>(contribPoint);
   const disposable2 = registerCodeContribution("test", "foo", {});

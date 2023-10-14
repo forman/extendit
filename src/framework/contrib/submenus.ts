@@ -38,7 +38,9 @@ const schema: JSONSchemaType<Submenu[]> = {
  */
 export const submenusPoint: ContributionPoint<Submenu[]> = {
   id: "submenus",
-  schema,
+  manifestInfo: {
+    schema,
+  },
 };
 
 export function useSubmenus() {

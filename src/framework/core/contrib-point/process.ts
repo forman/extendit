@@ -1,5 +1,4 @@
 import type {
-  CodeContributionPoint,
   ContributionPoint,
   Extension,
   ExtensionListener,
@@ -40,7 +39,7 @@ export const contributionProcessor: ExtensionListener = {
     getContributionPoints()
       // If there is no schema, then a contribution point is not supposed to
       // provide a JSON entry in manifest.contributes.
-      .filter((contribPoint) => contribPoint.schema)
+      .filter((contribPoint) => contribPoint.manifestInfo)
       .forEach((contribPoint) => {
         processContributionsFromExtension(contribPoint, extensionContext);
       });
@@ -68,9 +67,7 @@ function processContributionsFromExtension(
   );
   try {
     validateContrib(contribPoint, contrib, ctx);
-    if (requiresActivation(contribPoint)) {
-      registerActivationEvents(contribPoint, contrib, ctx);
-    }
+    registerActivationEvents(contribPoint, contrib, ctx);
     registerProcessedContrib(contribPoint, contrib, ctx);
   } catch (error) {
     setExtensionStatus(ctx.extensionId, "rejected", error);
@@ -83,7 +80,7 @@ function validateContrib(
   ctx: ExtensionContextImpl
 ) {
   validateJson(
-    contribPoint.schema!,
+    contribPoint.manifestInfo!.schema,
     contrib,
     "contribution to point " +
       `'${contribPoint.id}' from extension '${ctx.extensionId}'`
@@ -91,11 +88,15 @@ function validateContrib(
 }
 
 function registerActivationEvents(
-  contribPoint: CodeContributionPoint,
+  contribPoint: ContributionPoint,
   contrib: unknown,
   ctx: ExtensionContextImpl
 ) {
-  const activationEvent = contribPoint.activationEvent;
+  const codeInfo = contribPoint.codeInfo;
+  if (!codeInfo) {
+    return;
+  }
+  const activationEvent = codeInfo.activationEvent;
   if (!activationEvent) {
     return;
   }
@@ -103,7 +104,7 @@ function registerActivationEvents(
     ctx.activationEvents.add(activationEvent);
     return;
   }
-  const idKey = contribPoint.idKey ?? "id";
+  const idKey = codeInfo.idKey ?? "id";
   if (Array.isArray(contrib)) {
     contrib
       .map((contrib) => contrib[idKey])
@@ -124,20 +125,12 @@ function registerProcessedContrib(
   contrib: unknown,
   ctx: ExtensionContextImpl
 ) {
-  let storeEntry;
-  if (contribPoint.processManifestEntry) {
-    storeEntry = contribPoint.processManifestEntry(contrib);
+  const processEntry = contribPoint.manifestInfo?.processEntry;
+  let entry;
+  if (typeof processEntry === "function") {
+    entry = processEntry(contrib);
   } else {
-    storeEntry = contrib;
+    entry = contrib;
   }
-  ctx.contributions.set(contribPoint.id, storeEntry);
-}
-
-function requiresActivation(
-  contribPoint: ContributionPoint
-): contribPoint is CodeContributionPoint {
-  const activationEvent = (contribPoint as CodeContributionPoint)
-    .activationEvent;
-  // noinspection SuspiciousTypeOfGuard
-  return typeof activationEvent === "string";
+  ctx.contributions.set(contribPoint.id, entry);
 }

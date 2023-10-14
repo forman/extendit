@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import {
-  type CodeContributionPoint,
+  type ContributionPoint,
   registerCodeContribution,
   useCodeContributions,
 } from "@/core";
@@ -20,9 +20,11 @@ export interface StatusBarItem {
  *
  * @category UI Contributions API
  */
-export const statusBarItemsPoint: CodeContributionPoint = {
+export const statusBarItemsPoint: ContributionPoint = {
   id: "statusBarItems",
-  activationEvent: "onStatusBarItem:${id}",
+  codeInfo: {
+    activationEvent: "onStatusBarItem:${id}",
+  },
 };
 
 export function registerStatusBarItem(
@@ -36,8 +38,9 @@ export function registerStatusBarItem(
 }
 
 export function useStatusBarItems() {
-  const statusBarItems =
-    useCodeContributions<StatusBarItem>(statusBarItemsPoint);
+  const statusBarItems = useCodeContributions<StatusBarItem>(
+    statusBarItemsPoint.id
+  );
   return useMemo(
     () => processStatusBarItems([...statusBarItems.values()]),
     [statusBarItems]

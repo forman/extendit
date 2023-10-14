@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import {
-  type CodeContributionPoint,
+  type ContributionPoint,
   type When,
   useContributions,
   loadCodeContribution,
@@ -51,7 +51,7 @@ const schema: JSONSchemaType<JsonCommand[]> = {
   items: commandSchema,
 };
 
-function processContribution(commands: JsonCommand[]): Command[] {
+function processEntry(commands: JsonCommand[]): Command[] {
   return commands.map(processCommand);
 }
 
@@ -71,12 +71,16 @@ function processCommand(command: JsonCommand): Command {
  *
  * @category UI Contributions API
  */
-export const commandsPoint: CodeContributionPoint<JsonCommand[], Command[]> = {
+export const commandsPoint: ContributionPoint<JsonCommand[], Command[]> = {
   id: "commands",
-  schema,
-  idKey: "command",
-  activationEvent: "onCommand:${id}",
-  processManifestEntry: processContribution,
+  manifestInfo: {
+    schema,
+    processEntry,
+  },
+  codeInfo: {
+    idKey: "command",
+    activationEvent: "onCommand:${id}",
+  },
 };
 
 export type CommandFn<T = unknown, A extends unknown[] = unknown[]> = (
@@ -107,8 +111,7 @@ export async function executeCommand<T, A extends unknown[]>(
   ...args: A
 ): Promise<T> {
   const command = await loadCodeContribution<CommandFn<T>>(
-    // FIXME: TS: the cast should not be required
-    commandsPoint as CodeContributionPoint,
+    commandsPoint.id,
     commandId
   );
   LOG.debug("executeCommand", commandId, args);

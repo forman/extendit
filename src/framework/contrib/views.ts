@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import {
-  type CodeContributionPoint,
+  type ContributionPoint,
   type When,
   compileWhenClause,
   registerCodeContribution,
@@ -55,15 +55,19 @@ const schema: JSONSchemaType<Record<string, JsonView[]>> = {
  *
  * @category UI Contributions API
  */
-export const viewsPoint: CodeContributionPoint<Record<string, View[]>> = {
+export const viewsPoint: ContributionPoint<Record<string, View[]>> = {
   id: "views",
-  schema,
-  processManifestEntry: processContribution,
-  idKey: "id",
-  activationEvent: "onView:${id}",
+  manifestInfo: {
+    schema,
+    processEntry,
+  },
+  codeInfo: {
+    idKey: "id",
+    activationEvent: "onView:${id}",
+  },
 };
 
-function processContribution(
+function processEntry(
   views: Record<string, JsonView[]>
 ): Record<string, ProcessedView[]> {
   const processedContributions: Record<string, ProcessedView[]> = {};
@@ -95,12 +99,12 @@ export function registerViewComponent(
 }
 
 export function useViewComponent(
-  viewId: string | null | undefined
+  viewId: string
 ): React.JSX.Element | undefined {
-  const codeContribution = useLoadCodeContribution<
-    React.JSX.Element,
-    Record<string, View[]>
-  >(viewsPoint, viewId);
+  const codeContribution = useLoadCodeContribution<React.JSX.Element>(
+    viewsPoint.id,
+    viewId
+  );
   return (!codeContribution?.loading && codeContribution?.data) || undefined;
 }
 

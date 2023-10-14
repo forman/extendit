@@ -5,14 +5,8 @@ import {
   getContributionsMemo,
   getExtensionContributionsMemo,
 } from "@/core/contrib-point/get";
-import { getCodeContributions } from "@/core/code-contrib/get";
 import { loadCodeContribution } from "@/core/code-contrib/load";
-import type {
-  CodeContribution,
-  CodeContributionPoint,
-  ContributionPoint,
-  Extension,
-} from "./types";
+import type { CodeContribution, ContributionPoint, Extension } from "./types";
 import { frameworkStore, type FrameworkState } from "./store";
 import { getExtensionsMemo } from "@/core/extension/get";
 
@@ -104,51 +98,60 @@ export function useContributionPoints(): ContributionPoint[] {
   return getContributionPointsMemo(contributionPoints);
 }
 
-// TODO: use contribPointId instead of contribPoint
-
-export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(
-  contribPoint: CodeContributionPoint<S, PS>,
-  contribId: string | null | undefined
+export function useLoadCodeContribution<Data = unknown>(
+  contribPointId: string,
+  contribId: string
 ): CodeContribution<Data> | undefined {
   // TODO: Check, if we'd need to put this state into our frameworkStore.
   //   Otherwise, the state is only available until unmount of the
   //   component that owns this state.
-  const [state, setState] = useState<Record<string, CodeContribution>>({});
-  const contribKey = contribId && `${contribPoint.id}/${contribId}`;
+  const [dataStates, setDataStates] = useState<
+    Record<string, CodeContribution>
+  >({});
+  const dataId = `${contribPointId}/${contribId}`;
   useEffect(() => {
-    // LOG.debug("Hook 'useViewComponent' is recomputing");
-    if (!contribKey || state[contribKey]) {
-      // Either contribId is not given or
-      // useLoadCodeContribution() has already been called for given contribKey.
-      // In the latter case, if we now have data, ok.
-      // If we have an error, don't try again.
+    // LOG.debug("Hook 'useLoadCodeContribution' is recomputing");
+    if (dataStates[dataId]) {
+      // Done: we already have either loaded data or an error
       return;
     }
-    setState((s) => ({ ...s, [contribKey]: { loading: true } }));
-    loadCodeContribution(contribPoint, contribId!)
+    setDataStates((s) => ({ ...s, [dataId]: { loading: true } }));
+    loadCodeContribution(contribPointId, contribId)
       .then((data) => {
-        setState((s) => ({ ...s, [contribKey]: { loading: false, data } }));
+        setDataStates((s) => ({
+          ...s,
+          [dataId]: { loading: false, data },
+        }));
       })
       .catch((error: unknown) => {
         // LOG.error(
         //   "Hook 'useLoadCodeContribution' failed due to following error:",
         //   error
         // );
-        setState((s) => ({ ...s, [contribKey]: { loading: false, error } }));
+        setDataStates((s) => ({
+          ...s,
+          [dataId]: { loading: false, error },
+        }));
       });
-  }, [contribKey, contribPoint, contribId, state]);
-  return contribKey
-    ? (state[contribKey] as CodeContribution<Data> | undefined)
-    : undefined;
+  }, [contribPointId, contribId, dataId, dataStates]);
+  return dataStates[dataId] as CodeContribution<Data> | undefined;
 }
 
-// TODO: use contribPointId instead of contribPoint
-
+/**
+ * Gets the code contribution registrations
+ * as a read-only map. If there are no contributions for the given point,
+ * an empty map is returned.
+ *
+ * @category Extension Contribution API
+ * @param contribPointId - The code contribution point identifier.
+ * @returns A read-only map of code contributions.
+ */
 export function useCodeContributions<Data = unknown>(
-  contribPoint: CodeContributionPoint
-) {
+  contribPointId: string
+): ReadonlyMap<string, Data> {
+  const codeContribMap = useStore((s) => s.codeContributions[contribPointId]);
   return useMemo(
-    () => getCodeContributions<Data>(contribPoint),
-    [contribPoint]
-  );
+    () => codeContribMap || new Map(),
+    [codeContribMap]
+  ) as ReadonlyMap<string, Data>;
 }

@@ -92,7 +92,7 @@ const schema: JSONSchemaType<Record<string, JsonMenuItem[]>> = {
   required: [],
 };
 
-function processContribution(
+function processEntry(
   jsonMenusContrib: JsonMenusContrib
 ): ProcessedMenusContrib {
   const menusContrib: ProcessedMenusContrib = {};
@@ -114,8 +114,10 @@ export const menusPoint: ContributionPoint<
   ProcessedMenusContrib
 > = {
   id: "menus",
-  schema,
-  processManifestEntry: processContribution,
+  manifestInfo: {
+    schema,
+    processEntry,
+  },
 };
 
 export function useMenu(menuId: string, ctx: Record<string, unknown>) {

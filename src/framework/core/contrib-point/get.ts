@@ -4,8 +4,6 @@ import { getExtensionContext } from "@/core/extension-context/get";
 import { frameworkStore } from "@/core/store";
 import { getExtensions } from "@/core/extension/get";
 
-// TODO: introduce parameter "mustExists", see getExtension()
-
 /**
  * Gets the contribution point for the given contribution point identifier.
  *
@@ -16,10 +14,31 @@ import { getExtensions } from "@/core/extension/get";
  */
 export function getContributionPoint<TM = unknown, TS = TM>(
   contribPointId: string
+): ContributionPoint<TM, TS> | undefined;
+/**
+ * Gets the contribution point for the given contribution point identifier.
+ *
+ * @category Extension Contributions API
+ * @param contribPointId - The contribution point identifier.
+ * @param mustExist - If `true`, an error is raised
+ *   if the contribution point does not exist.
+ * @returns A read-only map of code contributions.
+ */
+export function getContributionPoint<TM = unknown, TS = TM>(
+  contribPointId: string,
+  mustExist: true
+): ContributionPoint<TM, TS>;
+export function getContributionPoint<TM = unknown, TS = TM>(
+  contribPointId: string,
+  mustExist?: true
 ): ContributionPoint<TM, TS> | undefined {
-  return frameworkStore.getState().contributionPoints[
+  const contributionPoint = frameworkStore.getState().contributionPoints[
     contribPointId
-  ] as ContributionPoint<TM, TS>;
+  ] as ContributionPoint<TM, TS> | undefined;
+  if (mustExist && !contributionPoint) {
+    throw new Error(`Unregistered contribution point '${contribPointId}'.`);
+  }
+  return contributionPoint;
 }
 
 /**

@@ -1,8 +1,6 @@
 import { getStoreRecord } from "@/core/store";
 import { emitActivationEvent } from "@/core/code-contrib/emit";
-import type { CodeContributionPoint } from "@/core/types";
-
-// TODO: use contribPointId instead of contribPoint
+import { getContributionPoint } from "../contrib-point/get";
 
 /**
  * Load code contribution data.
@@ -11,34 +9,28 @@ import type { CodeContributionPoint } from "@/core/types";
  * given `contribPoint.activationEvent`, if any.
  *
  * @category Extension Contribution API
- * @param contribPoint - The contribution point.
- * @param contribId - The contribution identifier.
+ * @param contribPointId - The contribution point identifier.
+ * @param contribId - The code contribution identifier.
  * @returns A promise that resolves to the code contribution data.
  * @throws Error - If the contribution point is unknown
  *  or if the contribution identifier is not registered
  */
-export async function loadCodeContribution<Data, S = unknown, PS = S>(
-  contribPoint: CodeContributionPoint<S, PS>,
+export async function loadCodeContribution<Data>(
+  contribPointId: string,
   contribId: string
 ): Promise<Data> {
-  let contribDataMap = getStoreRecord("codeContributions", contribPoint.id);
-  if (
-    contribPoint.activationEvent &&
-    (!contribDataMap || !contribDataMap.has(contribId))
-  ) {
-    await emitActivationEvent(
-      contribPoint.activationEvent.replace("${id}", contribId)
-    );
+  let contribDataMap = getStoreRecord("codeContributions", contribPointId);
+  if (!contribDataMap || !contribDataMap.has(contribId)) {
+    const contribPoint = getContributionPoint(contribPointId, true);
+    const activationEvent = contribPoint.codeInfo?.activationEvent;
+    if (activationEvent) {
+      await emitActivationEvent(activationEvent.replace("${id}", contribId));
+    }
   }
-  contribDataMap = getStoreRecord("codeContributions", contribPoint.id);
-  if (!contribDataMap) {
+  contribDataMap = getStoreRecord("codeContributions", contribPointId);
+  if (!contribDataMap || !contribDataMap.has(contribId)) {
     throw new Error(
-      `Unregistered contribution point '${contribPoint.id}/${contribId}'.`
-    );
-  }
-  if (!contribDataMap.has(contribId)) {
-    throw new Error(
-      `Unregistered code contribution '${contribPoint.id}/${contribId}'.`
+      `Unregistered code contribution '${contribPointId}/${contribId}'.`
     );
   }
   return Promise.resolve(contribDataMap.get(contribId) as Data);

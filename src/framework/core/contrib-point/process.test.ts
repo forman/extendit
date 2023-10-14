@@ -4,7 +4,7 @@ import { addExtensionListener } from "@/core/extension/listeners";
 import { newTestManifest } from "@/test/testing";
 import { registerExtension } from "@/core/extension/register";
 import { registerContributionPoint } from "@/core/contrib-point/register";
-import type { CodeContributionPoint, ContributionPoint } from "@/core/types";
+import type { ContributionPoint } from "@/core/types";
 import { Disposable } from "@/util/disposable";
 import { contributionProcessor } from "./process";
 import { getExtensionContext } from "@/core/extension-context/get";
@@ -41,9 +41,11 @@ describe("static data contributions", () => {
 
   const colorsPoint: ContributionPoint<Color[]> = {
     id: "colors",
-    schema: {
-      type: "array",
-      items: colorSchema,
+    manifestInfo: {
+      schema: {
+        type: "array",
+        items: colorSchema,
+      },
     },
   };
 
@@ -103,6 +105,7 @@ describe("static data contributions", () => {
     expect(Array.isArray(extension.reasons)).toBe(true);
     expect(extension.reasons).toHaveLength(1);
     expect(extension.reasons![0]).toBeInstanceOf(Error);
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     expect(`${extension.reasons![0]}`).toEqual(
       "Error: JSON validation failed for contribution to point 'colors' " +
         "from extension 'pippo.foo'. " +
@@ -139,19 +142,21 @@ describe("processed data contributions", () => {
 
   const colorsPoint: ContributionPoint<Color[], ProcessedColor[]> = {
     id: "colors",
-    schema: {
-      type: "array",
-      items: colorSchema,
-    },
-    processManifestEntry: (contrib: Color[]): ProcessedColor[] => {
-      return contrib.map((c) => ({
-        ...c,
-        rgb: [
-          parseInt(c.rgb.slice(1, 3), 16) / 255,
-          parseInt(c.rgb.slice(3, 5), 16) / 255,
-          parseInt(c.rgb.slice(5, 7), 16) / 255,
-        ],
-      }));
+    manifestInfo: {
+      schema: {
+        type: "array",
+        items: colorSchema,
+      },
+      processEntry: (contrib: Color[]): ProcessedColor[] => {
+        return contrib.map((c) => ({
+          ...c,
+          rgb: [
+            parseInt(c.rgb.slice(1, 3), 16) / 255,
+            parseInt(c.rgb.slice(3, 5), 16) / 255,
+            parseInt(c.rgb.slice(5, 7), 16) / 255,
+          ],
+        }));
+      },
     },
   };
 
@@ -200,14 +205,18 @@ describe("code contributions", () => {
     required: ["command", "title"],
   };
 
-  const commandsPoint: CodeContributionPoint<Command[]> = {
+  const commandsPoint: ContributionPoint<Command[]> = {
     id: "commands",
-    schema: {
-      type: "array",
-      items: commandSchema,
+    manifestInfo: {
+      schema: {
+        type: "array",
+        items: commandSchema,
+      },
     },
-    idKey: "command",
-    activationEvent: "onCommand:${id}",
+    codeInfo: {
+      idKey: "command",
+      activationEvent: "onCommand:${id}",
+    },
   };
 
   const manifest = newTestManifest({

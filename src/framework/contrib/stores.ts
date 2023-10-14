@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import {
-  type CodeContributionPoint,
+  type ContributionPoint,
   registerCodeContribution,
   useCodeContributions,
 } from "@/core";
@@ -11,8 +11,9 @@ export interface StoreProvider<T = unknown> {
   getSnapshot(): T;
 }
 
-export const storesPoint: CodeContributionPoint = {
+export const storesPoint: ContributionPoint = {
   id: "stores",
+  codeInfo: {}, // make this a code contribution point
 };
 
 export function registerStoreProvider(storeProvider: StoreProvider) {
@@ -24,7 +25,7 @@ export function registerStoreProvider(storeProvider: StoreProvider) {
 }
 
 export function useStoreProviders() {
-  const storeProviders = useCodeContributions<StoreProvider>(storesPoint);
+  const storeProviders = useCodeContributions<StoreProvider>(storesPoint.id);
   return useMemo(() => [...storeProviders.values()], [storeProviders]);
 }
 

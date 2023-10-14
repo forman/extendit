@@ -163,13 +163,6 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
   ? keyof T
   : string;
 
-// TODO: Refactor interface ContributionPoint {
-//      id: string;
-//      description: string;
-//      manifestInfo?: ManifestInfo;
-//      codeInfo?: CodeInfo;
-//   }
-
 /**
  * Represents a contribution point.
  *
@@ -192,29 +185,38 @@ export interface ContributionPoint<TM = unknown, TS = TM> {
    */
   id: string;
   /**
-   * Optional JSON schema used to validate JSON entries from the manifest.
-   * If not provided, contributions to this contribution point are not
-   * expected to be JSON entries.
+   * Optional description of this contribution point.
    */
-  schema?: JsonTypedSchema<TM> | JsonSchema;
+  description?: string;
+  /**
+   * Optional information to validate and process contributions encoded
+   * as JSON in the extension's manifest.
+   * If not provided, contributions to this contribution point are not
+   * expected to be JSON entries in the manifest.
+   */
+  manifestInfo?: ManifestContributionInfo<TM, TS>;
+  /**
+   * Optional information for code contributions.
+   * Use an empty object to indicate a code contribution
+   * if none of the information properties apply.
+   */
+  codeInfo?: CodeContributionInfo<TS>;
+}
+
+export interface ManifestContributionInfo<TM = unknown, TS = TM> {
+  /**
+   * JSON schema used to validate JSON entries from the manifest.
+   */
+  schema: JsonTypedSchema<TM> | JsonSchema;
   /**
    * Optional function used to process JSON entries from the manifest
    * to entries in the framework store.
-   * Ignored if a {@link schema} is not provided.
    * Defaults to the identity function.
    *
    * @param entry - A JSON entry from the manifest.
    * @returns An entry for the framework store.
    */
-  processManifestEntry?: (entry: TM) => TS;
-  /**
-   * Optional description of this contribution point.
-   */
-  description?: string;
-  /**
-   * Optional URL providing a detailed description of this contribution point,
-   */
-  docUrl?: string;
+  processEntry?: (entry: TM) => TS;
 }
 
 /**
@@ -222,15 +224,16 @@ export interface ContributionPoint<TM = unknown, TS = TM> {
  * require loading and executing JavaScript code.
  *
  * @category Extension Contribution API
- * @typeParam TM - Type of JSON entry in manifest
  * @typeParam TS - Type of contribution in framework store
  */
-export interface CodeContributionPoint<TM = unknown, TS = TM>
-  extends ContributionPoint<TM, TS> {
+export interface CodeContributionInfo<TS = unknown> {
   /**
    * This property is used to generate activation keys
    * from contributions with an ID-property named by `idKey`.
    * Defaults to `"id"`.
+   * The key usually points into the contributions
+   * processed from the manifest's JSON entries and
+   * kept in the framework's store.
    */
   idKey?: KeyOfObjOrArrayItem<TS>;
 

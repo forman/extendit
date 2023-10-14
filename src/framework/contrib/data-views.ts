@@ -1,7 +1,7 @@
 import React from "react";
 import type { JSONSchemaType } from "ajv";
 import {
-  type CodeContributionPoint,
+  type ContributionPoint,
   loadCodeContribution,
   registerCodeContribution,
   useContributions,
@@ -37,11 +37,15 @@ const schema: JSONSchemaType<DataView[]> = {
  *
  * @category UI Contributions API
  */
-export const dataViewsPoint: CodeContributionPoint<DataView[]> = {
+export const dataViewsPoint: ContributionPoint<DataView[]> = {
   id: "dataViews",
-  schema,
-  idKey: "viewType",
-  activationEvent: "onDataView:${id}",
+  manifestInfo: {
+    schema,
+  },
+  codeInfo: {
+    idKey: "viewType",
+    activationEvent: "onDataView:${id}",
+  },
 };
 
 export function useDataViews(): DataView[] {
@@ -78,8 +82,5 @@ export function registerDataViewProvider(
 }
 
 export async function getDataViewProvider(viewType: string) {
-  return loadCodeContribution<DataViewProvider, DataView[]>(
-    dataViewsPoint,
-    viewType
-  );
+  return loadCodeContribution<DataViewProvider>(dataViewsPoint.id, viewType);
 }

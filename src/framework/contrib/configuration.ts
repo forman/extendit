@@ -62,10 +62,13 @@ const configurationSchema = {
  */
 export const configurationPoint: ContributionPoint<Configuration> = {
   id: "configuration",
-  // Note, it is impossible to provide a schema that makes AJV happy with given
-  // JSONSchemaType<Configuration>. It is a nightmare,
-  // don't try, it is wasted time! That's why we fake it here.
-  schema: configurationSchema as unknown as JSONSchemaType<Configuration>,
+  manifestInfo: {
+    // Note, it seems impossible to provide a schema that
+    // makes AJV happy with given JSONSchemaType<Configuration>.
+    // It is a nightmare, don't try, it is wasted time!
+    // That's why we fake it here.
+    schema: configurationSchema as unknown as JSONSchemaType<Configuration>,
+  },
 };
 
 /**

@@ -58,7 +58,7 @@ const schema: JSONSchemaType<JsonKeybinding[]> = {
   items: keybindingSchema,
 };
 
-function processContribution(commands: JsonKeybinding[]): Keybinding[] {
+function processEntry(commands: JsonKeybinding[]): Keybinding[] {
   return commands.map(processKeybinding);
 }
 
@@ -83,8 +83,10 @@ export const keybindingsPoint: ContributionPoint<
   Keybinding[]
 > = {
   id: "keybindings",
-  schema,
-  processManifestEntry: processContribution,
+  manifestInfo: {
+    schema,
+    processEntry,
+  },
 };
 
 export function useKeybindings(
