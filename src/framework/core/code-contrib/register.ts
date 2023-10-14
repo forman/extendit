@@ -14,20 +14,20 @@ import { Disposable } from "@/util/disposable";
  * @category Extension Contribution API
  * @param contribPointId - The contribution point identifier.
  * @param contribId - The contribution identifier.
- * @param codeContribution - The code contribution.
+ * @param contribData - The code contribution.
  * @returns Disposable A disposable that unregisters the code contribution.
  */
 export function registerCodeContribution<Data>(
   contribPointId: string,
   contribId: string,
-  codeContribution: Data
+  contribData: Data
 ): Disposable {
-  let codeContribMap = getStoreRecord("codeContributions", contribPointId);
-  if (!codeContribMap) {
-    codeContribMap = new Map<string, Data>();
-    setStoreRecord("codeContributions", contribPointId, codeContribMap);
+  let contribDataMap = getStoreRecord("codeContributions", contribPointId);
+  if (!contribDataMap) {
+    contribDataMap = new Map<string, Data>();
+    setStoreRecord("codeContributions", contribPointId, contribDataMap);
   }
-  codeContribMap.set(contribId, codeContribution);
+  contribDataMap.set(contribId, contribData);
   return new Disposable(() => {
     deleteStoreRecord("codeContributions", contribPointId);
   });

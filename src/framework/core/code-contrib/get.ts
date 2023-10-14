@@ -2,6 +2,7 @@ import memoizeOne from "memoize-one";
 import { frameworkStore } from "@/core/store";
 import type { CodeContributionPoint } from "@/core/types";
 
+// TODO: use contribPointId instead of contribPoint
 /**
  * Gets a stable snapshot of the current code contribution registrations
  * as a read-only map. If there are no contributions for the given point,
@@ -14,12 +15,9 @@ import type { CodeContributionPoint } from "@/core/types";
 export function getCodeContributions<Data, TM = unknown, TS = TM>(
   contribPoint: CodeContributionPoint<TM, TS>
 ): ReadonlyMap<string, Data> {
-  return getMemoizedCodeContributions(contribPoint.id) as ReadonlyMap<
-    string,
-    Data
-  >;
+  return getCodeContributionsMemo(contribPoint.id) as ReadonlyMap<string, Data>;
 }
-const getMemoizedCodeContributions = memoizeOne(
+const getCodeContributionsMemo = memoizeOne(
   (contribPointId: string): Map<string, unknown> => {
     const contributions =
       frameworkStore.getState().codeContributions[contribPointId];

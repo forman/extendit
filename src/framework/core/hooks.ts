@@ -104,6 +104,8 @@ export function useContributionPoints(): ContributionPoint[] {
   return getContributionPointsMemo(contributionPoints);
 }
 
+// TODO: use contribPointId instead of contribPoint
+
 export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(
   contribPoint: CodeContributionPoint<S, PS>,
   contribId: string | null | undefined
@@ -139,6 +141,8 @@ export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(
     ? (state[contribKey] as CodeContribution<Data> | undefined)
     : undefined;
 }
+
+// TODO: use contribPointId instead of contribPoint
 
 export function useCodeContributions<Data = unknown>(
   contribPoint: CodeContributionPoint

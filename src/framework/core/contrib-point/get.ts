@@ -4,6 +4,8 @@ import { getExtensionContext } from "@/core/extension-context/get";
 import { frameworkStore } from "@/core/store";
 import { getExtensions } from "@/core/extension/get";
 
+// TODO: introduce parameter "mustExists", see getExtension()
+
 /**
  * Gets the contribution point for the given contribution point identifier.
  *

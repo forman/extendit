@@ -163,6 +163,13 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
   ? keyof T
   : string;
 
+// TODO: Refactor interface ContributionPoint {
+//      id: string;
+//      description: string;
+//      manifestInfo?: ManifestInfo;
+//      codeInfo?: CodeInfo;
+//   }
+
 /**
  * Represents a contribution point.
  *
