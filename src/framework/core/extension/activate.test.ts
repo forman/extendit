@@ -1,12 +1,10 @@
 import { expect, test } from "vitest";
 import { newTestManifest, readTestManifest } from "@/test/testing";
-import {
-  getExtension,
-  getExtensionContext,
-  setExtensionStatus,
-} from "@/core/store";
 import { activateExtension } from "./activate";
 import { registerExtension } from "./register";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { getExtension } from "@/core";
+import { setExtensionStatus } from "@/core/extension/set";
 
 test("activateExtension that exports Foo API", async () => {
   const { manifest, pathResolver } = readTestManifest("exports-foo-api");

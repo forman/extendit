@@ -4,14 +4,12 @@ import type {
   Extension,
   ExtensionListener,
 } from "@/core/types";
-import type { ExtensionContextImpl } from "@/core/extension/context";
-import {
-  getContributionPoints,
-  getExtensionContext,
-  setExtensionStatus,
-} from "@/core/store";
+import type { ExtensionContextImpl } from "@/core/extension-context/impl";
+import { getContributionPoints } from "@/core/contrib-point/get";
 import { type JsonValue, validateJson } from "@/util";
 import { Logger } from "@/util/log";
+import { getExtensionContext } from "@/core/extension-context/get";
+import { setExtensionStatus } from "@/core/extension/set";
 
 const LOG = new Logger("contrib/process");
 
@@ -29,7 +27,7 @@ const idRef = "${id}";
  *    form "${activationEvent}:${contrib[contribId]}",
  *    if the point defines an `activationEvent` string.
  * 3. Processing/transformation of the contribution, if the point defines
- *    a `processContribution` function. Registration of the processed or
+ *    a `processManifestEntry` function. Registration of the processed or
  *    existing contribution in the extension context.
  *
  * If any of the above steps fail, the extension is set into error state.
@@ -126,13 +124,13 @@ function registerProcessedContrib(
   contrib: unknown,
   ctx: ExtensionContextImpl
 ) {
-  let processedContrib;
-  if (contribPoint.processContribution) {
-    processedContrib = contribPoint.processContribution(contrib);
+  let storeEntry;
+  if (contribPoint.processManifestEntry) {
+    storeEntry = contribPoint.processManifestEntry(contrib);
   } else {
-    processedContrib = contrib;
+    storeEntry = contrib;
   }
-  ctx.processedContributions.set(contribPoint.id, processedContrib);
+  ctx.contributions.set(contribPoint.id, storeEntry);
 }
 
 function requiresActivation(

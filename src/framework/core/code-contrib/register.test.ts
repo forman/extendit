@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
+import { registerContributionPoint } from "@/core/contrib-point/register";
+import type { CodeContributionPoint } from "@/core/types";
 import { registerCodeContribution } from "./register";
-import { registerContributionPoint } from "@/core/contrib/point/register";
-import type { CodeContributionPoint } from "../../types";
 
 test("registerCodeContribution", () => {
   const contribPoint: CodeContributionPoint<string> = {

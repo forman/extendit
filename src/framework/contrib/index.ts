@@ -17,10 +17,12 @@ export {
   type ConfigurationHeaderItem,
   type ConfigurationPropertyItem,
   type ConfigurationItem,
-  useConfigurations,
+  getConfigurationSchemas,
+  getExtensionConfigurations,
   useConfigurationNodes,
   useConfigurationItems,
   useConfigurationSchemas,
+  useExtensionConfigurations,
   configurationPoint,
 } from "./configuration";
 

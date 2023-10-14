@@ -9,12 +9,15 @@ import { deleteStoreRecord, setStoreRecord } from "@/core/store";
  * @param contribPoint - The contribution point.
  * @returns Disposable A disposable that unregisters the contribution point.
  */
-export function registerContributionPoint<T = unknown, PT = T>(
-  contribPoint: ContributionPoint<T, PT>
+export function registerContributionPoint<TM = unknown, TS = TM>(
+  contribPoint: ContributionPoint<TM, TS>
 ): Disposable {
-  const id = contribPoint.id;
-  setStoreRecord("contributionPoints", id, contribPoint as ContributionPoint);
+  setStoreRecord(
+    "contributionPoints",
+    contribPoint.id,
+    contribPoint as ContributionPoint
+  );
   return new Disposable(() => {
-    deleteStoreRecord("contributionPoints", id);
+    deleteStoreRecord("contributionPoints", contribPoint.id);
   });
 }

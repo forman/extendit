@@ -1,4 +1,9 @@
 //////////////////////////////////////////////////////////////////////////
+// Framework API:
+export type { FrameworkOptions } from "./types";
+export { updateFrameworkConfig } from "./config";
+
+//////////////////////////////////////////////////////////////////////////
 // Extension API:
 // Use this API in your application to manage extensions.
 
@@ -11,24 +16,23 @@ export type {
   ExtensionStatus,
   ExtensionPathResolver,
   ExtensionOptions,
-  FrameworkOptions,
 } from "./types";
 export {
   getExtensionId,
   getExtensionDisplayName,
   readExtensionManifest,
 } from "./extension/manifest";
-export { getExtension } from "./store";
-export { updateFrameworkConfig } from "./config";
-export { registerExtension } from "./extension/register";
 export { activateExtension } from "./extension/activate";
+export { getExtension, getExtensions } from "@/core/extension/get";
+export { registerExtension } from "./extension/register";
 export { deactivateExtension } from "./extension/deactivate";
 export { addExtensionListener } from "./extension/listeners";
 export {
   useExtensions,
+  useExtensionContributions,
   useContributions,
   useContributionPoints,
-  useCodeContribution,
+  useLoadCodeContribution,
   useCodeContributions,
 } from "./hooks";
 
@@ -42,22 +46,25 @@ export type {
   CodeContribution,
   ContributionPoint,
   CodeContributionPoint,
+  When,
 } from "./types";
-export { registerContributionPoint } from "./contrib/point/register";
-export { registerCodeContribution } from "./contrib/code/register";
-export { getCodeContributions } from "./contrib/code/get";
-export { loadCodeContribution } from "./contrib/code/load";
 export {
-  type When,
-  WhenClauseCompiler,
-  whenClauseCompiler,
-} from "./contrib/when/compiler";
+  getContributionPoint,
+  getContributionPoints,
+  getContributions,
+  getExtensionContributions,
+} from "./contrib-point/get";
+export { registerContributionPoint } from "./contrib-point/register";
+export { getCodeContributions } from "./code-contrib/get";
+export { loadCodeContribution } from "./code-contrib/load";
+export { registerCodeContribution } from "./code-contrib/register";
+export { compileWhenClause } from "./contrib-point/when";
 
 //////////////////////////////////////////////////////////////////////////
 // Add extension listener that processes extension contributions
 // on extension registration.
 
-import { contributionProcessor } from "./contrib/point/process";
+import { contributionProcessor } from "./contrib-point/process";
 import { addExtensionListener } from "./extension/listeners";
 
 addExtensionListener(contributionProcessor);

@@ -1,8 +1,13 @@
-import { type ContributionPoint, useContributions } from "@/core";
+import {
+  type ContributionPoint,
+  getExtensionContributions,
+  useExtensionContributions,
+} from "@/core";
 import type { JSONSchemaType } from "ajv";
-import { getExtensionContext } from "@/core/store";
 import { jsonMetaSchema, newId, toTitle, type UiSchema } from "@/util";
 import { useMemo } from "react";
+import { getExtensionContext } from "@/core/extension-context/get";
+import memoizeOne from "memoize-one";
 //import * as log from "@/util/log";
 
 //const LOG = new log.Logger("contrib/configurations");
@@ -67,36 +72,50 @@ export const configurationPoint: ContributionPoint<Configuration> = {
  * Returns a mapping from extension identifier to the configuration
  * provided by that extension.
  */
-export function useConfigurations(): Map<string, Configuration> {
-  return useContributions<Configuration>(
-    configurationPoint.id,
-    undefined,
-    true
-  );
+export function useExtensionConfigurations(): ReadonlyMap<
+  string,
+  Configuration
+> {
+  return useExtensionContributions<Configuration>(configurationPoint.id);
+}
+
+/**
+ * Returns a mapping from extension identifier to the configuration
+ * provided by that extension.
+ */
+export function getExtensionConfigurations(): ReadonlyMap<
+  string,
+  Configuration
+> {
+  return getExtensionContributions<Configuration>(configurationPoint.id);
 }
 
 /**
  * Returns a mapping from configuration property name to the UI schema used by
  * that property.
  */
-export function useConfigurationSchemas(): Map<string, UiSchema> {
-  const configurations = useConfigurations();
-  return useMemo(
-    () => getSchemasFromConfigurations(configurations),
-    [configurations]
-  );
+export function useConfigurationSchemas(): ReadonlyMap<string, UiSchema> {
+  const configurations = useExtensionConfigurations();
+  return getConfigurationSchemasMemo(configurations);
 }
 
-function getSchemasFromConfigurations(
-  configurations: Map<string, Configuration>
-): Map<string, UiSchema> {
-  const schemas = new Map<string, UiSchema>();
-  collectSchemasFromConfigurations(configurations, schemas);
-  return schemas;
+export function getConfigurationSchemas(): ReadonlyMap<string, UiSchema> {
+  const configurations = getExtensionConfigurations();
+  return getConfigurationSchemasMemo(configurations);
 }
+
+const getConfigurationSchemasMemo = memoizeOne(
+  (
+    configurations: ReadonlyMap<string, Configuration>
+  ): ReadonlyMap<string, UiSchema> => {
+    const schemas = new Map<string, UiSchema>();
+    collectSchemasFromConfigurations(configurations, schemas);
+    return schemas;
+  }
+);
 
 function collectSchemasFromConfigurations(
-  configurations: Map<string, Configuration>,
+  configurations: ReadonlyMap<string, Configuration>,
   schemas: Map<string, UiSchema>
 ) {
   configurations.forEach((categoryOrArrayOf) => {
@@ -114,16 +133,18 @@ function collectSchemasFromCategory(
   category: ConfigurationCategory,
   schemas: Map<string, UiSchema>
 ) {
-  Object.entries(category.properties).forEach(([name, schema]) => {
-    schemas.set(name, schema);
-  });
+  Object.entries(category.properties).forEach(
+    ([propertyName, propertySchema]) => {
+      schemas.set(propertyName, propertySchema);
+    }
+  );
 }
 
 export function useConfigurationNodes(
   familyTitles: string[],
   searchPattern?: string
 ): ConfigurationNode[] {
-  const configurations = useConfigurations();
+  const configurations = useExtensionConfigurations();
   if (searchPattern) {
     searchPattern = searchPattern.toLowerCase();
   }
@@ -136,9 +157,12 @@ export function useConfigurationNodes(
 
 const defaultOrder = 1e6;
 
-// export for local test only
+/**
+ * Exported for local test only
+ * @internal
+ */
 export function getNodesFromConfigurations(
-  configurations: Map<string, Configuration>,
+  configurations: ReadonlyMap<string, Configuration>,
   familyTitles: string[],
   searchPattern?: string
 ): ConfigurationNode[] {

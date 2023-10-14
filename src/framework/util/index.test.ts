@@ -11,6 +11,7 @@ test("Framework Util API is complete", () => {
     "assert",
     "assertDefined",
     "capitalize",
+    "createSelector",
     "expr",
     "getDefaultUiValue",
     "isBooleanUiSchema",

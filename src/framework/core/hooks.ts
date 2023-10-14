@@ -1,14 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore as useZustandStore } from "zustand";
-import { getContributionsFromExtensions } from "@/core/contrib/point/get";
-import { getCodeContributions } from "@/core/contrib/code/get";
-import { loadCodeContribution } from "@/core/contrib/code/load";
+import {
+  getContributionPointsMemo,
+  getContributionsMemo,
+  getExtensionContributionsMemo,
+} from "@/core/contrib-point/get";
+import { getCodeContributions } from "@/core/code-contrib/get";
+import { loadCodeContribution } from "@/core/code-contrib/load";
 import type {
+  CodeContribution,
   CodeContributionPoint,
   ContributionPoint,
   Extension,
 } from "./types";
 import { frameworkStore, type FrameworkState } from "./store";
+import { getExtensionsMemo } from "@/core/extension/get";
+
+// Reactive hook: use<Name>(args)
+// Snapshot getter: get<Name>(args)
+// Memoized getter: get<Name>Memo(deps)
+//
+// use<Name>(args) implementation pattern:
+// 1. Collect reactive deps, e.g., use hooks & selectors into framework store
+// 2. Return result of get<Name>Memo(deps + args) - no need to use useMemo()
+//
+// get<Name>(args) implementation pattern:
+// 1. Collect snapshot deps, e.g., use getters & selectors into framework store
+// 2. Return result of get<Name>Memo(deps + args)
 
 /**
  * A React hook that gets data from the framework's store.
@@ -30,45 +48,50 @@ export function useStore<U>(selector: (state: FrameworkState) => U): U {
  */
 export function useExtensions(): Extension[] {
   const extensions = useStore((state) => state.extensions);
-  return useMemo(() => Object.values(extensions), [extensions]);
+  return getExtensionsMemo(extensions);
+}
+
+/**
+ * A React hook that provides all registered contributions for the given
+ * contribution point identifier `contribPointId` and optional `contribKey`.
+ *
+ * @category React Hooks
+ * @param contribPointId - The contribution point identifier
+ * @param contribKey - An optional key
+ * @returns An array of all extension contributions.
+ *   If a contribution is an array, its flattened items are appended
+ *   to the return value.
+ */
+export function useContributions<T>(
+  contribPointId: string,
+  contribKey?: string | undefined | null
+): T[] {
+  const extensions = useExtensions();
+  return getContributionsMemo(extensions, contribPointId, contribKey) as T[];
 }
 
 /**
  * A React hook that provides all registered contributions for the given
  * contribution point identifier `contribPointId` and optional `key`.
  *
- * @category React Hooks
- * @param contribPointId - The contribution point identifier
- * @param key - An optional key
- * @returns An array comprising all contributions points
- */
-export function useContributions<T>(contribPointId: string, key?: string): T[];
-/**
- * A React hook that provides all registered contributions for the given
- * contribution point identifier `contribPointId` and optional `key`.
+ * The contributions are returned as a mapping from extension identifier
+ * to extension contribution.
  *
  * @category React Hooks
  * @param contribPointId - The contribution point identifier
- * @param key - An optional key
- * @param asMap - `true`, if given
+ * @param contribKey - An optional contribution key
  * @returns A mapping from extension identifier to extension contribution.
  */
-export function useContributions<T>(
+export function useExtensionContributions<T>(
   contribPointId: string,
-  key: string | undefined | null,
-  asMap: true
-): Map<string, T>;
-export function useContributions<T>(
-  contribPointId: string,
-  key?: string | undefined | null,
-  asMap?: true
-): T[] | Map<string, T> {
+  contribKey?: string | undefined | null
+): ReadonlyMap<string, T> {
   const extensions = useExtensions();
-  return useMemo(() => {
-    return asMap
-      ? getContributionsFromExtensions(contribPointId, extensions, key, true)
-      : getContributionsFromExtensions(contribPointId, extensions, key);
-  }, [contribPointId, extensions, key, asMap]);
+  return getExtensionContributionsMemo(
+    extensions,
+    contribPointId,
+    contribKey
+  ) as ReadonlyMap<string, T>;
 }
 
 /**
@@ -78,17 +101,12 @@ export function useContributions<T>(
  */
 export function useContributionPoints(): ContributionPoint[] {
   const contributionPoints = useStore((state) => state.contributionPoints);
-  return useMemo(() => Object.values(contributionPoints), [contributionPoints]);
+  return getContributionPointsMemo(contributionPoints);
 }
 
-export interface CodeContribution<T = unknown> {
-  isLoading: boolean;
-  data?: T;
-  error?: unknown;
-}
+// TODO: use contribPointId instead of contribPoint
 
-// TODO: rename into useLoadCodeContribution
-export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
+export function useLoadCodeContribution<Data = unknown, S = unknown, PS = S>(
   contribPoint: CodeContributionPoint<S, PS>,
   contribId: string | null | undefined
 ): CodeContribution<Data> | undefined {
@@ -101,28 +119,30 @@ export function useCodeContribution<Data = unknown, S = unknown, PS = S>(
     // LOG.debug("Hook 'useViewComponent' is recomputing");
     if (!contribKey || state[contribKey]) {
       // Either contribId is not given or
-      // useCodeContribution() has already been called for given contribKey.
+      // useLoadCodeContribution() has already been called for given contribKey.
       // In the latter case, if we now have data, ok.
       // If we have an error, don't try again.
       return;
     }
-    setState((s) => ({ ...s, [contribKey]: { isLoading: true } }));
+    setState((s) => ({ ...s, [contribKey]: { loading: true } }));
     loadCodeContribution(contribPoint, contribId!)
       .then((data) => {
-        setState((s) => ({ ...s, [contribKey]: { isLoading: false, data } }));
+        setState((s) => ({ ...s, [contribKey]: { loading: false, data } }));
       })
       .catch((error: unknown) => {
         // LOG.error(
-        //   "Hook 'useViewComponent' failed due to following error:",
+        //   "Hook 'useLoadCodeContribution' failed due to following error:",
         //   error
         // );
-        setState((s) => ({ ...s, [contribKey]: { isLoading: false, error } }));
+        setState((s) => ({ ...s, [contribKey]: { loading: false, error } }));
       });
   }, [contribKey, contribPoint, contribId, state]);
   return contribKey
     ? (state[contribKey] as CodeContribution<Data> | undefined)
     : undefined;
 }
+
+// TODO: use contribPointId instead of contribPoint
 
 export function useCodeContributions<Data = unknown>(
   contribPoint: CodeContributionPoint

@@ -3,11 +3,11 @@ import type { JSONSchemaType } from "ajv";
 import {
   type CodeContributionPoint,
   type When,
+  compileWhenClause,
   registerCodeContribution,
   useContributions,
-  whenClauseCompiler,
 } from "@/core";
-import { useCodeContribution } from "@/core/hooks";
+import { useLoadCodeContribution } from "@/core/hooks";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
 
@@ -58,7 +58,7 @@ const schema: JSONSchemaType<Record<string, JsonView[]>> = {
 export const viewsPoint: CodeContributionPoint<Record<string, View[]>> = {
   id: "views",
   schema,
-  processContribution,
+  processManifestEntry: processContribution,
   idKey: "id",
   activationEvent: "onView:${id}",
 };
@@ -70,7 +70,7 @@ function processContribution(
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
-      return { ...rest, when: whenClauseCompiler.compile(whenClause) };
+      return { ...rest, when: compileWhenClause(whenClause) };
     });
   });
   return processedContributions;
@@ -97,11 +97,11 @@ export function registerViewComponent(
 export function useViewComponent(
   viewId: string | null | undefined
 ): React.JSX.Element | undefined {
-  const codeContribution = useCodeContribution<
+  const codeContribution = useLoadCodeContribution<
     React.JSX.Element,
     Record<string, View[]>
   >(viewsPoint, viewId);
-  return (!codeContribution?.isLoading && codeContribution?.data) || undefined;
+  return (!codeContribution?.loading && codeContribution?.data) || undefined;
 }
 
 export interface ViewComponentProps {

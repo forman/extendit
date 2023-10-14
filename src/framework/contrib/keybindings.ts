@@ -2,9 +2,9 @@ import { useEffect, useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import {
   type ContributionPoint,
-  useContributions,
   type When,
-  whenClauseCompiler,
+  useContributions,
+  compileWhenClause,
 } from "@/core";
 import * as log from "@/util/log";
 import { executeCommand } from "@/contrib/commands";
@@ -67,7 +67,7 @@ function processKeybinding(keybinding: JsonKeybinding): Keybinding {
   return {
     ...keybindingBase,
     key: normalizeKey(key),
-    when: whenClauseCompiler.compile(when),
+    when: compileWhenClause(when),
   } as Keybinding;
 }
 
@@ -84,7 +84,7 @@ export const keybindingsPoint: ContributionPoint<
 > = {
   id: "keybindings",
   schema,
-  processContribution,
+  processManifestEntry: processContribution,
 };
 
 export function useKeybindings(

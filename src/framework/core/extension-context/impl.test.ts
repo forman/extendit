@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ExtensionContextImpl } from "./context";
+import { ExtensionContextImpl } from "./impl";
 import { Disposable } from "@/util/disposable";
 
 describe("ExtensionContextImpl", () => {

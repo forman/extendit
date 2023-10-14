@@ -1,6 +1,8 @@
 import { getStoreRecord } from "@/core/store";
-import { emitActivationEvent } from "@/core/activation/emit";
+import { emitActivationEvent } from "@/core/code-contrib/emit";
 import type { CodeContributionPoint } from "@/core/types";
+
+// TODO: use contribPointId instead of contribPoint
 
 /**
  * Load code contribution data.
@@ -19,25 +21,25 @@ export async function loadCodeContribution<Data, S = unknown, PS = S>(
   contribPoint: CodeContributionPoint<S, PS>,
   contribId: string
 ): Promise<Data> {
-  let contribMap = getStoreRecord("codeContributions", contribPoint.id);
+  let contribDataMap = getStoreRecord("codeContributions", contribPoint.id);
   if (
     contribPoint.activationEvent &&
-    (!contribMap || !contribMap.has(contribId))
+    (!contribDataMap || !contribDataMap.has(contribId))
   ) {
     await emitActivationEvent(
       contribPoint.activationEvent.replace("${id}", contribId)
     );
   }
-  contribMap = getStoreRecord("codeContributions", contribPoint.id);
-  if (!contribMap) {
+  contribDataMap = getStoreRecord("codeContributions", contribPoint.id);
+  if (!contribDataMap) {
     throw new Error(
       `Unregistered contribution point '${contribPoint.id}/${contribId}'.`
     );
   }
-  if (!contribMap.has(contribId)) {
+  if (!contribDataMap.has(contribId)) {
     throw new Error(
       `Unregistered code contribution '${contribPoint.id}/${contribId}'.`
     );
   }
-  return Promise.resolve(contribMap.get(contribId) as Data);
+  return Promise.resolve(contribDataMap.get(contribId) as Data);
 }
