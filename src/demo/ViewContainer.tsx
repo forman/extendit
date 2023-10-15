@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { useViews, ViewComponent } from "@/contrib";
+import { useToolViews, ToolViewComponent } from "@/contrib";
 import { useAppContext, useAppStore } from "./app-store";
 
 function ViewContainer() {
   const selectedViewId = useAppStore((s) => s.viewId);
-  const views = useViews("main", useAppContext());
+  const views = useToolViews("main", useAppContext());
 
   const selectedView = useMemo(
     () => views.find((v) => v.id === selectedViewId) ?? null,
@@ -22,7 +22,7 @@ function ViewContainer() {
       </p>
       <div>
         {selectedView && (
-          <ViewComponent key={selectedViewId} viewId={selectedView.id} />
+          <ToolViewComponent key={selectedViewId} viewId={selectedView.id} />
         )}
       </div>
     </div>

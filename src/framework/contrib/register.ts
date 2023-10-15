@@ -7,7 +7,7 @@ import {
   statusBarItemsPoint,
   storesPoint,
   submenusPoint,
-  viewsPoint,
+  toolViewsPoint,
 } from "./index";
 import { registerContributionPoint } from "@/index";
 import { Disposable } from "@/util";
@@ -22,7 +22,7 @@ import { Disposable } from "@/util";
  * - `"menus"`
  * - `"submenus"`
  * - `"stores"`
- * - `"views"`
+ * - `"toolViews"`
  *
  * @category UI Contributions API
  * @returns A disposable that unregisters all provided contribution points.
@@ -37,6 +37,6 @@ export function registerContributionPoints(): Disposable {
     registerContributionPoint(submenusPoint),
     registerContributionPoint(statusBarItemsPoint),
     registerContributionPoint(storesPoint),
-    registerContributionPoint(viewsPoint)
+    registerContributionPoint(toolViewsPoint)
   );
 }

@@ -2,6 +2,13 @@
 
 ### Design
 
+* Review logging
+  * Use logger names "extend-me/core" etc
+* Clean up `framework/contrib`
+  * Add API docs 
+  * Every point should gets its own sub-folder, split into
+    * `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
+  * A `hooks.ts` in each submodule requires React
 * Get rid of globals, instead instantiate `Framework` class that
   contains the configuration, the store, the API, and provides hook factories.
 * Allow using the package without React.
@@ -15,7 +22,7 @@
 
 ### Before Deployment
 
-* Demo: switching views seems slow, but React devtools
+* Demo: switching toolViews seems slow, but React devtools
   say components update within millis. Check!
 * Setup CI
 * Add TSDoc at to all types, classes, members, methods,

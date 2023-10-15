@@ -13,21 +13,21 @@ import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/views");
 
-export interface View {
+export interface ToolView {
   id: string;
   title?: string;
   icon?: string;
 }
 
-export interface JsonView extends View {
+export interface ToolViewManifestEntry extends ToolView {
   when?: string;
 }
 
-interface ProcessedView extends View {
+interface StoreToolView extends ToolView {
   when?: When;
 }
 
-const viewSchema: JSONSchemaType<JsonView> = {
+const toolViewSchema: JSONSchemaType<ToolViewManifestEntry> = {
   type: "object",
   properties: {
     id: { type: "string" },
@@ -39,11 +39,11 @@ const viewSchema: JSONSchemaType<JsonView> = {
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<Record<string, JsonView[]>> = {
+const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
   type: "object",
   additionalProperties: {
     type: "array",
-    items: viewSchema,
+    items: toolViewSchema,
   },
   required: [],
 };
@@ -51,26 +51,26 @@ const schema: JSONSchemaType<Record<string, JsonView[]>> = {
 /**
  * The "views" contribution point.
  * To register in your app, call {@link registerContributionPoint} with
- * {@link viewsPoint}.
+ * {@link toolViewsPoint}.
  *
  * @category UI Contributions API
  */
-export const viewsPoint: ContributionPoint<Record<string, View[]>> = {
-  id: "views",
+export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
+  id: "toolViews",
   manifestInfo: {
     schema,
     processEntry,
   },
   codeInfo: {
     idKey: "id",
-    activationEvent: "onView:${id}",
+    activationEvent: "onToolView:${id}",
   },
 };
 
 function processEntry(
-  views: Record<string, JsonView[]>
-): Record<string, ProcessedView[]> {
-  const processedContributions: Record<string, ProcessedView[]> = {};
+  views: Record<string, ToolViewManifestEntry[]>
+): Record<string, StoreToolView[]> {
+  const processedContributions: Record<string, StoreToolView[]> = {};
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
@@ -80,38 +80,38 @@ function processEntry(
   return processedContributions;
 }
 
-export function useViews(
+export function useToolViews(
   containerId: string,
   ctx: Record<string, unknown>
-): View[] {
-  const views = useContributions<ProcessedView>(viewsPoint.id, containerId);
+): ToolView[] {
+  const views = useContributions<StoreToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
     LOG.debug("Hook 'useViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));
   }, [views, ctx]);
 }
 
-export function registerViewComponent(
+export function registerToolViewComponent(
   viewId: string,
   component: React.JSX.Element
 ): Disposable {
-  return registerCodeContribution(viewsPoint.id, viewId, component);
+  return registerCodeContribution(toolViewsPoint.id, viewId, component);
 }
 
-export function useViewComponent(
+export function useToolViewComponent(
   viewId: string
 ): React.JSX.Element | undefined {
   const codeContribution = useLoadCodeContribution<React.JSX.Element>(
-    viewsPoint.id,
+    toolViewsPoint.id,
     viewId
   );
   return (!codeContribution?.loading && codeContribution?.data) || undefined;
 }
 
-export interface ViewComponentProps {
+export interface ToolViewComponentProps {
   viewId: string;
 }
 
-export function ViewComponent({ viewId }: ViewComponentProps) {
-  return useViewComponent(viewId);
+export function ToolViewComponent({ viewId }: ToolViewComponentProps) {
+  return useToolViewComponent(viewId);
 }

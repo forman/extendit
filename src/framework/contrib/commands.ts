@@ -21,7 +21,7 @@ interface CommandBase {
   icon?: string;
 }
 
-export interface JsonCommand extends CommandBase {
+export interface CommandManifestEntry extends CommandBase {
   enablement?: string;
   checked?: string;
 }
@@ -31,7 +31,7 @@ export interface Command extends CommandBase {
   checked?: When;
 }
 
-const commandSchema: JSONSchemaType<JsonCommand> = {
+const commandSchema: JSONSchemaType<CommandManifestEntry> = {
   type: "object",
   properties: {
     command: { type: "string" },
@@ -46,16 +46,16 @@ const commandSchema: JSONSchemaType<JsonCommand> = {
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<JsonCommand[]> = {
+const schema: JSONSchemaType<CommandManifestEntry[]> = {
   type: "array",
   items: commandSchema,
 };
 
-function processEntry(commands: JsonCommand[]): Command[] {
+function processEntry(commands: CommandManifestEntry[]): Command[] {
   return commands.map(processCommand);
 }
 
-function processCommand(command: JsonCommand): Command {
+function processCommand(command: CommandManifestEntry): Command {
   const { enablement, checked, ...commandBase } = command;
   return {
     ...commandBase,
@@ -71,7 +71,10 @@ function processCommand(command: JsonCommand): Command {
  *
  * @category UI Contributions API
  */
-export const commandsPoint: ContributionPoint<JsonCommand[], Command[]> = {
+export const commandsPoint: ContributionPoint<
+  CommandManifestEntry[],
+  Command[]
+> = {
   id: "commands",
   manifestInfo: {
     schema,

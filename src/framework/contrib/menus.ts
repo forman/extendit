@@ -20,7 +20,7 @@ const LOG = new log.Logger("contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 
-export interface BaseMenuItem {
+export interface MenuItemBase {
   submenu?: string;
   command?: string;
   // Damn, this is what is needed, but it doesn't work with AJV
@@ -31,17 +31,18 @@ export interface BaseMenuItem {
   icon?: string;
 }
 
-export interface JsonMenuItem extends BaseMenuItem {
+export interface MenuItemManifestEntry extends MenuItemBase {
   when?: string;
 }
 
-export interface ResolvedMenuItem extends BaseMenuItem {
+export interface ResolvedMenuItem extends MenuItemBase {
   id: string;
   label: string;
   group: string;
   order: number;
 }
 
+// This is a local package export only
 export interface ProcessedMenuItem extends ResolvedMenuItem {
   when?: When;
   enablement?: When;
@@ -53,10 +54,10 @@ export interface MenuItem extends ResolvedMenuItem {
   keybinding?: Keybinding;
 }
 
-type JsonMenusContrib = Record<string, JsonMenuItem[]>;
+type ManifestMenusContrib = Record<string, MenuItemManifestEntry[]>;
 type ProcessedMenusContrib = Record<string, ProcessedMenuItem[]>;
 
-const menuItemSchema: JSONSchemaType<JsonMenuItem> = {
+const menuItemSchema: JSONSchemaType<MenuItemManifestEntry> = {
   type: "object",
   properties: {
     submenu: { type: "string", nullable: true },
@@ -83,7 +84,7 @@ const menuItemSchema: JSONSchemaType<JsonMenuItem> = {
   //required: [],
 };
 
-const schema: JSONSchemaType<Record<string, JsonMenuItem[]>> = {
+const schema: JSONSchemaType<ManifestMenusContrib> = {
   type: "object",
   additionalProperties: {
     type: "array",
@@ -93,13 +94,14 @@ const schema: JSONSchemaType<Record<string, JsonMenuItem[]>> = {
 };
 
 function processEntry(
-  jsonMenusContrib: JsonMenusContrib
+  manifestMenusContrib: ManifestMenusContrib
 ): ProcessedMenusContrib {
-  const menusContrib: ProcessedMenusContrib = {};
-  Object.keys(jsonMenusContrib).forEach((key) => {
-    menusContrib[key] = jsonMenusContrib[key].map(processJsonMenuItem);
+  const processedMenusContrib: ProcessedMenusContrib = {};
+  Object.keys(manifestMenusContrib).forEach((key) => {
+    processedMenusContrib[key] =
+      manifestMenusContrib[key].map(processJsonMenuItem);
   });
-  return menusContrib;
+  return processedMenusContrib;
 }
 
 /**
@@ -110,7 +112,7 @@ function processEntry(
  *  @category UI Contributions API
  */
 export const menusPoint: ContributionPoint<
-  JsonMenusContrib,
+  ManifestMenusContrib,
   ProcessedMenusContrib
 > = {
   id: "menus",
@@ -143,7 +145,9 @@ export function useMenu(menuId: string, ctx: Record<string, unknown>) {
 
 //---------------------------------------------------------------
 
-function processJsonMenuItem(jsonMenuItem: JsonMenuItem): ProcessedMenuItem {
+function processJsonMenuItem(
+  jsonMenuItem: MenuItemManifestEntry
+): ProcessedMenuItem {
   const [group, order] = parseGroupAndOrder(jsonMenuItem.group);
   const label = jsonMenuItem.label ?? "";
   return {

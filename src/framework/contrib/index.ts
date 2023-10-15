@@ -1,7 +1,7 @@
 export {
   type Command,
   type CommandFn,
-  type JsonCommand,
+  type CommandManifestEntry,
   useCommands,
   registerCommand,
   executeCommand,
@@ -13,10 +13,11 @@ export { type CommandMenuItem, useCommandPalette } from "./command-palette";
 export {
   type Configuration,
   type ConfigurationCategory,
-  type ConfigurationNode,
   type ConfigurationHeaderItem,
-  type ConfigurationPropertyItem,
   type ConfigurationItem,
+  type ConfigurationManifestEntry,
+  type ConfigurationNode,
+  type ConfigurationPropertyItem,
   getConfigurationSchemas,
   getExtensionConfigurations,
   useConfigurationNodes,
@@ -29,6 +30,7 @@ export {
 export {
   type DataView,
   type DataViewInstance,
+  type DataViewManifestEntry,
   useDataViews,
   useDataView,
   registerDataViewProvider,
@@ -37,13 +39,18 @@ export {
 } from "./data-views";
 
 export {
-  type JsonKeybinding,
   type Keybinding,
+  type KeybindingManifestEntry,
   useKeybindings,
   keybindingsPoint,
 } from "./keybindings";
 
-export { type JsonMenuItem, type MenuItem, useMenu, menusPoint } from "./menus";
+export {
+  type MenuItem,
+  type MenuItemManifestEntry,
+  useMenu,
+  menusPoint,
+} from "./menus";
 
 export {
   type StatusBarItem,
@@ -59,17 +66,22 @@ export {
   useStores,
 } from "./stores";
 
-export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
+export {
+  type Submenu,
+  type SubmenuManifestEntry,
+  useSubmenus,
+  submenusPoint,
+} from "./submenus";
 
 export {
-  type JsonView,
-  type View,
-  type ViewComponentProps,
-  ViewComponent,
-  useViews,
-  useViewComponent,
-  registerViewComponent,
-  viewsPoint,
-} from "./views";
+  type ToolView,
+  type ToolViewComponentProps,
+  type ToolViewManifestEntry,
+  ToolViewComponent,
+  useToolViews,
+  useToolViewComponent,
+  registerToolViewComponent,
+  toolViewsPoint,
+} from "./tool-views";
 
 export { registerContributionPoints } from "./register";

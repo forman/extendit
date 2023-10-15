@@ -2,7 +2,7 @@ import type { ExtensionContext } from "@/core";
 import {
   executeCommand,
   registerCommand,
-  registerViewComponent,
+  registerToolViewComponent,
 } from "@/contrib";
 import { MyEx1View } from "./MyEx1View";
 
@@ -15,5 +15,5 @@ export function activate(ctx: ExtensionContext) {
     await executeCommand("app.selectView", "ex1.foo").then();
   });
 
-  registerViewComponent("ex1.foo", <MyEx1View />);
+  registerToolViewComponent("ex1.foo", <MyEx1View />);
 }

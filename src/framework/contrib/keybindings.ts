@@ -20,7 +20,7 @@ interface KeybindingBase {
   mac?: string;
 }
 
-export interface JsonKeybinding extends KeybindingBase {
+export interface KeybindingManifestEntry extends KeybindingBase {
   when?: string;
 }
 
@@ -28,7 +28,7 @@ export interface Keybinding extends KeybindingBase {
   when?: When;
 }
 
-const keybindingSchema: JSONSchemaType<JsonKeybinding> = {
+const keybindingSchema: JSONSchemaType<KeybindingManifestEntry> = {
   type: "object",
   properties: {
     command: { type: "string" },
@@ -53,16 +53,16 @@ const keybindingSchema: JSONSchemaType<JsonKeybinding> = {
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<JsonKeybinding[]> = {
+const schema: JSONSchemaType<KeybindingManifestEntry[]> = {
   type: "array",
   items: keybindingSchema,
 };
 
-function processEntry(commands: JsonKeybinding[]): Keybinding[] {
+function processEntry(commands: KeybindingManifestEntry[]): Keybinding[] {
   return commands.map(processKeybinding);
 }
 
-function processKeybinding(keybinding: JsonKeybinding): Keybinding {
+function processKeybinding(keybinding: KeybindingManifestEntry): Keybinding {
   const { key, when, ...keybindingBase } = keybinding;
   return {
     ...keybindingBase,
@@ -79,7 +79,7 @@ function processKeybinding(keybinding: JsonKeybinding): Keybinding {
  * @category UI Contributions API
  */
 export const keybindingsPoint: ContributionPoint<
-  JsonKeybinding[],
+  KeybindingManifestEntry[],
   Keybinding[]
 > = {
   id: "keybindings",

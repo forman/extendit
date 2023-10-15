@@ -20,6 +20,7 @@ export interface ConfigurationCategory {
 }
 
 export type Configuration = ConfigurationCategory | ConfigurationCategory[];
+export type ConfigurationManifestEntry = Configuration;
 
 export interface ConfigurationNode {
   id: string;

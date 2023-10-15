@@ -30,7 +30,7 @@ const manifest1: ExtensionManifest = {
         },
       ],
     },
-    views: {
+    toolViews: {
       main: [
         {
           id: "ex1.foo",
@@ -71,7 +71,7 @@ const manifest2: ExtensionManifest = {
         },
       ],
     },
-    views: {
+    toolViews: {
       main: [
         {
           id: "ex2.bar",
@@ -112,7 +112,7 @@ const manifest3: ExtensionManifest = {
         },
       ],
     },
-    views: {
+    toolViews: {
       main: [
         {
           id: "ex3.pippo",
