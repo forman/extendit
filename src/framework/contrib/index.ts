@@ -1,7 +1,6 @@
 export {
   type Command,
   type CommandFn,
-  type JsonCommand,
   useCommands,
   registerCommand,
   executeCommand,
@@ -37,7 +36,6 @@ export {
 } from "./data-views";
 
 export {
-  type JsonKeybinding,
   type Keybinding,
   useKeybindings,
   keybindingsPoint,
@@ -62,14 +60,13 @@ export {
 export { type Submenu, useSubmenus, submenusPoint } from "./submenus";
 
 export {
-  type JsonView,
-  type View,
-  type ViewComponentProps,
-  ViewComponent,
-  useViews,
-  useViewComponent,
-  registerViewComponent,
-  viewsPoint,
-} from "./views";
+  type ToolView,
+  type ToolViewComponentProps,
+  ToolViewComponent,
+  useToolViews,
+  useToolViewComponent,
+  registerToolViewComponent,
+  toolViewsPoint,
+} from "./tool-views";
 
 export { registerContributionPoints } from "./register";

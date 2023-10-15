@@ -2,7 +2,7 @@ import type { ExtensionContext } from "@/core";
 import {
   executeCommand,
   registerCommand,
-  registerViewComponent,
+  registerToolViewComponent,
 } from "@/contrib";
 import { MyEx3View } from "./MyEx3View";
 
@@ -15,5 +15,5 @@ export function activate(ctx: ExtensionContext) {
     void executeCommand("app.selectView", "ex3.pippo");
   });
 
-  registerViewComponent("ex3.pippo", <MyEx3View />);
+  registerToolViewComponent("ex3.pippo", <MyEx3View />);
 }
