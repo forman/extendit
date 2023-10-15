@@ -4,7 +4,14 @@ import {
   useExtensionContributions,
 } from "@/core";
 import type { JSONSchemaType } from "ajv";
-import { jsonMetaSchema, newId, toTitle, type UiSchema } from "@/util";
+import {
+  getDefaultUiValue,
+  jsonMetaSchema,
+  newId,
+  toTitle,
+  type UiSchema,
+  type UiValue,
+} from "@/util";
 import { useMemo } from "react";
 import { getExtensionContext } from "@/core/extension-context/get";
 import memoizeOne from "memoize-one";
@@ -94,17 +101,29 @@ export function getExtensionConfigurations(): ReadonlyMap<
   return getExtensionContributions<Configuration>(configurationPoint.id);
 }
 
+export function getConfigurationDefaultValue(propertyName: string): UiValue {
+  return getDefaultUiValue(getConfigurationSchema(propertyName));
+}
+
+export function getConfigurationSchema(propertyName: string): UiSchema {
+  const schema = getConfigurationSchemas().get(propertyName);
+  if (!schema) {
+    throw new Error(`Unknown configuration property '${propertyName}'.`);
+  }
+  return schema;
+}
+
+export function getConfigurationSchemas(): ReadonlyMap<string, UiSchema> {
+  const configurations = getExtensionConfigurations();
+  return getConfigurationSchemasMemo(configurations);
+}
+
 /**
  * Returns a mapping from configuration property name to the UI schema used by
  * that property.
  */
 export function useConfigurationSchemas(): ReadonlyMap<string, UiSchema> {
   const configurations = useExtensionConfigurations();
-  return getConfigurationSchemasMemo(configurations);
-}
-
-export function getConfigurationSchemas(): ReadonlyMap<string, UiSchema> {
-  const configurations = getExtensionConfigurations();
   return getConfigurationSchemasMemo(configurations);
 }
 

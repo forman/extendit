@@ -18,6 +18,8 @@ export {
   type ConfigurationManifestEntry,
   type ConfigurationNode,
   type ConfigurationPropertyItem,
+  getConfigurationDefaultValue,
+  getConfigurationSchema,
   getConfigurationSchemas,
   getExtensionConfigurations,
   useConfigurationNodes,
