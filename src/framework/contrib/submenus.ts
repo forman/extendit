@@ -5,12 +5,12 @@ import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/submenus");
 
-export interface JsonSubmenu {
+export interface SubmenuManifestEntry {
   id: string;
   label: string;
 }
 
-export interface Submenu extends JsonSubmenu {}
+export interface Submenu extends SubmenuManifestEntry {}
 
 const submenuSchema: JSONSchemaType<Submenu> = {
   $id: "submenu",

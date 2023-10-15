@@ -19,15 +19,15 @@ export interface ToolView {
   icon?: string;
 }
 
-export interface ToolViewJsonEntry extends ToolView {
+export interface ToolViewManifestEntry extends ToolView {
   when?: string;
 }
 
-interface ProcessedToolView extends ToolView {
+interface StoreToolView extends ToolView {
   when?: When;
 }
 
-const toolViewSchema: JSONSchemaType<ToolViewJsonEntry> = {
+const toolViewSchema: JSONSchemaType<ToolViewManifestEntry> = {
   type: "object",
   properties: {
     id: { type: "string" },
@@ -39,7 +39,7 @@ const toolViewSchema: JSONSchemaType<ToolViewJsonEntry> = {
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<Record<string, ToolViewJsonEntry[]>> = {
+const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
   type: "object",
   additionalProperties: {
     type: "array",
@@ -68,9 +68,9 @@ export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
 };
 
 function processEntry(
-  views: Record<string, ToolViewJsonEntry[]>
-): Record<string, ProcessedToolView[]> {
-  const processedContributions: Record<string, ProcessedToolView[]> = {};
+  views: Record<string, ToolViewManifestEntry[]>
+): Record<string, StoreToolView[]> {
+  const processedContributions: Record<string, StoreToolView[]> = {};
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
@@ -84,10 +84,7 @@ export function useToolViews(
   containerId: string,
   ctx: Record<string, unknown>
 ): ToolView[] {
-  const views = useContributions<ProcessedToolView>(
-    toolViewsPoint.id,
-    containerId
-  );
+  const views = useContributions<StoreToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
     LOG.debug("Hook 'useViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));

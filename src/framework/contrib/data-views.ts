@@ -8,13 +8,20 @@ import {
 } from "@/core";
 import { Disposable, type DisposableLike } from "@/util/disposable";
 
-export interface DataView {
+export interface DataViewManifestEntry {
   viewType: string;
   title: string;
   icon?: string;
 }
 
-const dataViewSchema: JSONSchemaType<DataView> = {
+export interface DataView extends DataViewManifestEntry {}
+
+export interface DataViewInstance extends DataView, DisposableLike {
+  id: string;
+  component: React.JSX.Element;
+}
+
+const dataViewSchema: JSONSchemaType<DataViewManifestEntry> = {
   type: "object",
   properties: {
     viewType: { type: "string" },
@@ -25,7 +32,7 @@ const dataViewSchema: JSONSchemaType<DataView> = {
   additionalProperties: false,
 };
 
-const schema: JSONSchemaType<DataView[]> = {
+const schema: JSONSchemaType<DataViewManifestEntry[]> = {
   type: "array",
   items: dataViewSchema,
 };
@@ -33,11 +40,11 @@ const schema: JSONSchemaType<DataView[]> = {
 /**
  * The "views" contribution point.
  * To register in your app, call {@link registerContributionPoint} with
- * {@link viewsPoint}.
+ * {@link dataViewsPoint}.
  *
  * @category UI Contributions API
  */
-export const dataViewsPoint: ContributionPoint<DataView[]> = {
+export const dataViewsPoint: ContributionPoint<DataViewManifestEntry[]> = {
   id: "dataViews",
   manifestInfo: {
     schema,
@@ -59,11 +66,6 @@ export function useDataView(viewType: string): DataView {
     throw new Error(`Unknown data view type "${viewType}".`);
   }
   return dataView;
-}
-
-export interface DataViewInstance extends DataView, DisposableLike {
-  id: string;
-  component: React.JSX.Element;
 }
 
 export interface DataViewProvider {
