@@ -8,17 +8,33 @@ import {
 } from "@/core";
 import { Disposable, type DisposableLike } from "@/util/disposable";
 
+/**
+ * A data view type in a package JSON.
+ */
 export interface DataViewManifestEntry {
   viewType: string;
   title: string;
   icon?: string;
 }
 
-export interface DataView extends DataViewManifestEntry {}
+/**
+ * A data view types is used to describe a data view instances.
+ */
+export interface DataViewType extends DataViewManifestEntry {}
 
-export interface DataViewInstance extends DataView, DisposableLike {
+/**
+ * A data view instance created from a data view provider.
+ */
+export interface DataView extends DataViewType, DisposableLike {
   id: string;
   component: React.JSX.Element;
+}
+
+/**
+ * Used to create new data views from data view types.
+ */
+export interface DataViewProvider {
+  createDataView(dataViewType: DataViewType): DataView;
 }
 
 const dataViewSchema: JSONSchemaType<DataViewManifestEntry> = {
@@ -55,21 +71,17 @@ export const dataViewsPoint: ContributionPoint<DataViewManifestEntry[]> = {
   },
 };
 
-export function useDataViews(): DataView[] {
-  return useContributions<DataView>(dataViewsPoint.id);
+export function useDataViewTypes(): DataViewType[] {
+  return useContributions<DataViewType>(dataViewsPoint.id);
 }
 
-export function useDataView(viewType: string): DataView {
-  const dataViews = useDataViews();
+export function useDataViewType(viewType: string): DataViewType {
+  const dataViews = useDataViewTypes();
   const dataView = dataViews.find((dv) => dv.viewType === viewType);
   if (!dataView) {
     throw new Error(`Unknown data view type "${viewType}".`);
   }
   return dataView;
-}
-
-export interface DataViewProvider {
-  newDataViewInstance(dataView: DataView): DataViewInstance;
 }
 
 export function registerDataViewProvider(
