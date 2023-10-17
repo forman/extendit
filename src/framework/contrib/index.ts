@@ -31,12 +31,13 @@ export {
 
 export {
   type DataView,
-  type DataViewInstance,
   type DataViewManifestEntry,
-  useDataViews,
-  useDataView,
-  registerDataViewProvider,
+  type DataViewProvider,
+  type DataViewType,
   getDataViewProvider,
+  registerDataViewProvider,
+  useDataViewTypes,
+  useDataViewType,
   dataViewsPoint,
 } from "./data-views";
 
