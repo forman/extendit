@@ -7,7 +7,7 @@ export type PrimitiveUiValue = boolean | number | string;
  * An object UI value is an object comprising properties whose values are
  * only primitive UI values.
  */
-export type ObjectUiValue = Record<string, PrimitiveUiValue>;
+export type ObjectUiValue = Record<string, PrimitiveUiValue | TupleUiValue>;
 
 /**
  * A tuple UI value is a fixed-length array whose items are
@@ -85,9 +85,9 @@ export type PrimitiveUiSchema =
   | StringUiSchema;
 
 export interface ObjectUiSchema
-  extends UiSchemaBase<Record<string, PrimitiveUiValue>> {
+  extends UiSchemaBase<Record<string, PrimitiveUiValue | TupleUiValue>> {
   type: "object";
-  properties: Record<string, PrimitiveUiSchema>;
+  properties: Record<string, PrimitiveUiSchema | TupleUiSchema>;
   required?: string[];
   // In JSON Schema, additionalProperties is optional and defaults to true.
   // We don't support this. Any properties must be defined.
