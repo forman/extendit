@@ -169,11 +169,6 @@ type KeyOfObjOrArrayItem<T> = T extends unknown[]
  * Contribution points are the primary mechanism how extensions contribute
  * new data and functionality to applications.
  *
- * An extension contributes data to existing contribution points via
- * JSON entries in `manifest/contributes/${contribPoint.id}`.
- * The format of such entries must follow the contribution point's JSON Schema
- * given by its {@link schema} property.
- *
  * @category Extension Contribution API
  * @typeParam TM - Type of JSON entry in manifest
  * @typeParam TS - Type of contribution in framework store
@@ -203,6 +198,20 @@ export interface ContributionPoint<TM = unknown, TS = TM> {
   codeInfo?: CodeContributionInfo<TS>;
 }
 
+/**
+ * Information for a contribution point whose contributions
+ * have one or more entries the extension's JSON manifest
+ * `manifest/contributes/${contribPoint.id}`.
+ *
+ * The format of such entries must follow the contribution point's JSON Schema
+ * given by its {@link schema} property.
+ *
+ * This is an optional part of a {@link ContributionPoint}.
+ *
+ * @category Extension Contribution API
+ * @typeParam TM - Type of JSON entry in manifest
+ * @typeParam TS - Type of contribution in framework store
+ */
 export interface ManifestContributionInfo<TM = unknown, TS = TM> {
   /**
    * JSON schema used to validate JSON entries from the manifest.
@@ -220,8 +229,10 @@ export interface ManifestContributionInfo<TM = unknown, TS = TM> {
 }
 
 /**
- * Represents a contribution point for contribution that
+ * Information for a contribution point whose contributions
  * require loading and executing JavaScript code.
+ *
+ * This is an optional part of a {@link ContributionPoint}.
  *
  * @category Extension Contribution API
  * @typeParam TS - Type of contribution in framework store
@@ -283,9 +294,9 @@ export interface CodeContribution<Data = unknown> {
 /**
  * A compiled when-clause.
  *
- * The function takes a single argument `ctx`, e.g. the context
- * returned by {@link getContext} or the React hook {@link useContext},
- * and returns a Boolean that indicates whether the when-condition
+ * The function takes a single argument `ctx`, which is an application-specific
+ * key-value mapping.
+ * It returns a Boolean that indicates whether the when-condition
  * is fulfilled.
  *
  * @category Extension Contribution API
@@ -301,7 +312,7 @@ export interface When {
 
 /**
  * Used to resolve module paths.
- * @category Framework API
+ * @category Extension Framework API
  */
 export type ExtensionPathResolver = (path: string) => string;
 
@@ -325,12 +336,12 @@ export interface ExtensionOptions {
 
 /**
  * Framework options that can be set using {@link updateFrameworkConfig}.
- * @category Framework API
+ * @category Extension Framework API
  */
 export interface FrameworkOptions {
   /**
    * Used to resolve extension module paths.
-   * @category Framework API
+   * @category Extension Framework API
    */
   pathResolver?: ExtensionPathResolver;
 }

@@ -4,14 +4,14 @@ import type { FrameworkOptions } from "./types";
  * The framework's configuration instance.
  *
  * @internal
- * @category Framework API
+ * @category Extension Framework API
  */
 export let frameworkConfig: FrameworkOptions = {};
 
 /**
  * Update the framework's configuration.
  *
- * @category Framework API
+ * @category Extension Framework API
  * @param options - Framework options
  * @returns the previous configuration
  */

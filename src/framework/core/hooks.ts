@@ -89,7 +89,7 @@ export function useExtensionContributions<T>(
 }
 
 /**
- * A React hook the provides all registered contribution points.
+ * A React hook that provides all registered contribution points.
  * @category React Hooks
  * @returns An array comprising all contributions points
  */
@@ -98,6 +98,14 @@ export function useContributionPoints(): ContributionPoint[] {
   return getContributionPointsMemo(contributionPoints);
 }
 
+/**
+ * A React hook that gets a code contribution.
+ * It may activate inactive extensions required for the code contribution
+ * as a side effect.
+ *
+ * @category React Hooks
+ * @returns The current state of the code contribution.
+ */
 export function useLoadCodeContribution<Data = unknown>(
   contribPointId: string,
   contribId: string
@@ -142,7 +150,7 @@ export function useLoadCodeContribution<Data = unknown>(
  * as a read-only map. If there are no contributions for the given point,
  * an empty map is returned.
  *
- * @category Extension Contribution API
+ * @category React Hooks
  * @param contribPointId - The code contribution point identifier.
  * @returns A read-only map of code contributions.
  */

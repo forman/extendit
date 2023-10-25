@@ -11,8 +11,8 @@ function CommandPalette() {
       <p>
         Shows all available commands of the <code>commands</code> contribution
         point, except those removed by <code>when</code>-clauses in items of the{" "}
-        <code>commandPalette</code> menu of the <code>menus</code>
-        contribution point.
+        <code>commandPalette</code> menu of the <code>menus</code> contribution
+        point.
       </p>
       <div className="button-bar">
         {menuItems.map((menuItem) => (

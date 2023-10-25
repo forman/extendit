@@ -37,7 +37,7 @@ export {
 } from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
-// Extension Contribution API:
+// Contribution API:
 // Use this API to implement new contribution points and
 // provide specific contribution point APIs that can be
 // used by extensions.

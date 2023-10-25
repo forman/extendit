@@ -7,7 +7,7 @@ import { getExtensions } from "@/core/extension/get";
 /**
  * Gets the contribution point for the given contribution point identifier.
  *
- * @category Extension Contributions API
+ * @category Extension Contribution API
  * @param contribPointId - The contribution point identifier.
  * @returns A read-only map of code contributions or `undefined`
  *   if it cannot be found.
@@ -18,7 +18,7 @@ export function getContributionPoint<TM = unknown, TS = TM>(
 /**
  * Gets the contribution point for the given contribution point identifier.
  *
- * @category Extension Contributions API
+ * @category Extension Contribution API
  * @param contribPointId - The contribution point identifier.
  * @param mustExist - If `true`, an error is raised
  *   if the contribution point does not exist.
@@ -44,7 +44,7 @@ export function getContributionPoint<TM = unknown, TS = TM>(
 /**
  * Gets a stable snapshot of the framework's contribution points.
  *
- * @category Extension Contributions API
+ * @category Extension Contribution API
  */
 export function getContributionPoints(): ContributionPoint[] {
   return getContributionPointsMemo(

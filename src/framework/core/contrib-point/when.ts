@@ -41,11 +41,13 @@ const whenClauseCompiler = new WhenClauseCompiler();
 /**
  * Compiles a when-clause into a when-function.
  *
- * This utility functions is used by contribution points' `processContr
+ * This utility function may be used inside the `processEntry` function
+ * that is part of the {@link CodeContributionInfo}.
  *
  * Compiled when-functions are cached; the method will return
  * the same functions for equal when-clauses.
  *
+ * @category Extension Contribution API
  * @param whenClause The when-clause / expression
  * @returns a function that executes the when-clause, or `undefined`
  *   if an error occurs during compilation

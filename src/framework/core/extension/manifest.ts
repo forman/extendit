@@ -30,6 +30,7 @@ const manifestSchema: JsonTypedSchema<ExtensionManifest> = {
 /**
  * Reads and validates an extension manifest.
  *
+ * @category Extension API
  * @param manifestPath Path or URL to the extension's manifest, a file usually
  *  called `package.json`.
  * @returns A tuple `[manifest, resolvePath]` comprising the validated manifest

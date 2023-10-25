@@ -1,29 +1,7 @@
 ## TODO
 
-### Design
+### Release first version
 
-* Review logging
-  * Use logger names "extend-me/core" etc
-* Clean up `framework/contrib`
-  * Add API docs 
-  * Every point should gets its own sub-folder, split into
-    * `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
-  * A `hooks.ts` in each submodule requires React
-* Get rid of globals, instead instantiate `Framework` class that
-  contains the configuration, the store, the API, and provides hook factories.
-* Allow using the package without React.
-  Move react-dependent modules into `framework/react/core`
-  and `framework/react/contrib`
-* Split modules into packages:
-  * `@extend-me/core` (incl. `util`)
-  * `@extend-me/contrib`
-* Schema validation should be optional.
-  Add framework option `validateSchema: (jsonValue) => [boolean, errors]`
-
-### Before Deployment
-
-* Demo: switching toolViews seems slow, but React devtools
-  say components update within millis. Check!
 * Setup CI
 * Add TSDoc at to all types, classes, members, methods,
   functions, and constants.
@@ -36,6 +14,26 @@
   - Add explanations what's going on
   - Add submenus demo
 * Deploy package `extend-me`
+
+### Design improvements
+
+* Review logging
+  * Use logger named "extend-me/core" etc
+* Refactor `framework/contrib`
+  * Every point should get its own sub-folder, split into
+  `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
+  * A `hooks.ts` in each submodule requires React
+* Split modules into separate packages:
+  * `@extend-me/core` (incl. `util`)
+  * `@extend-me/contrib`
+* Allow using the package without React.
+  Move react-dependent modules into `framework/react/core`
+  and `framework/react/contrib`
+* Schema validation should be optional.
+  Add framework option `validateSchema: (jsonValue) => [boolean, errors]`
+* Get rid of globals, instead instantiate `Framework` class that
+  contains the configuration, the store, the API, and provides hook factories.
+
 
 ## DONE
 

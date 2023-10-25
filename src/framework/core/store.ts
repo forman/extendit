@@ -10,7 +10,7 @@ import type { ExtensionContextImpl } from "./extension-context/impl";
  * defines just its interface {@link ExtensionContext}.
  *
  * @internal
- * @category Framework API
+ * @category Extension Framework API
  */
 export interface FrameworkState {
   /**
@@ -35,7 +35,7 @@ export interface FrameworkState {
  * The framework's reactive store instance.
  *
  * @internal
- * @category Framework API
+ * @category Extension Framework API
  */
 export const frameworkStore = createStore<FrameworkState>()(() => ({
   extensions: {},
