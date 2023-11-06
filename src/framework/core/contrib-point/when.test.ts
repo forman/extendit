@@ -3,11 +3,37 @@ import type { When } from "@/core/types";
 import { compileWhenClause } from "./when";
 
 describe("compileWhenClause", () => {
+  test("it returns undefined", () => {
+    expect(compileWhenClause(null)).toBeUndefined();
+    expect(compileWhenClause(undefined)).toBeUndefined();
+    expect(compileWhenClause("")).toBeUndefined();
+  });
+
   test("it returns functions", () => {
     const whenClause = "view == 'dataSources' && listItem != 'localFS'";
     const when = compileWhenClause(whenClause);
     expect(when).toBeInstanceOf(Function);
     expect(when!.clause).toEqual(whenClause);
+  });
+
+  test("it returns functions that do not throw", () => {
+    const whenClause = "raise()";
+    const when = compileWhenClause(whenClause);
+    expect(when).toBeInstanceOf(Function);
+    expect(when!.clause).toEqual(whenClause);
+    expect(() => {
+      when!({
+        raise: () => {
+          throw new Error("Bam!");
+        },
+      });
+    }).not.toThrowError();
+  });
+
+  test("it throws", () => {
+    expect(() => {
+      compileWhenClause("dataSources + '");
+    }).toThrowError('Missing trailing "\'".');
   });
 
   test("it caches", () => {

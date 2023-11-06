@@ -33,5 +33,15 @@ test("setExtensionStatus", () => {
   expect(extension.reasons).toHaveLength(1);
   expect(extension.reasons![0]).toBe(error);
 
+  const rejection = { message: "Help!" };
+  setExtensionStatus("pippo.foo", "rejected", rejection);
+  extension = getExtension("pippo.foo", true);
+  expect(extension.status).toEqual("rejected");
+  expect(Array.isArray(extension.reasons)).toBe(true);
+  expect(extension.exports).toBe(exports);
+  expect(extension.reasons).toHaveLength(2);
+  expect(extension.reasons![1]).toBe(error);
+  expect(extension.reasons![0]).toBeInstanceOf(Error);
+
   disposable.dispose();
 });

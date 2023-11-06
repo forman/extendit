@@ -5,6 +5,7 @@ import {
   type TupleUiSchema,
   getDefaultUiValue,
   isBooleanUiSchema,
+  isIntegerUiSchema,
   isNumberUiSchema,
   isStringUiSchema,
   isTupleUiSchema,
@@ -16,6 +17,11 @@ describe("type guards", () => {
   test("boolean", () => {
     expect(isBooleanUiSchema({ type: "boolean" })).toEqual(true);
     expect(isBooleanUiSchema({ type: "string" })).toEqual(false);
+  });
+  test("integer", () => {
+    expect(isIntegerUiSchema({ type: "integer" })).toEqual(true);
+    expect(isIntegerUiSchema({ type: "number" })).toEqual(false);
+    expect(isIntegerUiSchema({ type: "string" })).toEqual(false);
   });
   test("number", () => {
     expect(isNumberUiSchema({ type: "number" })).toEqual(true);
@@ -67,13 +73,18 @@ describe("type guards", () => {
 
 describe("getDefaultUiValue", () => {
   test("boolean", () => {
+    expect(getDefaultUiValue({ type: "boolean", const: true })).toEqual(true);
     expect(getDefaultUiValue({ type: "boolean", default: true })).toEqual(true);
     expect(getDefaultUiValue({ type: "boolean" })).toEqual(false);
   });
 
   test("integer", () => {
+    expect(getDefaultUiValue({ type: "integer", const: 11 })).toEqual(11);
     expect(getDefaultUiValue({ type: "integer", default: 10 })).toEqual(10);
     expect(getDefaultUiValue({ type: "integer", enum: [3, 4] })).toEqual(3);
+    expect(
+      getDefaultUiValue({ type: "integer", enum: [11], default: 10 })
+    ).toEqual(11);
     expect(getDefaultUiValue({ type: "integer", minimum: 1 })).toEqual(1);
     expect(getDefaultUiValue({ type: "integer", maximum: 100 })).toEqual(100);
     expect(getDefaultUiValue({ type: "integer" })).toEqual(0);
@@ -84,6 +95,7 @@ describe("getDefaultUiValue", () => {
     expect(getDefaultUiValue({ type: "number", enum: [0.3, 0.4] })).toEqual(
       0.3
     );
+    expect(getDefaultUiValue({ type: "number", const: 0.1 })).toEqual(0.1);
     expect(getDefaultUiValue({ type: "number", minimum: 0.2 })).toEqual(0.2);
     expect(getDefaultUiValue({ type: "number", maximum: 0.9 })).toEqual(0.9);
     expect(getDefaultUiValue({ type: "number" })).toEqual(0);

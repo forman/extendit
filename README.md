@@ -25,8 +25,8 @@ loaded and activated.
 
 `ExtendMe!` provides some
 useful [React hooks](https://react.dev/reference/react) for developing user
-interfaces. However, the library can be used independently of React. React is a
-peer dependency.
+interfaces. However, the core library is designed to be used independently of 
+React. 
 
 The core API of `ExtendMe!` has been largely inspired by the
 [Extension API](https://code.visualstudio.com/api)

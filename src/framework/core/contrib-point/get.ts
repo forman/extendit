@@ -184,7 +184,7 @@ function getExtensionContribution<T>(
       throw new Error(
         `Extension '${ctx.extensionId}': ` +
           `contributions to point '${contribPointId}' ` +
-          `must be given as an object.`
+          `must be given as object, but was ${typeof contrib}.`
       );
     }
     contrib = (contrib as Record<string, unknown>)[contribKey];
