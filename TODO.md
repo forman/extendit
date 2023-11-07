@@ -3,7 +3,7 @@
 ### Release first version
 
 * Setup CI
-* Add TSDoc at to all types, classes, members, methods,
+* Add TSDoc to all types, classes, members, methods,
   functions, and constants.
 * Add badges in README.md for test result, docs, API docs, coverage,
   and package.
