@@ -1,250 +1,352 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import type { JSONSchemaType } from "ajv";
 import { addExtensionListener } from "@/core/extension/listeners";
-import { newTestManifest } from "@/test/testing";
 import { registerExtension } from "@/core/extension/register";
 import { registerContributionPoint } from "@/core/contrib-point/register";
 import type { ContributionPoint } from "@/core/types";
-import { Disposable } from "@/util/disposable";
+import { Disposable, type DisposableLike } from "@/util/disposable";
 import { contributionProcessor } from "./process";
 import { getExtensionContext } from "@/core/extension-context/get";
+import { ExtensionContextImpl } from "@/core/extension-context/impl";
 import { getExtension } from "@/core";
 
-test("contributionProcessor is a value", () => {
-  expect(contributionProcessor).toBeInstanceOf(Object);
-  expect(contributionProcessor.onExtensionRegistered).toBeInstanceOf(Function);
-  const removeExtensionListener = addExtensionListener(contributionProcessor);
-  expect(removeExtensionListener).toBeInstanceOf(Function);
-  removeExtensionListener();
-});
+interface Color {
+  name: string;
+  rgb: [number, number, number];
+}
 
-describe("static data contributions", () => {
-  interface Color {
-    name: string;
-    rgb: [number, number, number];
-  }
-
-  const colorSchema: JSONSchemaType<Color> = {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      rgb: {
-        type: "array",
-        items: [{ type: "number" }, { type: "number" }, { type: "number" }],
-        minItems: 3,
-        maxItems: 3,
-      },
+const colorSchema: JSONSchemaType<Color> = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    rgb: {
+      type: "array",
+      items: [{ type: "number" }, { type: "number" }, { type: "number" }],
+      minItems: 3,
+      maxItems: 3,
     },
-    additionalProperties: false,
-    required: ["name", "rgb"],
-  };
+  },
+  additionalProperties: false,
+  required: ["name", "rgb"],
+};
 
-  const colorsPoint: ContributionPoint<Color[]> = {
-    id: "colors",
-    manifestInfo: {
-      schema: {
-        type: "array",
-        items: colorSchema,
-      },
-    },
-  };
-
-  const manifest = newTestManifest({
-    contributes: {
-      colors: [
-        { name: "red", rgb: [1, 0, 0] },
-        { name: "yellow", rgb: [1, 1, 0] },
-        { name: "blue", rgb: [0, 0, 1] },
+const colorsPoint: ContributionPoint<Color | Color[]> = {
+  id: "colors",
+  manifestInfo: {
+    schema: {
+      oneOf: [
+        colorSchema,
+        {
+          type: "array",
+          items: colorSchema,
+        },
       ],
     },
+  },
+};
+
+const colorsObjectContrib: Color = { name: "red", rgb: [1, 0, 0] };
+
+const colorsArrayContrib: Color[] = [
+  { name: "red", rgb: [1, 0, 0] },
+  { name: "green", rgb: [0, 1, 0] },
+  { name: "blue", rgb: [0, 0, 1] },
+];
+
+describe("contributionProcessor", () => {
+  let _disposables: DisposableLike[] = [];
+
+  function disposeLater(...disposables: DisposableLike[]) {
+    disposables.forEach((disposable) => _disposables.push(disposable));
+  }
+
+  afterEach(() => {
+    Disposable.from(..._disposables).dispose();
+    _disposables = [];
   });
 
-  test("data contribution not recognized w.o. listener", () => {
-    const disposable1 = registerContributionPoint(colorsPoint);
-    const disposable2 = registerExtension(manifest);
-    const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.contributions.has("colors")).toBe(false);
-    Disposable.from(disposable1, disposable2).dispose();
-  });
+  function getCtx(extensionId: string, extensionStatus: string) {
+    const ex1 = getExtension(extensionId, true);
+    expect(ex1.status).toEqual(extensionStatus);
+    const ctx = getExtensionContext(extensionId, true);
+    expect(ctx).toBeInstanceOf(ExtensionContextImpl);
+    return ctx;
+  }
 
-  test("data contribution with listener is ok", () => {
-    const removeExtensionListener = addExtensionListener(contributionProcessor);
-    const disposable1 = registerContributionPoint(colorsPoint);
-    const disposable2 = registerExtension(manifest);
-    const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.contributions.has("colors")).toBe(true);
-    expect(ctx.contributions.get("colors")).toEqual([
-      { name: "red", rgb: [1, 0, 0] },
-      { name: "yellow", rgb: [1, 1, 0] },
-      { name: "blue", rgb: [0, 0, 1] },
-    ]);
-    Disposable.from(
-      disposable1,
-      disposable2,
-      new Disposable(removeExtensionListener)
-    ).dispose();
-  });
-
-  test("contribution schema validation works", () => {
-    const removeExtensionListener = addExtensionListener(contributionProcessor);
-    const disposable1 = registerContributionPoint(colorsPoint);
-    const disposable2 = registerExtension({
-      ...manifest,
-      contributes: {
-        colors: [
-          { name: "red", rgb: [1, 0, 0] },
-          { name: "yellow", rgba: [1, 1, 0, 0.5] }, // !
-          { name: "blue", rgb: [0, 0, 1] },
-        ],
-      },
-    });
-    const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.contributions.has("colors")).toBe(false);
-    const extension = getExtension("pippo.foo", true);
-    expect(extension.status).toEqual("rejected");
-    expect(Array.isArray(extension.reasons)).toBe(true);
-    expect(extension.reasons).toHaveLength(1);
-    expect(extension.reasons![0]).toBeInstanceOf(Error);
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    expect(`${extension.reasons![0]}`).toEqual(
-      "Error: JSON validation failed for contribution to point 'colors' " +
-        "from extension 'pippo.foo'. " +
-        "Must have required property 'rgb' at instance path /1."
+  test("is a value", () => {
+    expect(contributionProcessor).toBeInstanceOf(Object);
+    expect(contributionProcessor.onExtensionRegistered).toBeInstanceOf(
+      Function
     );
-    Disposable.from(
-      disposable1,
-      disposable2,
-      new Disposable(removeExtensionListener)
-    ).dispose();
-  });
-});
-
-describe("processed data contributions", () => {
-  interface Color {
-    name: string;
-    rgb: string;
-  }
-
-  interface ProcessedColor {
-    name: string;
-    rgb: [number, number, number];
-  }
-
-  const colorSchema: JSONSchemaType<Color> = {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      rgb: { type: "string" },
-    },
-    additionalProperties: false,
-    required: ["name", "rgb"],
-  };
-
-  const colorsPoint: ContributionPoint<Color[], ProcessedColor[]> = {
-    id: "colors",
-    manifestInfo: {
-      schema: {
-        type: "array",
-        items: colorSchema,
-      },
-      processEntry: (contrib: Color[]): ProcessedColor[] => {
-        return contrib.map((c) => ({
-          ...c,
-          rgb: [
-            parseInt(c.rgb.slice(1, 3), 16) / 255,
-            parseInt(c.rgb.slice(3, 5), 16) / 255,
-            parseInt(c.rgb.slice(5, 7), 16) / 255,
-          ],
-        }));
-      },
-    },
-  };
-
-  const manifest = newTestManifest({
-    contributes: {
-      colors: [
-        { name: "red", rgb: "#FF0000" },
-        { name: "yellow", rgb: "#FFFF00" },
-        { name: "blue", rgb: "#0000FF" },
-      ],
-    },
-  });
-
-  test("processing works as expected", async () => {
     const removeExtensionListener = addExtensionListener(contributionProcessor);
-    const disposable1 = registerContributionPoint(colorsPoint);
-    const disposable2 = registerExtension(manifest);
-    const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.contributions.has("colors")).toBe(true);
-    expect(ctx.contributions.get("colors")).toEqual([
-      { name: "red", rgb: [1, 0, 0] },
-      { name: "yellow", rgb: [1, 1, 0] },
-      { name: "blue", rgb: [0, 0, 1] },
-    ]);
-    Disposable.from(
-      disposable1,
-      disposable2,
-      new Disposable(removeExtensionListener)
-    ).dispose();
-  });
-});
-
-describe("code contributions", () => {
-  interface Command {
-    command: string;
-    title: string;
-  }
-
-  const commandSchema: JSONSchemaType<Command> = {
-    type: "object",
-    properties: {
-      command: { type: "string" },
-      title: { type: "string" },
-    },
-    additionalProperties: false,
-    required: ["command", "title"],
-  };
-
-  const commandsPoint: ContributionPoint<Command[]> = {
-    id: "commands",
-    manifestInfo: {
-      schema: {
-        type: "array",
-        items: commandSchema,
-      },
-    },
-    codeInfo: {
-      idKey: "command",
-      activationEvent: "onCommand:${id}",
-    },
-  };
-
-  const manifest = newTestManifest({
-    contributes: {
-      commands: [
-        { command: "showBgLayer", title: "Show BG Layer" },
-        { command: "hideBgLayer", title: "Hide BG Layer" },
-      ],
-    },
+    expect(removeExtensionListener).toBeInstanceOf(Function);
+    removeExtensionListener();
   });
 
-  test("activation events are registered", () => {
-    const removeExtensionListener = addExtensionListener(contributionProcessor);
-    const disposable1 = registerContributionPoint(commandsPoint);
-    const disposable2 = registerExtension(manifest);
-    const ctx = getExtensionContext("pippo.foo", true);
-    expect(ctx.contributions.has("commands")).toBe(true);
-    expect(ctx.contributions.get("commands")).toEqual([
-      { command: "showBgLayer", title: "Show BG Layer" },
-      { command: "hideBgLayer", title: "Hide BG Layer" },
-    ]);
+  test("not registered", () => {
+    disposeLater(
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsObjectContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with no contrib point registered", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsObjectContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with contrib point without manifest info", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({ ...colorsPoint, manifestInfo: undefined }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsObjectContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("without contributes property", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with object contribution", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsObjectContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx).toBeInstanceOf(ExtensionContextImpl);
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsObjectContrib);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with array contribution", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsArrayContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsArrayContrib);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with array contribution and entry processor", () => {
+    const convertColor = (c: Color): Color => {
+      return { ...c, name: "p_" + c.name };
+    };
+
+    const processEntry = (contrib: Color | Color[]): Color | Color[] => {
+      if (Array.isArray(contrib)) {
+        return contrib.map(convertColor);
+      }
+      return convertColor(contrib);
+    };
+
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({
+        ...colorsPoint,
+        manifestInfo: {
+          schema: colorsPoint.manifestInfo!.schema,
+          processEntry,
+        },
+      }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsArrayContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(
+      colorsArrayContrib.map(convertColor)
+    );
+    expect(ctx.activationEvents).toEqual(new Set([]));
+  });
+
+  test("without contributions for contrib point", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          numbers: [3, 7, 8],
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("with invalid object contribution", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint(colorsPoint),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: { name: "red", rgba: [1, 0, 0, 1] },
+        },
+      })
+    );
+    const ex1 = getExtension("test.ex1", true);
+    expect(ex1.status).toEqual("rejected");
+    expect(ex1.reasons).toHaveLength(1);
+    expect(ex1.reasons![0]).toBeInstanceOf(Error);
+    expect(ex1.reasons![0].toString()).toEqual(
+      "Error: JSON validation failed for contribution " +
+        "to point 'colors' from extension 'test.ex1'. " +
+        "Must have required property 'rgb'."
+    );
+    const ctx = getExtensionContext("test.ex1", true);
+    expect(ctx).toBeInstanceOf(ExtensionContextImpl);
+    expect(ctx.contributions.size).toEqual(0);
+    expect(ctx.activationEvents.size).toEqual(0);
+  });
+
+  test("object contribution with activation event", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({
+        ...colorsPoint,
+        codeInfo: { idKey: "name", activationEvent: "onColor:${id}" },
+      }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsObjectContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsObjectContrib);
+    expect(ctx.activationEvents).toEqual(new Set(["onColor:red"]));
+  });
+
+  test("array contribution with simple activation event", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({
+        ...colorsPoint,
+        codeInfo: { activationEvent: "onColor" },
+      }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsArrayContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsArrayContrib);
+    expect(ctx.activationEvents).toEqual(new Set(["onColor"]));
+  });
+
+  test("array contribution with activation event", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({
+        ...colorsPoint,
+        codeInfo: { idKey: "name", activationEvent: "onColor:${id}" },
+      }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsArrayContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsArrayContrib);
     expect(ctx.activationEvents).toEqual(
-      new Set(["onCommand:showBgLayer", "onCommand:hideBgLayer"])
+      new Set(["onColor:red", "onColor:green", "onColor:blue"])
     );
-    Disposable.from(
-      disposable1,
-      disposable2,
-      new Disposable(removeExtensionListener)
-    ).dispose();
+  });
+
+  test("array contribution without activation event", () => {
+    disposeLater(
+      new Disposable(addExtensionListener(contributionProcessor)),
+      registerContributionPoint({
+        ...colorsPoint,
+        codeInfo: { idKey: "name" },
+      }),
+      registerExtension({
+        name: "ex1",
+        provider: "test",
+        contributes: {
+          colors: colorsArrayContrib,
+        },
+      })
+    );
+    const ctx = getCtx("test.ex1", "inactive");
+    expect(ctx.contributions.size).toEqual(1);
+    expect(ctx.contributions.get("colors")).toEqual(colorsArrayContrib);
+    expect(ctx.activationEvents).toEqual(new Set([]));
   });
 });

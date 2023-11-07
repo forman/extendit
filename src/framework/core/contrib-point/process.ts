@@ -12,7 +12,7 @@ import { setExtensionStatus } from "@/core/extension/set";
 
 const LOG = new Logger("contrib/process");
 
-const idRef = "${id}";
+const ID_REF = "${id}";
 
 /**
  * Processes the contributions of an extension on registration
@@ -100,22 +100,24 @@ function registerActivationEvents(
   if (!activationEvent) {
     return;
   }
-  if (!activationEvent.includes(idRef)) {
+  if (!activationEvent.includes(ID_REF)) {
     ctx.activationEvents.add(activationEvent);
     return;
   }
   const idKey = codeInfo.idKey ?? "id";
   if (Array.isArray(contrib)) {
+    // contrib is an array: register activation events for all items
     contrib
       .map((contrib) => contrib[idKey])
       .filter((contribId) => typeof contribId === "string")
-      .map((contribId) => activationEvent.replace(idRef, contribId as string))
+      .map((contribId) => activationEvent.replace(ID_REF, contribId as string))
       .forEach((activationEvent) => ctx.activationEvents.add(activationEvent));
   } else if (typeof contrib === "object") {
+    // contrib is an object: register activation event for it
     const contribObj = contrib as unknown as Record<string, unknown>;
     const contribId = contribObj[idKey];
     if (typeof contribId === "string") {
-      ctx.activationEvents.add(activationEvent.replace(idRef, contribId));
+      ctx.activationEvents.add(activationEvent.replace(ID_REF, contribId));
     }
   }
 }
