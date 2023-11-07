@@ -26,6 +26,7 @@
 * Split modules into separate packages:
   * `@extend-me/core` (incl. `util`)
   * `@extend-me/contrib`
+  * see https://github.com/adiun/vite-monorepo
 * Allow using the package without React.
   Move react-dependent modules into `framework/react/core`
   and `framework/react/contrib`
