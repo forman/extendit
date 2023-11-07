@@ -75,7 +75,8 @@ export interface Extension<ExportedApi = unknown> {
   readonly status: ExtensionStatus;
 
   /**
-   * One or more reasons for extension rejection, if status === "rejected"
+   * One or more reasons for extension rejection, if the {@link status}
+   * is `"rejected"`.
    */
   readonly reasons?: Error[];
 }
