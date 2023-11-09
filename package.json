@@ -54,9 +54,10 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run",
+    "test-watch": "vitest watch",
     "coverage": "vitest --coverage",
-    "typedoc": "typedoc src/framework src/framework/contrib src/framework/util --out docs/api"
+    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs/api"
   },
   "dependencies": {
     "ajv": "^8.12.0",

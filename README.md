@@ -70,7 +70,7 @@ stick to the following order:
 3. Dependencies on our own packages
 4. Dependencies on our own modules higher up in the hierarchy 
    using source prefix `@`
-5. Dependencies on sub-modules that are in the same module folder 
+5. Dependencies on submodules that are in the same module folder 
    further down the hierarchy using source prefix `./`
 
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
