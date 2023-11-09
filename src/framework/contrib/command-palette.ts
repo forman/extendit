@@ -1,6 +1,6 @@
-import { useContributions } from "@/core";
-import { type Command, useCommands } from "@/contrib/commands";
 import { useMemo } from "react";
+import { useContributions } from "@/react";
+import { type Command, useCommands } from "@/contrib/commands";
 import type { MenuItem, ProcessedMenuItem } from "@/contrib/menus";
 import { COMMAND_PALETTE_MENU_ID, menusPoint } from "@/contrib/menus";
 import { capitalize } from "@/util/capitalize";

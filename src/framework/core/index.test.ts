@@ -21,12 +21,6 @@ export const expectedExports = [
   "registerContributionPoint",
   "registerExtension",
   "updateFrameworkConfig",
-  "useCodeContributions",
-  "useContributionPoints",
-  "useContributions",
-  "useExtensionContributions",
-  "useExtensions",
-  "useLoadCodeContribution",
 ];
 
 test("Framework Core API is complete", () => {

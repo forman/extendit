@@ -36,6 +36,12 @@
       "module": "./dist/contrib/index.js",
       "default": "./dist/contrib/index.js"
     },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "require": "./dist/react/index.cjs",
+      "module": "./dist/react/index.js",
+      "default": "./dist/react/index.js"
+    },
     "./util": {
       "types": "./dist/util/index.d.ts",
       "require": "./dist/util/index.cjs",

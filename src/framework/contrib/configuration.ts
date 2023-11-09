@@ -1,9 +1,8 @@
-import {
-  type ContributionPoint,
-  getExtensionContributions,
-  useExtensionContributions,
-} from "@/core";
+import { useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
+import memoizeOne from "memoize-one";
+import { type ContributionPoint, getExtensionContributions } from "@/core";
+import { useExtensionContributions } from "@/react";
 import {
   getDefaultUiValue,
   jsonMetaSchema,
@@ -12,9 +11,7 @@ import {
   type UiSchema,
   type UiValue,
 } from "@/util";
-import { useMemo } from "react";
 import { getExtensionContext } from "@/core/extension-context/get";
-import memoizeOne from "memoize-one";
 //import * as log from "@/util/log";
 
 //const LOG = new log.Logger("contrib/configurations");

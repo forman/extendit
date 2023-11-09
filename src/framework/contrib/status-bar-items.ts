@@ -1,10 +1,7 @@
 import React, { useMemo } from "react";
-import {
-  type ContributionPoint,
-  registerCodeContribution,
-  useCodeContributions,
-} from "@/core";
+import { type ContributionPoint, registerCodeContribution } from "@/core";
 import { Disposable } from "@/util";
+import { useCodeContributions } from "@/react";
 
 export interface StatusBarItem {
   id: string;

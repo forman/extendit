@@ -29,6 +29,7 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: {
         "contrib/index": resolve(__dirname, "src/framework/contrib/index.ts"),
+        "react/index": resolve(__dirname, "src/framework/react/index.ts"),
         "util/index": resolve(__dirname, "src/framework/util/index.ts"),
         index: resolve(__dirname, "src/framework/index.ts"),
       },

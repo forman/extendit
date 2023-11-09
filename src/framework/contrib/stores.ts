@@ -1,9 +1,6 @@
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
-import {
-  type ContributionPoint,
-  registerCodeContribution,
-  useCodeContributions,
-} from "@/core";
+import { type ContributionPoint, registerCodeContribution } from "@/core";
+import { useCodeContributions } from "@/react";
 
 export interface StoreProvider<T = unknown> {
   id: string;

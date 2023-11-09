@@ -4,8 +4,8 @@ import {
   type ContributionPoint,
   loadCodeContribution,
   registerCodeContribution,
-  useContributions,
 } from "@/core";
+import { useContributions } from "@/react";
 import { Disposable, type DisposableLike } from "@/util/disposable";
 
 /**

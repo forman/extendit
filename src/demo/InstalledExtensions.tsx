@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import {
-  activateExtension,
   type Extension,
+  activateExtension,
   getExtensionDisplayName,
-  useExtensions,
 } from "@/core";
+import { useExtensions } from "@/react";
 
 function sortExtensions(extensions: Extension[]): Extension[] {
   return extensions.sort((e1, e2) =>

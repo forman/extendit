@@ -5,9 +5,8 @@ import {
   type When,
   compileWhenClause,
   registerCodeContribution,
-  useContributions,
 } from "@/core";
-import { useLoadCodeContribution } from "@/core/hooks";
+import { useContributions, useLoadCodeContribution } from "@/react";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
 

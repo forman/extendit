@@ -6,8 +6,12 @@ import {
   getExtensionContributionsMemo,
 } from "@/core/contrib-point/get";
 import { loadCodeContribution } from "@/core/code-contrib/load";
-import type { CodeContribution, ContributionPoint, Extension } from "./types";
-import { frameworkStore, type FrameworkState } from "./store";
+import type {
+  CodeContribution,
+  ContributionPoint,
+  Extension,
+} from "@/core/types";
+import { frameworkStore, type FrameworkState } from "@/core/store";
 import { getExtensionsMemo } from "@/core/extension/get";
 
 // Reactive hook: use<Name>(args)

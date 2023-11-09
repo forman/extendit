@@ -27,14 +27,6 @@ export { getExtension, getExtensions } from "@/core/extension/get";
 export { registerExtension } from "./extension/register";
 export { deactivateExtension } from "./extension/deactivate";
 export { addExtensionListener } from "./extension/listeners";
-export {
-  useExtensions,
-  useExtensionContributions,
-  useContributions,
-  useContributionPoints,
-  useLoadCodeContribution,
-  useCodeContributions,
-} from "./hooks";
 
 //////////////////////////////////////////////////////////////////////////
 // Contribution API:

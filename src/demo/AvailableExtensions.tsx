@@ -2,9 +2,9 @@ import availableExtensions from "./extensions";
 import {
   getExtensionDisplayName,
   getExtensionId,
-  useExtensions,
   registerExtension,
 } from "@/core";
+import { useExtensions } from "@/react";
 
 function AvailableExtensions() {
   const extensions = useExtensions();

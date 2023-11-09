@@ -3,11 +3,11 @@ import type { JSONSchemaType } from "ajv";
 import {
   type ContributionPoint,
   type When,
-  useContributions,
   loadCodeContribution,
   registerCodeContribution,
   compileWhenClause,
 } from "@/core";
+import { useContributions } from "@/react";
 import { Disposable } from "@/util/disposable";
 import * as log from "@/util/log";
 

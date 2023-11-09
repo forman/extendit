@@ -1,6 +1,7 @@
-import type { JSONSchemaType } from "ajv";
-import { type ContributionPoint, useContributions } from "@/core";
 import { useMemo } from "react";
+import type { JSONSchemaType } from "ajv";
+import { type ContributionPoint } from "@/core";
+import { useContributions } from "@/react";
 import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/submenus");

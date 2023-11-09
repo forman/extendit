@@ -1,11 +1,7 @@
 import { useEffect, useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
-import {
-  type ContributionPoint,
-  type When,
-  useContributions,
-  compileWhenClause,
-} from "@/core";
+import { type ContributionPoint, type When, compileWhenClause } from "@/core";
+import { useContributions } from "@/react";
 import * as log from "@/util/log";
 import { executeCommand } from "@/contrib/commands";
 

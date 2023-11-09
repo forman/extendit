@@ -1,10 +1,6 @@
-import {
-  type ContributionPoint,
-  type When,
-  useContributions,
-  compileWhenClause,
-} from "@/core";
 import { useMemo } from "react";
+import { type ContributionPoint, type When, compileWhenClause } from "@/core";
+import { useContributions } from "@/react";
 import { type Command, useCommandsMap } from "./commands";
 import { type Submenu, useSubmenusMap } from "./submenus";
 import { newId } from "@/util/id";
