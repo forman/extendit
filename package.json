@@ -55,7 +55,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "coverage": "vitest --coverage",
+    "coverage": "vitest run --coverage",
     "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs/api"
   },
   "dependencies": {
