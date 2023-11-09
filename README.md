@@ -1,3 +1,5 @@
+[![CI](https://github.com/forman/extend-me/actions/workflows/node.js.yml/badge.svg)](https://github.com/forman/extend-me/actions/workflows/node.js.yml)
+
 ![image](docs/images/extend-me.png)
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
