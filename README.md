@@ -7,7 +7,7 @@
 
 
 ExtendIt.js is a framework and library that is used to create extensible and
-scalable TypeScript/JavaScript applications.
+scalable JavaScript applications.
 
 At its core ExtendIt.js provides the means for a host application to dynamically
 import JavaScript modules - extensions - that add new features and capabilities
