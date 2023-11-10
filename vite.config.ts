@@ -34,7 +34,7 @@ export default defineConfig({
         index: resolve(__dirname, "src/framework/index.ts"),
       },
       // Only used for formats "umd" and "iife"
-      name: "ExtendMe!",
+      name: "extendit",
       // "[name]" will resolve to keys from "entry" object,
       // the proper extensions will be added
       fileName: "[name]",

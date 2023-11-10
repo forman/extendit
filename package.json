@@ -1,8 +1,8 @@
 {
-  "name": "extend-me",
+  "name": "extendit",
   "version": "0.1.0",
   "private": false,
-  "displayName": "ExtendMe!",
+  "displayName": "ExtendIt.js",
   "description": "An extension framework that may be used with React hooks",
   "readme": "README.md",
   "author": "https://github.com/forman",

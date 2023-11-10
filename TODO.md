@@ -13,19 +13,19 @@
 * Enhance the demo:
   - Add explanations what's going on
   - Add submenus demo
-* Deploy package `extend-me`
+* Deploy package 
 
 ### Design improvements
 
 * Review logging
-  * Use logger named "extend-me/core" etc
+  * Use logger named "extendit/core" etc
 * Refactor `framework/contrib`
   * Every point should get its own sub-folder, split into
   `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
   * A `hooks.ts` in each submodule requires React
 * Split modules into separate packages:
-  * `@extend-me/core` (incl. `util`)
-  * `@extend-me/contrib`
+  * `@extendit/core` (incl. `util`)
+  * `@extendit/contrib`
   * see https://github.com/adiun/vite-monorepo
 * Allow using the package without React.
   Move react-dependent modules into `framework/react/core`
