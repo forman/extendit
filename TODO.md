@@ -2,14 +2,13 @@
 
 ### Release first version
 
-* Setup CI
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants.
-* Add badges in README.md for test result, docs, API docs, coverage,
-  and package.
-* Write `getting started` section in README.md
+* Add coverage badge in README.md
+* Write *getting started* section in README.md
 * Implement remaining unit-tests
-* Find out how to test React hooks using `vitest`
+  * Missing specific tests in experimental `src/framework/contrib`
+  * Find out how to test React hooks using `vitest`
 * Enhance the demo:
   - Add explanations what's going on
   - Add submenus demo
@@ -20,24 +19,26 @@
 * Review logging
   * Use logger named "extendit/core" etc
 * Refactor `framework/contrib`
-  * Every point should get its own sub-folder, split into
-  `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
+  * Every point should be a separate sub-folder that may contain
+    `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
   * A `hooks.ts` in each submodule requires React
 * Split modules into separate packages:
-  * `@extendit/core` (incl. `util`)
-  * `@extendit/contrib`
+  * `extendit/` `@extendit/core` (incl. `util`)
+  * `extendit/contrib` --> `@extendit/ui`
   * see https://github.com/adiun/vite-monorepo
-* Allow using the package without React.
-  Move react-dependent modules into `framework/react/core`
-  and `framework/react/contrib`
+* Allow using the contrib module without React.
+  Move react-dependent modules into `framework/contrib/react`
 * Schema validation should be optional.
   Add framework option `validateSchema: (jsonValue) => [boolean, errors]`
-* Get rid of globals, instead instantiate `Framework` class that
+* Maybe get rid of globals later, instead instantiate `Framework` class that
   contains the configuration, the store, the API, and provides hook factories.
 
 
 ## DONE
 
+* Setup CI
+* Allow using the core module without React.
+  Move react-dependent modules into `framework/react`
 * Get rid of `registerAppExtension`, just use `registerExtension` with
   options:
   - `pathResolver`

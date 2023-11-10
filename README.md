@@ -51,14 +51,14 @@ $ cd extendit
 $ npm install
 ```
 
-Now the following scripts are available:
+Now the following scripts are available that can be started with `npm run`:
 
-* `npm run dev` - run the UI demo in development mode
-* `npm run build` - build the library, outputs to `./dist`
-* `npm run lint` - run `eslint` on project sources
-* `npm run test` - run project unit tests
-* `npm run coverage` - generate project coverage report in `./coverage`
-* `npm run typedoc` - generate project API docs in `./docs/api`
+* `dev` - run the UI demo in development mode
+* `build` - build the library, outputs to `./dist`
+* `lint` - run `eslint` on project sources
+* `test` - run project unit tests
+* `coverage` - generate project coverage report in `./coverage`
+* `typedoc` - generate project API docs in `./docs/api`
 
 ### Coding style
 
@@ -76,5 +76,5 @@ stick to the following order:
    further down the hierarchy using source prefix `./`
 
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
-we first import import TypeScript source dependencies, then separated by a 
+we first import TypeScript source dependencies, then separated by a 
 newline, insert resource dependencies in the same order as source dependencies.
