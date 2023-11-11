@@ -31,7 +31,7 @@ export default defineConfig({
         "contrib/index": resolve(__dirname, "src/framework/contrib/index.ts"),
         "react/index": resolve(__dirname, "src/framework/react/index.ts"),
         "util/index": resolve(__dirname, "src/framework/util/index.ts"),
-        index: resolve(__dirname, "src/framework/index.ts"),
+        index: resolve(__dirname, "src/framework/core/index.ts"),
       },
       // Only used for formats "umd" and "iife"
       name: "extendit",

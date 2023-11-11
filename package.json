@@ -27,10 +27,10 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "module": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/core/index.d.ts",
+      "require": "./dist/core/index.cjs",
+      "module": "./dist/core/index.js",
+      "default": "./dist/core/index.js"
     },
     "./contrib": {
       "types": "./dist/contrib/index.d.ts",
