@@ -29,9 +29,9 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: {
         "contrib/index": resolve(__dirname, "src/framework/contrib/index.ts"),
+        "core/index": resolve(__dirname, "src/framework/core/index.ts"),
         "react/index": resolve(__dirname, "src/framework/react/index.ts"),
         "util/index": resolve(__dirname, "src/framework/util/index.ts"),
-        index: resolve(__dirname, "src/framework/core/index.ts"),
       },
       // Only used for formats "umd" and "iife"
       name: "extendit",
