@@ -1,8 +1,8 @@
 import { expect, test } from "vitest";
-import * as expr from "./index";
+import * as util from "./index";
 
 test("Framework Util API is complete", () => {
-  const api = Object.getOwnPropertyNames(expr);
+  const api = Object.getOwnPropertyNames(util);
   api.sort();
   expect(api).toEqual([
     "AssertionError",

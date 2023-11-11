@@ -36,9 +36,10 @@ The core API of `ExtendIt.js` has been largely inspired by the
 [Extension API](https://code.visualstudio.com/api)
 of [Visual Studio Code](https://code.visualstudio.com/).
 
-`ExtendIt.js` currently depends on the two awesome libraries
+`ExtendIt.js` currently depends on the awesome libraries
 
-* [zustand](https://github.com/pmndrs/zustand) for state management, and
+* [zustand](https://github.com/pmndrs/zustand) for state management,
+* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions, and
 * [Ajv](https://ajv.js.org/) for JSON validation.
 
 ### Getting Started
@@ -63,6 +64,21 @@ Now the following scripts are available that can be started with `npm run`:
 * `test` - run project unit tests
 * `coverage` - generate project coverage report in `./coverage`
 * `typedoc` - generate project API docs in `./docs/api`
+
+### Configuration
+
+You can use `.env` files, e.g., `.env.local` to configure development options:
+
+```.env
+# As `vite build` runs a production build by default, you can
+# change this and run a development build by using a different mode
+# and `.env` file configuration:
+NODE_ENV=development
+
+# Set the library's log level (ALL, DEBUG, INFO, WARN, ERROR, OFF)
+# Logging is OFF by default.
+VITE_LOG_LEVEL=ALL
+```
 
 ### Coding style
 
