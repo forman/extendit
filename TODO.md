@@ -15,8 +15,6 @@
 
 ### Improve design
 
-* Review logging
-  * Use logger named "extendit/core" etc
 * Refactor `framework/contrib`
   * Every point should be a separate sub-folder that may contain
     `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
@@ -27,6 +25,7 @@
   * see https://github.com/adiun/vite-monorepo
 * Allow using the contrib module without React.
   Move react-dependent modules into `framework/contrib/react`
+* Review logging, e.g., use logger named "extendit/core" etc
 * Schema validation should be optional.
   Add framework option `validateSchema: (jsonValue) => [boolean, errors]`
 * Maybe get rid of globals later, instead instantiate `Framework` class that
