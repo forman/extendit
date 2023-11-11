@@ -1,6 +1,7 @@
 {
-  "name": "extendit",
-  "version": "0.1.0",
+  "name": "@forman2/extendit",
+  "version": "0.1.0-dev.0",
+  "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
   "readme": "README.md",
@@ -19,17 +20,17 @@
     "store",
     "react"
   ],
-  "type": "module",
   "files": [
-    "**"
+    "dist",
+    "src"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "module": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/core/index.d.ts",
+      "require": "./dist/core/index.cjs",
+      "module": "./dist/core/index.js",
+      "default": "./dist/core/index.js"
     },
     "./contrib": {
       "types": "./dist/contrib/index.d.ts",

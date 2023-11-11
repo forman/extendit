@@ -9,7 +9,7 @@ import {
   submenusPoint,
   toolViewsPoint,
 } from "./index";
-import { registerContributionPoint } from "@/index";
+import { registerContributionPoint } from "@/core/contrib-point/register";
 import { Disposable } from "@/util";
 
 /**
