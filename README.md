@@ -3,7 +3,7 @@
 [![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-![image](docs/images/extendit.png)
+![image](logo.png)
 
 
 ExtendIt.js is a framework and library that is used to create extensible and
@@ -40,6 +40,10 @@ of [Visual Studio Code](https://code.visualstudio.com/).
 
 * [zustand](https://github.com/pmndrs/zustand) for state management, and
 * [Ajv](https://ajv.js.org/) for JSON validation.
+
+### Getting Started
+
+_Will ba added for the fist stable release._
 
 ### Development
 

@@ -1,20 +1,19 @@
 ## TODO
 
-### Release first version
+### Publish stable version
 
+* Write _Getting Started_ section in `README.md`
 * Add TSDoc to all types, classes, members, methods,
-  functions, and constants.
-* Add coverage badge in README.md
-* Write *getting started* section in README.md
+  functions, and constants also in `util` and `contrib`.
+* Add coverage badge in `README.md`
 * Implement remaining unit-tests
   * Missing specific tests in experimental `src/framework/contrib`
   * Find out how to test React hooks using `vitest`
 * Enhance the demo:
   - Add explanations what's going on
   - Add submenus demo
-* Deploy package 
 
-### Design improvements
+### Improve design
 
 * Review logging
   * Use logger named "extendit/core" etc
