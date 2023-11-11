@@ -1,94 +1,30 @@
 import { keyFromArray } from "@/util/key";
-
-/**
- * A log level.
- */
-export class LogLevel {
-  /**
-   * Disables logging.
-   */
-  static readonly OFF = new LogLevel("OFF", -1);
-  /**
-   * Log always. Its value is 0.
-   */
-  static readonly ALL = new LogLevel("ALL", 0);
-  /**
-   * Log at debugging level. Its value is 100.
-   */
-  static readonly DEBUG = new LogLevel(
-    "DEBUG",
-    100,
-    "color:green;font-weight:bold;",
-    console.debug
-  );
-  /**
-   * Log at information level. Its value is 200.
-   */
-  static readonly INFO = new LogLevel(
-    "INFO",
-    200,
-    "color:blue;font-weight:bold;",
-    console.info
-  );
-  /**
-   * Log at warning level. Its value is 300.
-   */
-  static readonly WARN = new LogLevel(
-    "WARN",
-    300,
-    "color:orange;font-weight:bold;",
-    console.warn
-  );
-  /**
-   * Log at error level. Its value is 400.
-   */
-  static readonly ERROR = new LogLevel(
-    "ERROR",
-    400,
-    "color:red;font-weight:bold;",
-    console.error
-  );
-
-  /**
-   * Constructs a new log level.
-   * @param label Level label.
-   * @param value Level value. Must be >= zero.
-   * @param style Label CSS style. Defaults to `"font-weight:bold;"`.
-   * @param logFn Logging function. Defaults to `console.log`.
-   */
-  constructor(
-    readonly label: string,
-    readonly value: number,
-    readonly style?: string,
-    readonly logFn?: (...data: unknown[]) => void
-  ) {}
-}
-
-let logLevel: LogLevel = import.meta.env.PROD ? LogLevel.WARN : LogLevel.ALL;
-
-/**
- * Gets the global log level.
- */
-export function getLevel(): LogLevel {
-  return logLevel;
-}
-
-/**
- * Sets the global log level.
- * @param level - The new global log level
- * @returns The previous global level
- */
-export function setLevel(level: LogLevel): LogLevel {
-  const prevLevel = logLevel;
-  logLevel = level;
-  return prevLevel;
-}
+import { LogLevel } from "./level";
 
 /**
  * A logger.
  */
 export class Logger {
+  private static globalLevel = LogLevel.get("DEFAULT")!;
   private seenWarnings = new Set<string>();
+
+  /**
+   * Gets the global log level.
+   */
+  static getGlobalLevel(): LogLevel {
+    return Logger.globalLevel;
+  }
+
+  /**
+   * Sets the global log level.
+   * @param level - The new global log level
+   * @returns The previous global level
+   */
+  static setGlobalLevel(level: LogLevel): LogLevel {
+    const prevLevel = Logger.globalLevel;
+    Logger.globalLevel = level;
+    return prevLevel;
+  }
 
   /**
    * Constructs a new logger.
@@ -113,7 +49,7 @@ export class Logger {
    * Gets the logger's level.
    */
   getLevel(): LogLevel {
-    return this.level ?? logLevel;
+    return this.level ?? Logger.getGlobalLevel();
   }
 
   /**
@@ -128,7 +64,7 @@ export class Logger {
    * Checks whether this logger is enabled.
    */
   isEnabled(): boolean {
-    return getLevel().value >= 0 && this.getLevel().value >= 0;
+    return Logger.getGlobalLevel().value >= 0 && this.getLevel().value >= 0;
   }
 
   /**
@@ -138,7 +74,7 @@ export class Logger {
   isLevelEnabled(level: LogLevel): boolean {
     return (
       this.isEnabled() &&
-      level.value >= getLevel().value &&
+      level.value >= Logger.getGlobalLevel().value &&
       level.value >= this.getLevel().value
     );
   }

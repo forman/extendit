@@ -62,11 +62,15 @@ export default defineConfig({
     },
   },
   test: {
+    setupFiles: ["src/framework/test/setup.ts"],
     coverage: {
       exclude: ["src/demo", "src/framework/test/extensions/**"],
     },
     onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
-      console.log(_log, _type);
+      const logLevel = process.env.VITE_LOG_LEVEL;
+      if (logLevel && logLevel !== "OFF") {
+        console.log(_log, _type);
+      }
     },
   },
 });

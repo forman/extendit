@@ -1,35 +1,43 @@
-import { describe, expect, test } from "vitest";
-import * as log from "./log";
-import { LogLevel } from "./log";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { Logger, LogLevel } from "@/util/log";
 
-test("module properties", () => {
-  const level = log.getLevel();
-  expect(level).toEqual(log.LogLevel.ALL);
-  const oldLevel = log.setLevel(log.LogLevel.INFO);
-  expect(oldLevel).toEqual(level);
-  expect(log.getLevel()).toEqual(log.LogLevel.INFO);
-  log.setLevel(level);
+let globalLevel: LogLevel;
+
+beforeEach(() => {
+  globalLevel = Logger.getGlobalLevel();
+});
+
+afterEach(() => {
+  Logger.setGlobalLevel(globalLevel);
+});
+
+test("logger global level", () => {
+  expect(globalLevel).toBeInstanceOf(LogLevel);
+  const oldLevel = Logger.setGlobalLevel(LogLevel.INFO);
+  expect(oldLevel).toEqual(globalLevel);
+  expect(Logger.getGlobalLevel()).toEqual(LogLevel.INFO);
 });
 
 describe("logger properties", () => {
   test("name", () => {
-    const logger = new log.Logger("test");
+    const logger = new Logger("test");
     expect(logger.getName()).toEqual("test");
   });
 
   test("level", () => {
-    const logger = new log.Logger("test");
-    expect(logger.getLevel()).toEqual(log.LogLevel.ALL);
-    logger.setLevel(log.LogLevel.WARN);
-    expect(logger.getLevel()).toEqual(log.LogLevel.WARN);
+    Logger.setGlobalLevel(LogLevel.ALL);
+    const logger = new Logger("test");
+    expect(logger.getLevel()).toEqual(LogLevel.ALL);
+    logger.setLevel(LogLevel.WARN);
+    expect(logger.getLevel()).toEqual(LogLevel.WARN);
     logger.setLevel(undefined);
-    expect(logger.getLevel()).toEqual(log.getLevel());
+    expect(logger.getLevel()).toEqual(Logger.getGlobalLevel());
   });
 });
 
 describe("enablement", () => {
   function assertLoggerEnablement(
-    logger: log.Logger,
+    logger: Logger,
     ok: boolean,
     debugOk: boolean,
     infoOk: boolean,
@@ -37,57 +45,53 @@ describe("enablement", () => {
     errorOk: boolean
   ) {
     expect(logger.isEnabled()).toBe(ok);
-    expect(logger.isLevelEnabled(log.LogLevel.DEBUG)).toBe(debugOk);
-    expect(logger.isLevelEnabled(log.LogLevel.INFO)).toBe(infoOk);
-    expect(logger.isLevelEnabled(log.LogLevel.WARN)).toBe(warnOk);
-    expect(logger.isLevelEnabled(log.LogLevel.ERROR)).toBe(errorOk);
+    expect(logger.isLevelEnabled(LogLevel.DEBUG)).toBe(debugOk);
+    expect(logger.isLevelEnabled(LogLevel.INFO)).toBe(infoOk);
+    expect(logger.isLevelEnabled(LogLevel.WARN)).toBe(warnOk);
+    expect(logger.isLevelEnabled(LogLevel.ERROR)).toBe(errorOk);
   }
 
   test("global ALL and logger ALL", () => {
-    const oldLevel = log.setLevel(log.LogLevel.ALL);
+    Logger.setGlobalLevel(LogLevel.ALL);
 
-    const logger = new log.Logger("test", log.LogLevel.ALL);
+    const logger = new Logger("test", LogLevel.ALL);
     assertLoggerEnablement(logger, true, true, true, true, true);
 
-    logger.setLevel(log.LogLevel.INFO);
+    logger.setLevel(LogLevel.INFO);
     assertLoggerEnablement(logger, true, false, true, true, true);
 
-    logger.setLevel(log.LogLevel.WARN);
+    logger.setLevel(LogLevel.WARN);
     assertLoggerEnablement(logger, true, false, false, true, true);
 
-    logger.setLevel(log.LogLevel.ERROR);
+    logger.setLevel(LogLevel.ERROR);
     assertLoggerEnablement(logger, true, false, false, false, true);
 
-    logger.setLevel(log.LogLevel.OFF);
+    logger.setLevel(LogLevel.OFF);
     assertLoggerEnablement(logger, false, false, false, false, false);
-
-    log.setLevel(oldLevel);
   });
 
   test("global WARN and logger ALL", () => {
-    const oldLevel = log.setLevel(log.LogLevel.WARN);
+    Logger.setGlobalLevel(LogLevel.WARN);
 
-    const logger = new log.Logger("test", log.LogLevel.ALL);
+    const logger = new Logger("test", LogLevel.ALL);
     assertLoggerEnablement(logger, true, false, false, true, true);
 
-    logger.setLevel(log.LogLevel.INFO);
+    logger.setLevel(LogLevel.INFO);
     assertLoggerEnablement(logger, true, false, false, true, true);
 
-    logger.setLevel(log.LogLevel.WARN);
+    logger.setLevel(LogLevel.WARN);
     assertLoggerEnablement(logger, true, false, false, true, true);
 
-    logger.setLevel(log.LogLevel.ERROR);
+    logger.setLevel(LogLevel.ERROR);
     assertLoggerEnablement(logger, true, false, false, false, true);
 
-    logger.setLevel(log.LogLevel.OFF);
+    logger.setLevel(LogLevel.OFF);
     assertLoggerEnablement(logger, false, false, false, false, false);
-
-    log.setLevel(oldLevel);
   });
 });
 
 describe("logging methods", () => {
-  function logStuff(logger: log.Logger) {
+  function logStuff(logger: Logger) {
     logger.debug("More frogs coming in,", 1000, "we have");
     logger.info("Good amount of frogs, ", 100, "are enough");
     logger.warn("Low on frogs,", 10, "left");
@@ -103,24 +107,24 @@ describe("logging methods", () => {
   }
 
   test("using console with global level", () => {
-    const logger = new log.Logger("test");
+    const logger = new Logger("test");
     logStuff(logger);
   });
 
   test("using console with logger level", () => {
-    const logger = new log.Logger("test", log.LogLevel.ALL);
+    const logger = new Logger("test", LogLevel.ALL);
     logStuff(logger);
   });
 
   test("generated records", () => {
-    const oldLevel = log.setLevel(log.LogLevel.ALL);
+    Logger.setGlobalLevel(LogLevel.ALL);
 
     const records: unknown[][] = [];
     const logFn = (...data: unknown[]) => {
       records.push(data);
     };
 
-    const logger = new log.Logger("test", log.LogLevel.ALL, logFn);
+    const logger = new Logger("test", LogLevel.ALL, logFn);
     logStuff(logger);
 
     expect(records).toEqual([
@@ -165,7 +169,5 @@ describe("logging methods", () => {
         "Salamanders take over!",
       ],
     ]);
-
-    log.setLevel(oldLevel);
   });
 });
