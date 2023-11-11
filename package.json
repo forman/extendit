@@ -1,6 +1,7 @@
 {
-  "name": "extendit",
-  "version": "0.1.0",
+  "name": "@forman2/extendit",
+  "version": "0.1.0-dev.0",
+  "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
   "readme": "README.md",
@@ -19,9 +20,9 @@
     "store",
     "react"
   ],
-  "type": "module",
   "files": [
-    "**"
+    "dist",
+    "src"
   ],
   "exports": {
     "./package.json": "./package.json",
