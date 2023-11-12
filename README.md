@@ -2,11 +2,14 @@
 [![License: MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
 [![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+![npm](https://img.shields.io/npm/v/%40forman2/extendit)
 
 ![image](logo.png)
 
 ExtendIt.js is a framework and library that is used to create extensible and
-scalable JavaScript applications. Its core API design is largely inspired by 
+scalable JavaScript applications. Its 
+[core API](https://forman.github.io/extendit/modules/core.html) 
+design is largely inspired by 
 the [Extension API](https://code.visualstudio.com/api)
 of [Visual Studio Code](https://code.visualstudio.com/).
 
@@ -17,7 +20,7 @@ capabilities to the application.
 ExtendIt.js has been designed to efficiently work with 
 [React](https://react.dev/), for this purpose it provides a number of
 reactive [hooks](). However, the library can be used without 
-React too. It's a peer dependency.
+React too. It's only a peer dependency.
 
 ### Installation
 
@@ -33,20 +36,26 @@ yarn add @forman2/extendit
 
 ### Getting Started
 
-Any extension comprises at least a usual [`package.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-json)  
+Any extension must be defined by its 
+[_extension manifest_](https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html), 
+which is basically a slightly enhanced 
+[`package.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-json).  
 
 ```json
 {
    "name": "my-extension",
    "provider": "my-company",
+   "version": "1.0.0",
    "main": "init"
 }
 ```
 
-The `main` field above is optional. If you provide it as above, it means you 
-provide an _extension activator_ in a submodule named `init`, 
-e.g., in `init.ts` you can define an `activate()` function that is called
-if your extension is activated within the host application:
+The `main` field is optional. If you provide it as above, it means you 
+provide an 
+[_extension activator_](https://forman.github.io/extendit/interfaces/core.ExtensionModule.html) 
+in a submodule named `init` which defines an `activate()` 
+function that is called if your extension is activated by the host 
+application:
 
 ```ts
 import { SomeAppApi } from "some-app/api";
@@ -90,11 +99,12 @@ export function activate(ctx: ExtensionContext) {
   const myExtension = getExtension("my-company.my-extension");
   const myApi = myExtension.exports as MyApi;
   // Use imported extension API here, e.g., to add some contribution
-   myApi.registerViewProvider({ ... });
+  myApi.registerViewProvider({ ... });
 }
 ```
 
-The host application registers extensions using the `registerExtension`
+The host application registers extensions using the 
+[`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
 function:
 
 ```ts
@@ -113,7 +123,7 @@ function getAppExtensionUrls(): URL[] {
 ```
 
 The host application (or an extension) can also define handy 
-_contribution points_:
+[_contribution points_](https://forman.github.io/extendit/interfaces/core.ContributionPoint.html):
 
 ```ts
 import { registerContributionPoint } from "@forman2/extendit";
@@ -132,7 +142,7 @@ export function initApp() {
 ```
 
 Extensions can provide contributions to defined contribution points. 
-Contributions are encoded in the `contributes` object of an extension's 
+Contributions are encoded in the `contributes` value of an extension's 
 `package.json`:
 
 ```json
@@ -150,18 +160,22 @@ Contributions are encoded in the `contributes` object of an extension's
 ```
 
 A consumer can access a current snapshot of all contributions
-found in the application using the `getContributions` function:
+found in the application using the 
+[`getContributions`](https://forman.github.io/extendit/functions/core.getContributions.html) 
+function:
 
 ```ts
   const wiseSayings = getContributions<string[]>("wiseSayings");
 ```
 
-The return value will be the _same_ object, as long no other extensions are
-installed that contribute to "wiseSayings". If this happens, a new snapshot 
-instance will be returned.
+The return value will be the _same_ value, as long as no other extensions are
+installed that contribute to the contribution point `wiseSayings`. If this 
+happens, a new snapshot value will be returned.
 
-If you are building a React application, you can use hooks to access
-contributions (and other elements of the ExtendMe.js API) in a reactive way:
+If you are building a React application, you can use the 
+[provided React hooks](https://forman.github.io/extendit/modules/react.html) 
+in `@forman2/extend-me/react` for accessing contributions (and other elements 
+of the ExtendMe.js API) in a reactive way:
 
 ```tsx
 import { useContributions } from "@forman2/extend-me/react";
@@ -250,7 +264,8 @@ code contribution is needed by a consumer, the contributing extension will be
 activated.
 
 Therefore, code contributions are loaded asynchronously using the 
-`loadCodeContribution` function:
+[`loadCodeContribution`](https://forman.github.io/extendit/functions/core.loadCodeContribution.html)
+function:
 
 ```ts
 import { loadCodeContribution } from "@forman2/extendit";
@@ -261,7 +276,8 @@ async function getCommand(commandId: string): Promise<Command> {
 }  
 ```
 
-There is also a corresponding React hook `useLoadCodeContribution`
+There is also a corresponding React hook 
+[`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useCodeContributions.html)
 that is used for implementing React components:
 
 ```tsx
