@@ -5,7 +5,6 @@
 
 ![image](logo.png)
 
-
 ExtendIt.js is a framework and library that is used to create extensible and
 scalable JavaScript applications. Its core API design is largely inspired by 
 the [Extension API](https://code.visualstudio.com/api)
@@ -46,14 +45,15 @@ Any extension comprises at least a usual [`package.json`](https://docs.npmjs.com
 
 The `main` field above is optional. If you provide it as above, it means you 
 provide an _extension activator_ in a submodule named `init`, 
-e.g., in `init.ts` you define an `activate()` function:
+e.g., in `init.ts` you can define an `activate()` function that is called
+if your extension is activated within the host application:
 
 ```ts
-import { type ExtensionContext } from "@forman2/extendit";
-import { type AppApi } from "./app/api";
+import { SomeAppApi } from "some-app/api";
 
 export function activate() {
-  // Use your AppApi here, e.g. register your contributions
+  // Use the SomeAppApi here, e.g., 
+  // register your contributions to the app
 }
 ```
 
@@ -181,12 +181,10 @@ The component will be re-rendered if more contributions are added to the
 contribution point.
 
 A contribution may be fully specified by the JSON data in the 
-`contributes` object in `package.json`. 
-
-A contribution may also require JavaScript to be loaded and executed. 
-Examples are commands and UI components, such as rendered views.
-
-Let a contribution point be
+`contributes` object in `package.json`. It may also require JavaScript to be 
+loaded and executed. Examples are commands or UI components that are rendered
+by React or another UI library. The following contribution point also 
+defined `codeInfo` to express its need of JavaScript code: 
 
 ```ts
 import { registerCodeContribution } from "@forman2/extendit";
@@ -215,11 +213,12 @@ export function activate() {
 ```
 
 The entry `activationEvent` causes the framework to fire an event of the form
-`"onCommand:${id}"`, if the code contribution with the given `"id"` is 
-requested. In turn, this causes the extension to be activated, that provides
-this requested code contribution.
+`"onCommand:${id}"` if the code contribution with the given `"id"` is 
+requested. In turn, any extension that listens for the fired event will be 
+activated.
 
-Then some extension could provide the following JSON contribution:
+Here is an extension that provide the following JSON contribution to the 
+defined contribution point `commands` in its `package.json`
 
 ```json
 {
@@ -234,7 +233,8 @@ Then some extension could provide the following JSON contribution:
 }
 ```
 
-and define the corresponding JavaScript code contribution:
+and also defines the corresponding JavaScript code contribution in its 
+activator:
 
 ```ts
 import { registerCodeContribition } from "@forman2/extendit";
@@ -245,7 +245,7 @@ export function activate() {
 }
 ```
 
-Such code contributions are loaded lazily: Only the first time a
+Such code contributions are loaded lazily. Only the first time a
 code contribution is needed by a consumer, the contributing extension will be
 activated.
 
