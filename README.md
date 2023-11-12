@@ -7,44 +7,277 @@
 
 
 ExtendIt.js is a framework and library that is used to create extensible and
-scalable JavaScript applications.
-
-At its core ExtendIt.js provides the means for a host application to dynamically
-import JavaScript modules - extensions - that add new features and capabilities
-to the application.
-
-An extension comprises a `package.json` and optionally some JavaScript code. The
-JavaScript code may export an extension-specific API that other, dependent
-extensions may consume.
-
-Both the host application and an extension can also define contribution points.
-Extensions provide contributions to one or more contribution points and the host
-application or host extension can consume them. Contributions are encoded in
-the `contributes` object of an extension's `package.json`. A contribution may be
-either fully specified by the JSON data in the `contributes` object, or it may
-require also JavaScript to be loaded and executed. Examples are commands and UI
-components. Such code contributions are loaded lazily: Only the first time a
-code contribution is needed by a consumer, the contributing extension will be
-loaded and activated.
-
-`ExtendIt.js` provides some
-useful [React hooks](https://react.dev/reference/react) for developing user
-interfaces. However, the core library is designed to be used independently of 
-React. 
-
-The core API of `ExtendIt.js` has been largely inspired by the
-[Extension API](https://code.visualstudio.com/api)
+scalable JavaScript applications. Its core API design is largely inspired by 
+the [Extension API](https://code.visualstudio.com/api)
 of [Visual Studio Code](https://code.visualstudio.com/).
 
-`ExtendIt.js` currently depends on the awesome libraries
+ExtendIt.js provides the means for a host application to dynamically
+import JavaScript modules - _extensions_ - that add new features and 
+capabilities to the application.
 
-* [zustand](https://github.com/pmndrs/zustand) for state management,
-* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions, and
-* [Ajv](https://ajv.js.org/) for JSON validation.
+ExtendIt.js has been designed to efficiently work with 
+[React](https://react.dev/), for this purpose it provides a number of
+reactive [hooks](). However, the library can be used without React too.
 
 ### Getting Started
 
-_Will ba added for the fist stable release._
+Any extension comprises at least a usual [`package.json`](https://docs.npmjs.com/cli/v7/configuring-npm/package-json)  
+
+```json
+{
+   "name": "my-extension",
+   "provider": "my-company",
+   "main": "init"
+}
+```
+
+and optionally some JavaScript code to provide an _extension activator_, 
+here in module, e.g., in `init.ts`:
+
+```ts
+import { type ExtensionContext } from "@forman2/extendit";
+import { type AppApi } from "app/api";
+
+export function activate() {
+  // Use AppApi here, e.g. register your contributions
+}
+```
+
+The activator may also export an extension-specific API 
+
+```ts
+import { MyApi } from "./api";
+
+export function activate(): MyApi {
+  return new MyApi({ ... });
+}
+```
+
+that another, dependent extension
+
+```json
+{
+   "name": "other-extension",
+   "provider": "other-company",
+   "main": "init",
+   "dependencies": {
+      "@my-company/my-extension": "1.0.0"
+   }
+}
+```
+
+may consume
+
+```ts
+import { type ExtensionContext, getExtension } from "@forman2/extendit";
+import { type MyApi } from "@my-company/my-extension";
+
+export function activate(ctx: ExtensionContext) {
+  const myExtension = getExtension("my-company.my-extension");
+  const myApi = myExtension.exports as MyApi;
+  // Use imported extension API here, e.g., to add some contribution
+   myApi.registerViewProvider({ ... });
+}
+```
+
+The host application registers extensions using the `registerExtension`
+function:
+
+```ts
+import { registerExtension } from "@forman2/extendit";
+
+export function initApp() {
+   const extensionsUrls = getAppExtensionUrls();
+   extensionUrls.forEach((extensionUrl) => {
+      void registerExtension(extensionUrl);
+   });
+}
+
+function getAppExtensionUrls(): URL[] {
+  // ...
+}
+```
+
+The host application (or an extension) can also define handy 
+_contribution points_:
+
+```ts
+import { registerContributionPoint } from "@forman2/extendit";
+
+export function initApp() {
+  registerContributionPoint({
+    id: "wiseSayings",
+    manifestInfo: {
+      schema: {
+        type: "array",
+        items: {type: "string"}
+      }
+    }
+  });
+}
+```
+
+Extensions can provide contributions to defined contribution points. 
+Contributions are encoded in the `contributes` object of an extension's 
+`package.json`:
+
+```json
+{
+   "name": "my-extension",
+   "provider": "my-company",
+   "contributes": {
+      "wiseSayings": [
+         "Silence is a true friend who never betrays.",
+         "Use your head to save your feet.",
+         "Before Alice went to Wonderland, she had to fall."
+      ]
+   }
+}
+```
+
+A consumer can access a current snapshot of all contributions
+found in the application using the `getContributions` function:
+
+```ts
+  const wiseSayings = getContributions<string[]>("wiseSayings");
+```
+
+The return value will be the _same_ object, as long no other extensions are
+installed that contribute to "wiseSayings". If this happens, a new snapshot 
+instance will be returned.
+
+If you are building a React application, you can use hooks to access
+contributions (and other elements of the ExtendMe.js API) in a reactive way:
+
+```tsx
+import { useContributions } from "@forman2/extend-me/react";
+
+export default function WiseSayingsComponent() {
+  const wiseSayings = useContributions("wiseSayings");   
+  return (
+    <div>
+      <h4>Wise Sayings:</h4>
+       <ol>{ wiseSayings.map((wiseSaying) => <li>{wiseSaying}</li>) }</ol>
+    </div>
+  );
+}
+```
+
+The component will be re-rendered if more contributions are added to the 
+contribution point.
+
+A contribution may be fully specified by the JSON data in the 
+`contributes` object in `package.json`. 
+
+A contribution may also require JavaScript to be loaded and executed. 
+Examples are commands and UI components, such as rendered views.
+
+Let a contribution point be
+
+```ts
+import { registerCodeContribution } from "@forman2/extendit";
+
+export function activate() {
+   registerContributionPoint({
+      id: "commands",
+      manifestInfo: {
+         schema: {
+            type: "array",
+            items: {
+               type: "object",
+               properties: {
+                  id: {type: "string"},
+                  title: {type: "string"}
+               }
+            }
+         }
+      },
+      codeInfo: {
+         idKey: "id",
+         activationEvent: "onCommand:${id}"
+      }
+   });
+}
+```
+
+The entry `activationEvent` causes the framework to fire an event of the form
+`"onCommand:${id}"`, if the code contribution with the given `"id"` is 
+requested. In turn, this causes the extension to be activated, that provides
+this requested code contribution.
+
+Then some extension could provide the following JSON contribution:
+
+```json
+{
+   "contributes": {
+      "commands": [
+         {
+            "id": "openMapView",
+            "title": "Open Map View"
+         }
+      ]
+   }
+}
+```
+
+and define the corresponding JavaScript code contribution:
+
+```ts
+import { registerCodeContribition } from "@forman2/extendit";
+import { openMapView } from "./map-view";
+
+export function activate() {
+   registerCodeContribition("commands", "openMapView", openMapView);
+}
+```
+
+Such code contributions are loaded lazily: Only the first time a
+code contribution is needed by a consumer, the contributing extension will be
+activated.
+
+Therefore, code contributions are loaded asynchronously using the 
+`loadCodeContribution` function:
+
+```ts
+import { loadCodeContribution } from "@forman2/extendit";
+import { type Command } from "./command";
+
+async function getCommand(commandId: string): Promise<Command> {
+  return await loadCodeContribution<Command>("commands", commandId);
+}  
+```
+
+There is also a corresponding React hook `useLoadCodeContribution`
+that is used for implementing React components:
+
+```ts
+import { useLoadCodeContribution } from "@forman2/extendit/react";
+import { type Command } from "./command";
+
+interface CommandButtonProps {
+  command: Command;  
+}
+
+export default function CommandButton({ command }: CommandButtonProps) {
+  const commandCode = useLoadCodeContribution("commands", command.id);
+  return (
+    <button
+      onClick={commandCode.data}
+      disabled={commandCode.loading || commandCode.error}      
+    >
+      {command.title} 
+    </button>
+  );    
+}  
+```
+
+### Acknowledgements
+
+ExtendIt.js currently uses the awesome libraries
+
+* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
+* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
+* [zustand](https://github.com/pmndrs/zustand) for state management
 
 ### Development
 

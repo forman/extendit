@@ -1,11 +1,11 @@
 {
   "name": "@forman2/extendit",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
   "readme": "README.md",
-  "author": "https://github.com/forman",
+  "author": "Norman Fomferra (https://github.com/forman)",
   "repository": "https://github.com/forman/extendit",
   "bugs": "https://github.com/forman/extendit/issues",
   "license": "MIT",

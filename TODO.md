@@ -2,16 +2,15 @@
 
 ### Publish stable version
 
-* Write _Getting Started_ section in `README.md`
+* Implement remaining unit-tests
+  - Missing specific tests in experimental `src/framework/contrib`
+  - Find out how to test React hooks using `vitest`
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants also in `util` and `contrib`.
-* Add coverage badge in `README.md`
-* Implement remaining unit-tests
-  * Missing specific tests in experimental `src/framework/contrib`
-  * Find out how to test React hooks using `vitest`
 * Enhance the demo:
   - Add explanations what's going on
   - Add submenus demo
+* Add coverage badge in `README.md`
 
 ### Improve design
 
@@ -34,6 +33,7 @@
 
 ## DONE
 
+* Write _Getting Started_ section in `README.md`
 * Setup CI
 * Allow using the core module without React.
   Move react-dependent modules into `framework/react`
