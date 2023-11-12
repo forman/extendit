@@ -22,7 +22,7 @@ ExtendIt.js has been designed to efficiently work with
 reactive [hooks](). However, the library can be used without 
 React too. It's only a peer dependency.
 
-### Installation
+# Installation
 
 ```bash
 npm install @forman2/extendit
@@ -34,7 +34,7 @@ or
 yarn add @forman2/extendit
 ```
 
-### Getting Started
+# Getting Started
 
 Any extension must be defined by its 
 [_extension manifest_](https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html), 
@@ -301,7 +301,7 @@ export default function CommandButton({ command }: CommandButtonProps) {
 }  
 ```
 
-### Acknowledgements
+# Acknowledgements
 
 ExtendIt.js currently uses the awesome libraries
 
@@ -309,7 +309,9 @@ ExtendIt.js currently uses the awesome libraries
 * [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
 * [zustand](https://github.com/pmndrs/zustand) for state management
 
-### Development
+# Development
+
+## Source Code
 
 Get sources and install dependencies first:
 
@@ -318,6 +320,8 @@ $ git clone https://github.com/forman/extendit
 $ cd extendit
 $ npm install
 ```
+
+## Scripts
 
 Now the following scripts are available that can be started with `npm run`:
 
@@ -328,7 +332,7 @@ Now the following scripts are available that can be started with `npm run`:
 * `coverage` - generate project coverage report in `./coverage`
 * `typedoc` - generate project API docs in `./docs/api`
 
-### Configuration
+## Configuration
 
 You can use `.env` files, e.g., `.env.local` to configure development options:
 
@@ -343,7 +347,7 @@ NODE_ENV=development
 VITE_LOG_LEVEL=ALL
 ```
 
-### Coding style
+## Coding style
 
 Most of the code is formatted to default settings of
 [prettier](https://prettier.io/), see its [configuration](./.prettierrc.json).
@@ -361,3 +365,10 @@ stick to the following order:
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
 we first import TypeScript source dependencies, then separated by a 
 newline, insert resource dependencies in the same order as source dependencies.
+
+# License
+
+Copyright © 2023 Norman Fomferra
+
+Permissions are hereby granted under the terms of the MIT License:
+https://opensource.org/licenses/MIT.
