@@ -11,7 +11,7 @@ import {
   isTupleUiSchema,
   isListUiSchema,
   isObjectUiSchema,
-} from "./ui-schema";
+} from "@/util/json/ui-schema";
 
 describe("type guards", () => {
   test("boolean", () => {

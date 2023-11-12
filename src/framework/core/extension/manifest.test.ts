@@ -1,7 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { getExtensionId, getExtensionDisplayName } from "./manifest";
+import {
+  getExtensionId,
+  getExtensionDisplayName,
+  readExtensionManifest,
+} from "@/core/extension/manifest";
 import { newTestManifest } from "@/test/testing";
-import { readExtensionManifest } from "./manifest";
 
 test("readExtensionManifest", async () => {
   const [manifest, pathResolver] = await readExtensionManifest(

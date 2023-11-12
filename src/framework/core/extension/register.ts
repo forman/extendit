@@ -8,12 +8,12 @@ import {
   emitExtensionRegistered,
   emitExtensionUnregistered,
   emitExtensionWillUnregister,
-} from "./listeners";
+} from "@/core/extension/listeners";
+import { deactivateExtension } from "@/core/extension/deactivate";
+import { getExtensionId } from "@/core/extension/manifest";
 import { ExtensionContextImpl } from "@/core/extension-context/impl";
 import { Disposable } from "@/util/disposable";
 import { Logger } from "@/util/log";
-import { deactivateExtension } from "./deactivate";
-import { getExtensionId } from "./manifest";
 
 const LOG = new Logger("extension/register");
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { loadCodeContribution } from "./load";
-import { registerCodeContribution } from "./register";
+import { registerCodeContribution } from "@/core/code-contrib/register";
 import { registerContributionPoint } from "@/core/contrib-point/register";
 import { Disposable } from "@/util";
 

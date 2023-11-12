@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { getCodeContributions } from "./get";
-import { registerCodeContribution } from "./register";
+import { getCodeContributions } from "@/core/code-contrib/get";
+import { registerCodeContribution } from "@/core/code-contrib/register";
 import { Disposable } from "@/util";
 
 test("getCodeContributions", () => {

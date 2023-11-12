@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { jsonMetaSchema } from "./json-meta-schema";
+import { jsonMetaSchema } from "@/util/json/json-meta-schema";
 
 test("meta schema is as expected", () => {
   expect(jsonMetaSchema).toEqual({

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { registerContributionPoint } from "./register";
+import { registerContributionPoint } from "@/core/contrib-point/register";
 
 test("registerContributionPoint", async () => {
   // TODO: replace smoke test by unit test

@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 import { newTestManifest } from "@/test/testing";
-import { ExtensionContextImpl } from "@/core/extension-context/impl";
 import { type ExtensionModule } from "@/core/types";
-import { activateExtension } from "./activate";
-import { addExtensionListener } from "./listeners";
-import { registerExtension } from "./register";
+import { getExtension } from "@/core/extension/get";
+import { activateExtension } from "@/core/extension/activate";
+import { addExtensionListener } from "@/core/extension/listeners";
+import { registerExtension } from "@/core/extension/register";
 import { getExtensionContext } from "@/core/extension-context/get";
-import { getExtension } from "@/core";
+import { ExtensionContextImpl } from "@/core/extension-context/impl";
 
 test("registerExtension", () => {
   addExtensionListener({

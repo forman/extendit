@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import type { JsonSchema } from "./json-schema";
-import { validateJson } from "./validate-json";
+import type { JsonSchema } from "@/util/json/json-schema";
+import { validateJson } from "@/util/json/validate-json";
 
 test("validateJson succeeds", () => {
   validateJson({ type: "number" }, 13);
