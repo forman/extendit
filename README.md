@@ -171,7 +171,7 @@ export default function WiseSayingsComponent() {
   return (
     <div>
       <h4>Wise Sayings:</h4>
-       <ol>{ wiseSayings.map((wiseSaying) => <li>{wiseSaying}</li>) }</ol>
+      <ol>{ wiseSayings.map((wiseSaying) => <li>{wiseSaying}</li>) }</ol>
     </div>
   );
 }
@@ -190,25 +190,25 @@ defined `codeInfo` to express its need of JavaScript code:
 import { registerCodeContribution } from "@forman2/extendit";
 
 export function activate() {
-   registerContributionPoint({
-      id: "commands",
-      manifestInfo: {
-         schema: {
-            type: "array",
-            items: {
-               type: "object",
-               properties: {
-                  id: {type: "string"},
-                  title: {type: "string"}
-               }
-            }
-         }
-      },
-      codeInfo: {
-         idKey: "id",
-         activationEvent: "onCommand:${id}"
+  registerContributionPoint({
+    id: "commands",
+    manifestInfo: {
+      schema: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: {type: "string"},
+            title: {type: "string"}
+          }
+        }
       }
-   });
+    },
+    codeInfo: {
+      idKey: "id",
+      activationEvent: "onCommand:${id}"
+    }
+  });
 }
 ```
 
@@ -222,14 +222,14 @@ defined contribution point `commands` in its `package.json`
 
 ```json
 {
-   "contributes": {
-      "commands": [
-         {
-            "id": "openMapView",
-            "title": "Open Map View"
-         }
-      ]
-   }
+  "contributes": {
+    "commands": [
+      {
+        "id": "openMapView",
+        "title": "Open Map View"
+      }
+    ]
+  }
 }
 ```
 
@@ -241,7 +241,7 @@ import { registerCodeContribition } from "@forman2/extendit";
 import { openMapView } from "./map-view";
 
 export function activate() {
-   registerCodeContribition("commands", "openMapView", openMapView);
+  registerCodeContribition("commands", "openMapView", openMapView);
 }
 ```
 
@@ -316,7 +316,7 @@ Now the following scripts are available that can be started with `npm run`:
 
 You can use `.env` files, e.g., `.env.local` to configure development options:
 
-```.env
+```sh
 # As `vite build` runs a production build by default, you can
 # change this and run a development build by using a different mode
 # and `.env` file configuration:
