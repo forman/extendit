@@ -277,7 +277,7 @@ async function getCommand(commandId: string): Promise<Command> {
 ```
 
 There is also a corresponding React hook 
-[`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useCodeContributions.html)
+[`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useLoadCodeContribution.html)
 that is used for implementing React components:
 
 ```tsx
@@ -305,21 +305,6 @@ export default function CommandButton({ command }: CommandButtonProps) {
 
 We currently only have this file and the 
 [API docs](https://forman.github.io/extendit/), sorry.
-
-# Acknowledgements
-
-ExtendIt.js currently uses the awesome libraries
-
-* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
-* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
-* [zustand](https://github.com/pmndrs/zustand) for state management
-
-# License
-
-Copyright © 2023 Norman Fomferra
-
-Permissions are hereby granted under the terms of the MIT License:
-https://opensource.org/licenses/MIT.
 
 # Development
 
@@ -377,3 +362,18 @@ stick to the following order:
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
 we first import TypeScript source dependencies, then separated by a 
 newline, insert resource dependencies in the same order as source dependencies.
+
+# Acknowledgements
+
+ExtendIt.js currently uses the awesome libraries
+
+* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
+* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
+* [zustand](https://github.com/pmndrs/zustand) for state management
+
+# License
+
+Copyright © 2023 Norman Fomferra
+
+Permissions are hereby granted under the terms of the MIT License:
+https://opensource.org/licenses/MIT.
