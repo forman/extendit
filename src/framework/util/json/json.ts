@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 // Note, we must add undefined to the property value's type
 // to model a missing JSON property, not the value undefined!
 

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { createStore } from "zustand/vanilla";
 import type { ContributionPoint, Extension } from "./types";
 import type { ExtensionContextImpl } from "./extension-context/impl";

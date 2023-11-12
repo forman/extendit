@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
@@ -66,7 +72,9 @@ export default defineConfig({
     coverage: {
       exclude: ["src/demo", "src/framework/test/extensions/**"],
     },
-    onConsoleLog: (_log: string, _type: "stdout" | "stderr"): false | void => {
+    onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
+      | false
+      | void => {
       const logLevel = process.env.VITE_LOG_LEVEL;
       if (!logLevel || logLevel === "OFF") {
         return false;

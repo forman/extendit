@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { type ContributionPoint, registerCodeContribution } from "@/core";
 import { useCodeContributions } from "@/react";

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { executeCommand } from "@/contrib";
 import { useCommandPalette } from "@/contrib/command-palette";
 import { useAppContext } from "./app-store";

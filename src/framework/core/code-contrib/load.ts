@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { getStoreRecord } from "@/core/store";
 import { emitActivationEvent } from "@/core/code-contrib/emit";
 import { getContributionPoint } from "@/core/contrib-point/get";

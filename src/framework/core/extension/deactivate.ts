@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Norman Fomferra
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import type { Extension } from "@/core/types";
 import { Logger } from "@/util/log";
 import { getExtensionContext } from "@/core/extension-context/get";

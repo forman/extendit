@@ -250,7 +250,7 @@ async function getCommand(commandId: string): Promise<Command> {
 There is also a corresponding React hook `useLoadCodeContribution`
 that is used for implementing React components:
 
-```ts
+```tsx
 import { useLoadCodeContribution } from "@forman2/extendit/react";
 import { type Command } from "./command";
 
