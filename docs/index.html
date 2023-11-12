@@ -15,10 +15,13 @@
 <div class="tsd-panel tsd-typography"><p><a href="https://github.com/forman/extendit/actions/workflows/node.js.yml"><img src="https://github.com/forman/extendit/actions/workflows/node.js.yml/badge.svg" alt="CI"></a>
 <a href="https://mit-license.org/"><img src="https://badgen.net/static/license/MIT/blue" alt="License: MIT"></a>
 <a href="https://www.typescriptlang.org/"><img src="https://badgen.net/npm/types/tslib" alt=""></a>
-<a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" alt="Code Style: Prettier"></a></p>
+<a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" alt="Code Style: Prettier"></a>
+<img src="https://img.shields.io/npm/v/%40forman2/extendit" alt="npm"></p>
 <p><img src="logo.png" alt="image"></p>
 <p>ExtendIt.js is a framework and library that is used to create extensible and
-scalable JavaScript applications. Its core API design is largely inspired by 
+scalable JavaScript applications. Its 
+<a href="https://forman.github.io/extendit/modules/core.html">core API</a> 
+design is largely inspired by 
 the <a href="https://code.visualstudio.com/api">Extension API</a>
 of <a href="https://code.visualstudio.com/">Visual Studio Code</a>.</p>
 <p>ExtendIt.js provides the means for a host application to dynamically
@@ -27,19 +30,24 @@ capabilities to the application.</p>
 <p>ExtendIt.js has been designed to efficiently work with 
 <a href="https://react.dev/">React</a>, for this purpose it provides a number of
 reactive <a href="">hooks</a>. However, the library can be used without 
-React too. It&#39;s a peer dependency.</p>
-<a id="md:installation" class="tsd-anchor"></a><h3><a href="#md:installation">Installation</a></h3><pre><code class="language-bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@forman2/extendit</span>
+React too. It&#39;s only a peer dependency.</p>
+<a id="md:installation" class="tsd-anchor"></a><h1><a href="#md:installation">Installation</a></h1><pre><code class="language-bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@forman2/extendit</span>
 </code><button>Copy</button></pre>
 <p>or </p>
 <pre><code class="language-bash"><span class="hl-0">yarn</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@forman2/extendit</span>
 </code><button>Copy</button></pre>
-<a id="md:getting-started" class="tsd-anchor"></a><h3><a href="#md:getting-started">Getting Started</a></h3><p>Any extension comprises at least a usual <a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json"><code>package.json</code></a>  </p>
-<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-extension&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;provider&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-company&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;init&quot;</span><br/><span class="hl-1">}</span>
+<a id="md:getting-started" class="tsd-anchor"></a><h1><a href="#md:getting-started">Getting Started</a></h1><p>Any extension must be defined by its 
+<a href="https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html"><em>extension manifest</em></a>, 
+which is basically a slightly enhanced 
+<a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json"><code>package.json</code></a>.  </p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-extension&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;provider&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-company&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;version&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;1.0.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;init&quot;</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
-<p>The <code>main</code> field above is optional. If you provide it as above, it means you 
-provide an <em>extension activator</em> in a submodule named <code>init</code>, 
-e.g., in <code>init.ts</code> you can define an <code>activate()</code> function that is called
-if your extension is activated within the host application:</p>
+<p>The <code>main</code> field is optional. If you provide it as above, it means you 
+provide an 
+<a href="https://forman.github.io/extendit/interfaces/core.ExtensionModule.html"><em>extension activator</em></a> 
+in a submodule named <code>init</code> which defines an <code>activate()</code> 
+function that is called if your extension is activated by the host 
+application:</p>
 <pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">SomeAppApi</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;some-app/api&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">activate</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-7">// Use the SomeAppApi here, e.g., </span><br/><span class="hl-1">  </span><span class="hl-7">// register your contributions to the app</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>The activator may also export an extension-specific API for other extensions</p>
@@ -49,30 +57,35 @@ if your extension is activated within the host application:</p>
 <pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;other-extension&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;provider&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;other-company&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;main&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;init&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;dependencies&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-3">&quot;@my-company/my-extension&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;1.0.0&quot;</span><br/><span class="hl-1">   }</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>may consume it in its own <code>init.ts</code></p>
-<pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">ExtensionContext</span><span class="hl-1">, </span><span class="hl-5">getExtension</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">MyApi</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@my-company/my-extension&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">activate</span><span class="hl-1">(</span><span class="hl-5">ctx</span><span class="hl-1">: </span><span class="hl-8">ExtensionContext</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">myExtension</span><span class="hl-1"> = </span><span class="hl-0">getExtension</span><span class="hl-1">(</span><span class="hl-2">&quot;my-company.my-extension&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">myApi</span><span class="hl-1"> = </span><span class="hl-5">myExtension</span><span class="hl-1">.</span><span class="hl-5">exports</span><span class="hl-1"> </span><span class="hl-4">as</span><span class="hl-1"> </span><span class="hl-8">MyApi</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-7">// Use imported extension API here, e.g., to add some contribution</span><br/><span class="hl-1">   </span><span class="hl-5">myApi</span><span class="hl-1">.</span><span class="hl-0">registerViewProvider</span><span class="hl-1">({ ... });</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">ExtensionContext</span><span class="hl-1">, </span><span class="hl-5">getExtension</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">MyApi</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@my-company/my-extension&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">activate</span><span class="hl-1">(</span><span class="hl-5">ctx</span><span class="hl-1">: </span><span class="hl-8">ExtensionContext</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">myExtension</span><span class="hl-1"> = </span><span class="hl-0">getExtension</span><span class="hl-1">(</span><span class="hl-2">&quot;my-company.my-extension&quot;</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">myApi</span><span class="hl-1"> = </span><span class="hl-5">myExtension</span><span class="hl-1">.</span><span class="hl-5">exports</span><span class="hl-1"> </span><span class="hl-4">as</span><span class="hl-1"> </span><span class="hl-8">MyApi</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-7">// Use imported extension API here, e.g., to add some contribution</span><br/><span class="hl-1">  </span><span class="hl-5">myApi</span><span class="hl-1">.</span><span class="hl-0">registerViewProvider</span><span class="hl-1">({ ... });</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
-<p>The host application registers extensions using the <code>registerExtension</code>
+<p>The host application registers extensions using the 
+<a href="https://forman.github.io/extendit/functions/core.registerExtension.html"><code>registerExtension</code></a>
 function:</p>
 <pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">registerExtension</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">initApp</span><span class="hl-1">() {</span><br/><span class="hl-1">   </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">extensionsUrls</span><span class="hl-1"> = </span><span class="hl-0">getAppExtensionUrls</span><span class="hl-1">();</span><br/><span class="hl-1">   </span><span class="hl-5">extensionUrls</span><span class="hl-1">.</span><span class="hl-0">forEach</span><span class="hl-1">((</span><span class="hl-5">extensionUrl</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-6">void</span><span class="hl-1"> </span><span class="hl-0">registerExtension</span><span class="hl-1">(</span><span class="hl-5">extensionUrl</span><span class="hl-1">);</span><br/><span class="hl-1">   });</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">getAppExtensionUrls</span><span class="hl-1">(): </span><span class="hl-8">URL</span><span class="hl-1">[] {</span><br/><span class="hl-1">  </span><span class="hl-7">// ...</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>The host application (or an extension) can also define handy 
-<em>contribution points</em>:</p>
+<a href="https://forman.github.io/extendit/interfaces/core.ContributionPoint.html"><em>contribution points</em></a>:</p>
 <pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">registerContributionPoint</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">initApp</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-0">registerContributionPoint</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">id:</span><span class="hl-1"> </span><span class="hl-2">&quot;wiseSayings&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">manifestInfo:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">schema:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-2">&quot;array&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">items:</span><span class="hl-1"> {</span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-2">&quot;string&quot;</span><span class="hl-1">}</span><br/><span class="hl-1">      }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  });</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>Extensions can provide contributions to defined contribution points. 
-Contributions are encoded in the <code>contributes</code> object of an extension&#39;s 
+Contributions are encoded in the <code>contributes</code> value of an extension&#39;s 
 <code>package.json</code>:</p>
 <pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-extension&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;provider&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;my-company&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">   </span><span class="hl-3">&quot;contributes&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-3">&quot;wiseSayings&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">         </span><span class="hl-2">&quot;Silence is a true friend who never betrays.&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-2">&quot;Use your head to save your feet.&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">         </span><span class="hl-2">&quot;Before Alice went to Wonderland, she had to fall.&quot;</span><br/><span class="hl-1">      ]</span><br/><span class="hl-1">   }</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>A consumer can access a current snapshot of all contributions
-found in the application using the <code>getContributions</code> function:</p>
+found in the application using the 
+<a href="https://forman.github.io/extendit/functions/core.getContributions.html"><code>getContributions</code></a> 
+function:</p>
 <pre><code class="language-ts"><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">wiseSayings</span><span class="hl-1"> = </span><span class="hl-0">getContributions</span><span class="hl-1">&lt;</span><span class="hl-8">string</span><span class="hl-1">[]&gt;(</span><span class="hl-2">&quot;wiseSayings&quot;</span><span class="hl-1">);</span>
 </code><button>Copy</button></pre>
-<p>The return value will be the <em>same</em> object, as long no other extensions are
-installed that contribute to &quot;wiseSayings&quot;. If this happens, a new snapshot 
-instance will be returned.</p>
-<p>If you are building a React application, you can use hooks to access
-contributions (and other elements of the ExtendMe.js API) in a reactive way:</p>
+<p>The return value will be the <em>same</em> value, as long as no other extensions are
+installed that contribute to the contribution point <code>wiseSayings</code>. If this 
+happens, a new snapshot value will be returned.</p>
+<p>If you are building a React application, you can use the 
+<a href="https://forman.github.io/extendit/modules/react.html">provided React hooks</a> 
+in <code>@forman2/extend-me/react</code> for accessing contributions (and other elements 
+of the ExtendMe.js API) in a reactive way:</p>
 <pre><code class="language-tsx"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">useContributions</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extend-me/react&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-4">default</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">WiseSayingsComponent</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">wiseSayings</span><span class="hl-1"> = </span><span class="hl-0">useContributions</span><span class="hl-1">(</span><span class="hl-2">&quot;wiseSayings&quot;</span><span class="hl-1">);   </span><br/><span class="hl-1">  </span><span class="hl-4">return</span><span class="hl-1"> (</span><br/><span class="hl-1">    </span><span class="hl-10">&lt;</span><span class="hl-11">div</span><span class="hl-10">&gt;</span><br/><span class="hl-1">      </span><span class="hl-10">&lt;</span><span class="hl-11">h4</span><span class="hl-10">&gt;</span><span class="hl-1">Wise Sayings:</span><span class="hl-10">&lt;/</span><span class="hl-11">h4</span><span class="hl-10">&gt;</span><br/><span class="hl-1">      </span><span class="hl-10">&lt;</span><span class="hl-11">ol</span><span class="hl-10">&gt;</span><span class="hl-6">{</span><span class="hl-12"> </span><span class="hl-5">wiseSayings</span><span class="hl-12">.</span><span class="hl-0">map</span><span class="hl-12">((</span><span class="hl-5">wiseSaying</span><span class="hl-12">) </span><span class="hl-6">=&gt;</span><span class="hl-12"> </span><span class="hl-10">&lt;</span><span class="hl-11">li</span><span class="hl-10">&gt;</span><span class="hl-6">{</span><span class="hl-5">wiseSaying</span><span class="hl-6">}</span><span class="hl-10">&lt;/</span><span class="hl-11">li</span><span class="hl-10">&gt;</span><span class="hl-12">) </span><span class="hl-6">}</span><span class="hl-10">&lt;/</span><span class="hl-11">ol</span><span class="hl-10">&gt;</span><br/><span class="hl-1">    </span><span class="hl-10">&lt;/</span><span class="hl-11">div</span><span class="hl-10">&gt;</span><br/><span class="hl-1">  );</span><br/><span class="hl-1">}</span>
 </code><button>Copy</button></pre>
 <p>The component will be re-rendered if more contributions are added to the 
@@ -100,35 +113,42 @@ activator:</p>
 code contribution is needed by a consumer, the contributing extension will be
 activated.</p>
 <p>Therefore, code contributions are loaded asynchronously using the 
-<code>loadCodeContribution</code> function:</p>
+<a href="https://forman.github.io/extendit/functions/core.loadCodeContribution.html"><code>loadCodeContribution</code></a>
+function:</p>
 <pre><code class="language-ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">loadCodeContribution</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">Command</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;./command&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">getCommand</span><span class="hl-1">(</span><span class="hl-5">commandId</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">): </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Command</span><span class="hl-1">&gt; {</span><br/><span class="hl-1">  </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">loadCodeContribution</span><span class="hl-1">&lt;</span><span class="hl-8">Command</span><span class="hl-1">&gt;(</span><span class="hl-2">&quot;commands&quot;</span><span class="hl-1">, </span><span class="hl-5">commandId</span><span class="hl-1">);</span><br/><span class="hl-1">}  </span>
 </code><button>Copy</button></pre>
-<p>There is also a corresponding React hook <code>useLoadCodeContribution</code>
+<p>There is also a corresponding React hook 
+<a href="https://forman.github.io/extendit/functions/react.useCodeContributions.html"><code>useLoadCodeContribution</code></a>
 that is used for implementing React components:</p>
 <pre><code class="language-tsx"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">useLoadCodeContribution</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@forman2/extendit/react&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-4">type</span><span class="hl-1"> </span><span class="hl-5">Command</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;./command&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">interface</span><span class="hl-1"> </span><span class="hl-8">CommandButtonProps</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">command</span><span class="hl-1">: </span><span class="hl-8">Command</span><span class="hl-1">;  </span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">export</span><span class="hl-1"> </span><span class="hl-4">default</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">CommandButton</span><span class="hl-1">({ </span><span class="hl-5">command</span><span class="hl-1"> }: </span><span class="hl-8">CommandButtonProps</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-9">commandCode</span><span class="hl-1"> = </span><span class="hl-0">useLoadCodeContribution</span><span class="hl-1">(</span><span class="hl-2">&quot;commands&quot;</span><span class="hl-1">, </span><span class="hl-5">command</span><span class="hl-1">.</span><span class="hl-5">id</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-4">return</span><span class="hl-1"> (</span><br/><span class="hl-1">    </span><span class="hl-10">&lt;</span><span class="hl-11">button</span><br/><span class="hl-1">      </span><span class="hl-13">onClick</span><span class="hl-1">=</span><span class="hl-6">{</span><span class="hl-5">commandCode</span><span class="hl-12">.</span><span class="hl-5">data</span><span class="hl-6">}</span><br/><span class="hl-1">      </span><span class="hl-13">disabled</span><span class="hl-1">=</span><span class="hl-6">{</span><span class="hl-5">commandCode</span><span class="hl-12">.</span><span class="hl-5">loading</span><span class="hl-12"> </span><span class="hl-1">||</span><span class="hl-12"> </span><span class="hl-5">commandCode</span><span class="hl-12">.</span><span class="hl-5">error</span><span class="hl-6">}</span><span class="hl-1">      </span><br/><span class="hl-1">    </span><span class="hl-10">&gt;</span><br/><span class="hl-1">      </span><span class="hl-6">{</span><span class="hl-5">command</span><span class="hl-12">.</span><span class="hl-5">title</span><span class="hl-6">}</span><span class="hl-1"> </span><br/><span class="hl-1">    </span><span class="hl-10">&lt;/</span><span class="hl-11">button</span><span class="hl-10">&gt;</span><br/><span class="hl-1">  );    </span><br/><span class="hl-1">}  </span>
 </code><button>Copy</button></pre>
-<a id="md:acknowledgements" class="tsd-anchor"></a><h3><a href="#md:acknowledgements">Acknowledgements</a></h3><p>ExtendIt.js currently uses the awesome libraries</p>
+<a id="md:documentation" class="tsd-anchor"></a><h1><a href="#md:documentation">Documentation</a></h1><p>We currently only have this file and the 
+<a href="https://forman.github.io/extendit/">API docs</a>, sorry.</p>
+<a id="md:acknowledgements" class="tsd-anchor"></a><h1><a href="#md:acknowledgements">Acknowledgements</a></h1><p>ExtendIt.js currently uses the awesome libraries</p>
 <ul>
 <li><a href="https://ajv.js.org/">Ajv</a> for JSON validation (may be turned into peer dependency later)</li>
 <li><a href="https://github.com/alexreardon/memoize-one">memoize-one</a> for implementing state selector functions</li>
 <li><a href="https://github.com/pmndrs/zustand">zustand</a> for state management</li>
 </ul>
-<a id="md:development" class="tsd-anchor"></a><h3><a href="#md:development">Development</a></h3><p>Get sources and install dependencies first:</p>
+<a id="md:license" class="tsd-anchor"></a><h1><a href="#md:license">License</a></h1><p>Copyright © 2023 Norman Fomferra</p>
+<p>Permissions are hereby granted under the terms of the MIT License:
+<a href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a>.</p>
+<a id="md:development" class="tsd-anchor"></a><h1><a href="#md:development">Development</a></h1><a id="md:source-code" class="tsd-anchor"></a><h2><a href="#md:source-code">Source Code</a></h2><p>Get sources and install dependencies first:</p>
 <pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">git</span><span class="hl-1"> </span><span class="hl-2">clone</span><span class="hl-1"> </span><span class="hl-2">https://github.com/forman/extendit</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">cd</span><span class="hl-1"> </span><span class="hl-2">extendit</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">npm</span><span class="hl-1"> </span><span class="hl-2">install</span>
 </code><button>Copy</button></pre>
-<p>Now the following scripts are available that can be started with <code>npm run</code>:</p>
+<a id="md:scripts" class="tsd-anchor"></a><h2><a href="#md:scripts">Scripts</a></h2><p>Now the following scripts are available that can be started with <code>npm run</code>:</p>
 <ul>
-<li><code>dev</code> - run the UI demo in development mode</li>
+<li><code>dev</code> - run the <strong>React Demo</strong> in development mode</li>
 <li><code>build</code> - build the library, outputs to <code>./dist</code></li>
 <li><code>lint</code> - run <code>eslint</code> on project sources</li>
 <li><code>test</code> - run project unit tests</li>
 <li><code>coverage</code> - generate project coverage report in <code>./coverage</code></li>
-<li><code>typedoc</code> - generate project API docs in <code>./docs/api</code></li>
+<li><code>typedoc</code> - generate project API docs in <code>./docs</code></li>
 </ul>
-<a id="md:configuration" class="tsd-anchor"></a><h3><a href="#md:configuration">Configuration</a></h3><p>You can use <code>.env</code> files, e.g., <code>.env.local</code> to configure development options:</p>
+<a id="md:configuration" class="tsd-anchor"></a><h2><a href="#md:configuration">Configuration</a></h2><p>You can use <code>.env</code> files, e.g., <code>.env.local</code> to configure development options:</p>
 <pre><code class="language-sh"><span class="hl-7"># As `vite build` runs a production build by default, you can</span><br/><span class="hl-7"># change this and run a development build by using a different mode</span><br/><span class="hl-7"># and `.env` file configuration:</span><br/><span class="hl-5">NODE_ENV</span><span class="hl-1">=</span><span class="hl-2">development</span><br/><br/><span class="hl-7"># Set the library&#39;s log level (ALL, DEBUG, INFO, WARN, ERROR, OFF)</span><br/><span class="hl-7"># Logging is OFF by default.</span><br/><span class="hl-5">VITE_LOG_LEVEL</span><span class="hl-1">=</span><span class="hl-2">ALL</span>
 </code><button>Copy</button></pre>
-<a id="md:coding-style" class="tsd-anchor"></a><h3><a href="#md:coding-style">Coding style</a></h3><p>Most of the code is formatted to default settings of
+<a id="md:coding-style" class="tsd-anchor"></a><h2><a href="#md:coding-style">Coding style</a></h2><p>Most of the code is formatted to default settings of
 <a href="https://prettier.io/">prettier</a>, see its <a href="./.prettierrc.json">configuration</a>.
 Since <code>prettier</code> is un-opinionated regarding the order of imports, we try to 
 stick to the following order: </p>
@@ -167,15 +187,17 @@ newline, insert resource dependencies in the same order as source dependencies.<
 <li>
 <ul>
 <li><a href="#md:installation"><span>Installation</span></a></li>
-<li>
-<ul>
 <li><a href="#md:getting-started"><span>Getting <wbr/>Started</span></a></li>
+<li><a href="#md:documentation"><span>Documentation</span></a></li>
+<li><a href="#md:acknowledgements"><span>Acknowledgements</span></a></li>
+<li><a href="#md:license"><span>License</span></a></li>
+<li><a href="#md:development"><span>Development</span></a></li>
 <li>
 <ul>
-<li><a href="#md:acknowledgements"><span>Acknowledgements</span></a></li>
-<li><a href="#md:development"><span>Development</span></a></li>
+<li><a href="#md:source-code"><span>Source <wbr/>Code</span></a></li>
+<li><a href="#md:scripts"><span>Scripts</span></a></li>
 <li><a href="#md:configuration"><span>Configuration</span></a></li>
-<li><a href="#md:coding-style"><span>Coding style</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#md:coding-style"><span>Coding style</span></a></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>@forman2/extendit</span></a>
 <ul class="tsd-small-nested-navigation">

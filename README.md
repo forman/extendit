@@ -301,6 +301,11 @@ export default function CommandButton({ command }: CommandButtonProps) {
 }  
 ```
 
+# Documentation
+
+We currently only have this file and the 
+[API docs](https://forman.github.io/extendit/), sorry.
+
 # Acknowledgements
 
 ExtendIt.js currently uses the awesome libraries
@@ -308,6 +313,13 @@ ExtendIt.js currently uses the awesome libraries
 * [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
 * [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
 * [zustand](https://github.com/pmndrs/zustand) for state management
+
+# License
+
+Copyright © 2023 Norman Fomferra
+
+Permissions are hereby granted under the terms of the MIT License:
+https://opensource.org/licenses/MIT.
 
 # Development
 
@@ -325,12 +337,12 @@ $ npm install
 
 Now the following scripts are available that can be started with `npm run`:
 
-* `dev` - run the UI demo in development mode
+* `dev` - run the **React Demo** in development mode
 * `build` - build the library, outputs to `./dist`
 * `lint` - run `eslint` on project sources
 * `test` - run project unit tests
 * `coverage` - generate project coverage report in `./coverage`
-* `typedoc` - generate project API docs in `./docs/api`
+* `typedoc` - generate project API docs in `./docs`
 
 ## Configuration
 
@@ -365,10 +377,3 @@ stick to the following order:
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
 we first import TypeScript source dependencies, then separated by a 
 newline, insert resource dependencies in the same order as source dependencies.
-
-# License
-
-Copyright © 2023 Norman Fomferra
-
-Permissions are hereby granted under the terms of the MIT License:
-https://opensource.org/licenses/MIT.
