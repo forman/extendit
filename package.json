@@ -59,7 +59,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs"
+    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs & copy logo.png docs"
   },
   "dependencies": {
     "ajv": "^8.12.0",
