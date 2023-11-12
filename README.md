@@ -17,7 +17,20 @@ capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
 [React](https://react.dev/), for this purpose it provides a number of
-reactive [hooks](). However, the library can be used without React too.
+reactive [hooks](). However, the library can be used without 
+React too. It's a peer dependency.
+
+### Installation
+
+```bash
+npm install @forman2/extendit
+```
+
+or 
+
+```bash
+yarn add @forman2/extendit
+```
 
 ### Getting Started
 
@@ -31,19 +44,20 @@ Any extension comprises at least a usual [`package.json`](https://docs.npmjs.com
 }
 ```
 
-and optionally some JavaScript code to provide an _extension activator_, 
-here in module, e.g., in `init.ts`:
+The `main` field above is optional. If you provide it as above, it means you 
+provide an _extension activator_ in a submodule named `init`, 
+e.g., in `init.ts` you define an `activate()` function:
 
 ```ts
 import { type ExtensionContext } from "@forman2/extendit";
-import { type AppApi } from "app/api";
+import { type AppApi } from "./app/api";
 
 export function activate() {
-  // Use AppApi here, e.g. register your contributions
+  // Use your AppApi here, e.g. register your contributions
 }
 ```
 
-The activator may also export an extension-specific API 
+The activator may also export an extension-specific API for other extensions
 
 ```ts
 import { MyApi } from "./api";
@@ -53,7 +67,7 @@ export function activate(): MyApi {
 }
 ```
 
-that another, dependent extension
+Hence, another dependent extension such as
 
 ```json
 {
@@ -66,7 +80,7 @@ that another, dependent extension
 }
 ```
 
-may consume
+may consume it in its own `init.ts`
 
 ```ts
 import { type ExtensionContext, getExtension } from "@forman2/extendit";
