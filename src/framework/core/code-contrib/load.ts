@@ -1,6 +1,6 @@
 import { getStoreRecord } from "@/core/store";
 import { emitActivationEvent } from "@/core/code-contrib/emit";
-import { getContributionPoint } from "../contrib-point/get";
+import { getContributionPoint } from "@/core/contrib-point/get";
 
 /**
  * Load code contribution data.

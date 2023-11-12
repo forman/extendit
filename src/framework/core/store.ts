@@ -6,7 +6,7 @@ import type { ExtensionContextImpl } from "./extension-context/impl";
  * Represents the framework's current state.
  *
  * Note, this type is defined here and not in `./types.ts`, because of
- * its dependency on class {@link ExtensionContextImpl}. `./types.ts` defines
+ * its dependency on class {@link ExtensionContextImpl}. `./types.ts`
  * defines just its interface {@link ExtensionContext}.
  *
  * @internal
