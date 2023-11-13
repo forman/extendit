@@ -352,7 +352,9 @@ You can use `.env` files, e.g., `.env.local` to configure development options:
 NODE_ENV=development
 
 # Set the library's log level (ALL, DEBUG, INFO, WARN, ERROR, OFF)
-# Logging is OFF by default.
+# Logging is OFF by default. 
+# Note, if the level is not set or it is OFF, no console outputs 
+# are suppressed while unit tests are run.
 VITE_LOG_LEVEL=ALL
 ```
 
