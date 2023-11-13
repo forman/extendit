@@ -5,7 +5,7 @@
  */
 
 import { executeCommand, useCommandPalette } from "@/contrib";
-import { useAppContext } from "./app-store";
+import { useAppContext } from "../app/store";
 
 function CommandPalette() {
   const menuItems = useCommandPalette(useAppContext());

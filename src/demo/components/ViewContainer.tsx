@@ -6,7 +6,7 @@
 
 import { useMemo } from "react";
 import { useToolViews, ToolViewComponent } from "@/contrib";
-import { useAppContext, useAppStore } from "./app-store";
+import { useAppContext, useAppStore } from "../app/store";
 
 function ViewContainer() {
   const selectedViewId = useAppStore((s) => s.viewId);

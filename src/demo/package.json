@@ -1,0 +1,26 @@
+{
+  "provider": "forman",
+  "name": "app",
+  "displayName": "ExtendIt.js Demo",
+  "contributes": {
+    "commands": [
+      {
+        "command": "app.selectView",
+        "title": "Show View",
+        "enablement": "false"
+      },
+      {
+        "command": "app.clearView",
+        "title": "Clear View"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "app.selectView",
+          "when": "false"
+        }
+      ]
+    }
+  }
+}

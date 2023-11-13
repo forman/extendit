@@ -4,13 +4,26 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import availableExtensions from "./extensions";
 import {
   getExtensionDisplayName,
   getExtensionId,
   registerExtension,
 } from "@/core";
 import { useExtensions } from "@/react";
+
+import type { ExtensionManifest } from "@/core";
+
+import manifest1 from "../extensions/my-extension-1/package.json";
+import manifest2 from "../extensions/my-extension-2/package.json";
+import manifest3 from "../extensions/my-extension-3/package.json";
+
+const availableExtensions: [string, ExtensionManifest][] = [
+  ["my-extension-1", manifest1],
+  ["my-extension-2", manifest2],
+  ["my-extension-3", manifest3],
+];
+
+const extensionsPath = "/src/demo/extensions";
 
 function AvailableExtensions() {
   const extensions = useExtensions();
@@ -24,7 +37,7 @@ function AvailableExtensions() {
       <h1>Available Extensions</h1>
       <p>Click to install</p>
       <div className="button-bar">
-        {availableExtensions.map(([dirPath, manifest]) => {
+        {availableExtensions.map(([extPath, manifest]) => {
           return (
             <button
               key={getExtensionId(manifest)}
@@ -32,7 +45,7 @@ function AvailableExtensions() {
               onClick={() =>
                 registerExtension(manifest, {
                   pathResolver: (path) =>
-                    `/src/demo/extensions/${dirPath}/${path}`,
+                    `${extensionsPath}/${extPath}/${path}`,
                 })
               }
               type="button"

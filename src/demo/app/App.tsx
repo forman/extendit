@@ -4,13 +4,16 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import AvailableExtensions from "./AvailableExtensions";
-import InstalledExtensions from "./InstalledExtensions";
-import CommandPalette from "./CommandPalette";
-import ViewContainer from "./ViewContainer";
-import MainMenu from "./MainMenu";
+import AvailableExtensions from "../components/AvailableExtensions";
+import InstalledExtensions from "../components/InstalledExtensions";
+import CommandPalette from "../components/CommandPalette";
+import ViewContainer from "../components/ViewContainer";
+import MainMenu from "../components/MainMenu";
+import { initApp } from "./init";
 
 import "./App.css";
+
+initApp();
 
 function App() {
   return (

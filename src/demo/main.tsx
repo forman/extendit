@@ -7,7 +7,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { assertDefined } from "@/util/assert";
-import App from "./App";
+import App from "./app/App";
 
 const root = document.getElementById("root");
 assertDefined(root, "root");
