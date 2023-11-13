@@ -95,6 +95,7 @@ async function getExtensionDependencies(extension: Extension) {
 
 async function importModule(ctx: ExtensionContextImpl, path: string) {
   const resolvedPath = ctx.resolveModulePath(path);
+  LOG.debug("Importing extension module", resolvedPath);
   const module: ExtensionModule = (await import(
     /*@vite-ignore*/ resolvedPath
   )) as ExtensionModule;

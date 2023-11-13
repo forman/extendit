@@ -37,13 +37,12 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
   private _subscriptions: DisposableLike[] = [];
   private _module: ExtensionModule | undefined = undefined;
   private _modulePath: string | undefined = undefined;
-  private _moduleResolver: ExtensionPathResolver | undefined = undefined;
+  private _pathResolver: ExtensionPathResolver | undefined = undefined;
 
   constructor(readonly extensionId: string) {}
 
   resolveModulePath(path: string): string {
-    const resolveModulePath =
-      this.moduleResolver ?? frameworkConfig.pathResolver;
+    const resolveModulePath = this.pathResolver;
     if (resolveModulePath instanceof Function) {
       return resolveModulePath(path);
     }
@@ -62,16 +61,12 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     return this._subscriptions;
   }
 
-  get moduleResolver() {
-    return this._moduleResolver;
+  get pathResolver() {
+    return this._pathResolver ?? frameworkConfig.pathResolver;
   }
 
-  setPathResolver(moduleResolver: ExtensionPathResolver) {
-    this._moduleResolver = moduleResolver;
-  }
-
-  get builtIn(): boolean {
-    return !this._modulePath;
+  setPathResolver(pathResolver: ExtensionPathResolver) {
+    this._pathResolver = pathResolver;
   }
 
   get modulePath(): string {
@@ -90,6 +85,18 @@ export class ExtensionContextImpl implements ExtensionContext, DisposableLike {
     this._module = module;
   }
 
+  /**
+   * Returns `true` if this is a built-in extension.
+   * Built-in extensions have no module path.
+   * @internal
+   */
+  get builtIn(): boolean {
+    return !this._modulePath;
+  }
+
+  /**
+   * Disposes all resources associated with the extension.
+   */
   dispose(): void {
     this._subscriptions.forEach((d) => {
       d.dispose();
