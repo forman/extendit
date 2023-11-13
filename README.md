@@ -299,6 +299,9 @@ interface CommandButtonProps {
 
 export default function CommandButton({ command }: CommandButtonProps) {
   const commandCode = useLoadCodeContribution("commands", command.id);
+  if (!commandCode) {  // Happens on first render only
+    return null;
+  }
   return (
     <button
       onClick={commandCode.data}

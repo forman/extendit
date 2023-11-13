@@ -2,6 +2,8 @@
 
 ### Publish stable version
 
+* Implement a GH action that builds docs including API docs
+  so we don't have to include generated API docs pages in source code.
 * Implement remaining unit-tests
   - Missing specific tests in experimental `src/framework/contrib`
   - Find out how to test React hooks using `vitest`
