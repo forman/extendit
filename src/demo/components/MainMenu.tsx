@@ -6,6 +6,7 @@
 
 import { executeCommand, useMenu } from "@/contrib";
 import { useAppContext } from "../app/store";
+import ApiLink from "./ApiLink";
 
 function MainMenu() {
   const mainMenuItems = useMenu("main", useAppContext());
@@ -16,7 +17,16 @@ function MainMenu() {
     <div className="row2-item">
       <h1>Main Menu</h1>
       <p>
-        Shows the contribution of the <code>menus.main</code> menu:
+        Shows the contributions made to the <code>main</code> menu of the{" "}
+        <ApiLink
+          module="contrib"
+          type="variables"
+          name="menusPoint"
+          text="menus"
+        />{" "}
+        contribution point. Menu items that select the current view are disabled
+        using a <strong>when-clause</strong> if the corresponding view is
+        already shown.
       </p>
       <div className="menu">
         {mainMenuItems.map((menuItem) =>

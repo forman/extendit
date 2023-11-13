@@ -1,7 +1,7 @@
 {
   "provider": "forman",
   "name": "app",
-  "displayName": "ExtendIt.js Demo",
+  "displayName": "The App",
   "contributes": {
     "commands": [
       {

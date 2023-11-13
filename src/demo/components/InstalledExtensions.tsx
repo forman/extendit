@@ -11,6 +11,7 @@ import {
   getExtensionDisplayName,
 } from "@/core";
 import { useExtensions } from "@/react";
+import ApiLink from "./ApiLink";
 
 function InstalledExtensions() {
   const extensions = useExtensions();
@@ -26,8 +27,9 @@ function InstalledExtensions() {
     <div className="row2-item">
       <h1>Installed Extensions</h1>
       <p>
-        Will be auto-activated when you click a command below. Click to activate
-        manually:
+        Extensions will be auto-activated when you click a corresponding command
+        below. Already activated extensions are disabled. Click to activate
+        manually using the <ApiLink name="activateExtension" /> function:
       </p>
       <div className="button-bar">
         {sortedExtensions.map((extension) => {
