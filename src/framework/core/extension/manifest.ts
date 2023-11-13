@@ -45,10 +45,9 @@ const manifestSchema: JsonTypedSchema<ExtensionManifest> = {
 export async function readExtensionManifest(
   manifestPath: string
 ): Promise<[ExtensionManifest, ExtensionPathResolver]> {
-  const manifestModule = (await import(manifestPath)) as unknown as Record<
-    string,
-    unknown
-  >;
+  const manifestModule = (await import(
+    manifestPath /* @vite-ignore */
+  )) as unknown as Record<string, unknown>;
   const manifestJson = manifestModule.default as JsonValue;
   const manifest = validateJson(
     manifestSchema,

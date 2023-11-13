@@ -4,9 +4,9 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { executeCommand } from "@/contrib";
-import { useCommandPalette } from "@/contrib/command-palette";
-import { useAppContext } from "./app-store";
+import { executeCommand, useCommandPalette } from "@/contrib";
+import { useAppContext } from "../app/store";
+import ApiLink from "./ApiLink";
 
 function CommandPalette() {
   const menuItems = useCommandPalette(useAppContext());
@@ -15,10 +15,22 @@ function CommandPalette() {
     <div className="row2-item">
       <h1>Command Palette</h1>
       <p>
-        Shows all available commands of the <code>commands</code> contribution
-        point, except those removed by <code>when</code>-clauses in items of the{" "}
-        <code>commandPalette</code> menu of the <code>menus</code> contribution
-        point.
+        Shows all available commands of the{" "}
+        <ApiLink
+          module="contrib"
+          type="variables"
+          name="commandsPoint"
+          text="commands"
+        />{" "}
+        contribution point, except those removed by <code>when</code>-clauses in
+        items of the <code>commandPalette</code> menu of the{" "}
+        <ApiLink
+          module="contrib"
+          type="variables"
+          name="menusPoint"
+          text="menus"
+        />{" "}
+        contribution point.
       </p>
       <div className="button-bar">
         {menuItems.map((menuItem) => (

@@ -1,0 +1,40 @@
+{
+  "provider": "forman",
+  "name": "ex2",
+  "version": "0.0.0",
+  "displayName": "Example #2",
+  "main": "activator",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ex2.foo",
+        "title": "Print Foo 2"
+      },
+      {
+        "command": "ex2.bar",
+        "title": "Show Bar 2",
+        "enablement": "viewId != 'ex2.bar'"
+      }
+    ],
+    "menus": {
+      "main": [
+        {
+          "command": "ex2.foo",
+          "group": "print@2"
+        },
+        {
+          "command": "ex2.bar",
+          "group": "show@2"
+        }
+      ]
+    },
+    "toolViews": {
+      "main": [
+        {
+          "id": "ex2.bar",
+          "title": "Bar 2"
+        }
+      ]
+    }
+  }
+}

@@ -98,17 +98,17 @@ export interface Extension<ExportedApi = unknown> {
  */
 export interface ExtensionContext {
   /**
+   * The current {@link Extension} instance.
+   */
+  readonly extension: Extension;
+
+  /**
    * An array to which disposables can be added. When this
    * extension is deactivated the disposables will be disposed.
    *
    * *Note* that asynchronous dispose-functions aren't awaited.
    */
   readonly subscriptions: DisposableLike[];
-
-  /**
-   * The current `Extension` instance.
-   */
-  readonly extension: Extension;
 
   /**
    * The resolved module path.

@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-export function MyEx3View() {
+export function Ex3View() {
   return (
     <div style={{ color: "rgba(255, 0, 0, 0.7)", fontStyle: "italic" }}>
       Habitant morbi tristique senectus et netus et malesuada fames. Ac orci
