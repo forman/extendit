@@ -24,12 +24,17 @@ function AvailableExtensions() {
       <h1>Available Extensions</h1>
       <p>Click to install</p>
       <div className="button-bar">
-        {availableExtensions.map((manifest) => {
+        {availableExtensions.map(([dirPath, manifest]) => {
           return (
             <button
               key={getExtensionId(manifest)}
               disabled={hasExtension(getExtensionId(manifest))}
-              onClick={() => registerExtension(manifest)}
+              onClick={() =>
+                registerExtension(manifest, {
+                  pathResolver: (path) =>
+                    `/src/demo/extensions/${dirPath}/${path}`,
+                })
+              }
               type="button"
             >
               {getExtensionDisplayName(manifest)}

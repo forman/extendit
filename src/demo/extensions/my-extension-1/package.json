@@ -1,0 +1,40 @@
+{
+  "provider": "forman",
+  "name": "ex1",
+  "version": "0.0.0",
+  "displayName": "Example #1",
+  "main": "activator",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ex1.pippo",
+        "title": "Print Pippo 1"
+      },
+      {
+        "command": "ex1.foo",
+        "title": "Show Foo 1",
+        "enablement": "viewId != 'ex1.foo'"
+      }
+    ],
+    "menus": {
+      "main": [
+        {
+          "command": "ex1.pippo",
+          "group": "print@1"
+        },
+        {
+          "command": "ex1.foo",
+          "group": "show@1"
+        }
+      ]
+    },
+    "toolViews": {
+      "main": [
+        {
+          "id": "ex1.foo",
+          "title": "Foo 1"
+        }
+      ]
+    }
+  }
+}

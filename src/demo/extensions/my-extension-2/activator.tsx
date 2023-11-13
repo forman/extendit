@@ -10,16 +10,16 @@ import {
   registerCommand,
   registerToolViewComponent,
 } from "@/contrib";
-import { MyEx1View } from "./MyEx1View";
+import { Ex2View } from "./Ex2View";
 
 export function activate(ctx: ExtensionContext) {
-  registerCommand("ex1.pippo", () => {
+  registerCommand("ex2.foo", () => {
     console.log("Hello, hello from extension", ctx.extension);
   });
 
-  registerCommand("ex1.foo", async () => {
-    await executeCommand("app.selectView", "ex1.foo").then();
+  registerCommand("ex2.bar", () => {
+    void executeCommand("app.selectView", "ex2.bar");
   });
 
-  registerToolViewComponent("ex1.foo", <MyEx1View />);
+  registerToolViewComponent("ex2.bar", <Ex2View />);
 }

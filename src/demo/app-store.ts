@@ -5,11 +5,14 @@
  */
 
 import { create } from "zustand";
-import type { ExtensionContext, ExtensionManifest } from "@/core";
-import { activateExtension, getExtensionId, registerExtension } from "@/core";
-import { registerCommand } from "@/contrib";
-import { registerContributionPoints } from "@/contrib";
-import { updateFrameworkConfig } from "@/core/config";
+import {
+  type ExtensionContext,
+  type ExtensionManifest,
+  activateExtension,
+  getExtensionId,
+  registerExtension,
+} from "@/core";
+import { registerCommand, registerContributionPoints } from "@/contrib";
 
 export interface AppState {
   viewId: string | null;
@@ -37,8 +40,10 @@ function clearView() {
 }
 
 // The app's manifest.
-// It is a bit weird to have it here.
-// In the future this might because our package.json.
+// It is a bit weird to have the package.json here.
+// We'll move the Demo into its own subpackage later,
+// then this manifest object will become the usual
+// package.json file.
 //
 const appManifest: ExtensionManifest = {
   provider: "forman",
@@ -70,31 +75,14 @@ const appManifest: ExtensionManifest = {
 
 function activate(ctx: ExtensionContext) {
   // Register app-level commands
-
   ctx.subscriptions.push(registerCommand("app.selectView", selectView));
-
   ctx.subscriptions.push(registerCommand("app.clearView", clearView));
 }
 
-const pathResolver = (path: string) => {
-  // By default
-  if (path.startsWith("/")) {
-    return path;
-  }
-  if (path.startsWith("./")) {
-    path = path.slice(2);
-  }
-  //return `../../../demo/extensions/${path}`;
-  return `/src/demo/extensions/${path}`;
-};
-
-//log.setLevel(log.LogLevel.OFF);
+// log.setLevel(log.LogLevel.OFF);
 
 // Register app-level contribution points
 registerContributionPoints();
-
-updateFrameworkConfig({ pathResolver });
-
 registerExtension(appManifest, {
   module: { activate },
 });

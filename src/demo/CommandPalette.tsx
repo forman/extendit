@@ -4,8 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { executeCommand } from "@/contrib";
-import { useCommandPalette } from "@/contrib/command-palette";
+import { executeCommand, useCommandPalette } from "@/contrib";
 import { useAppContext } from "./app-store";
 
 function CommandPalette() {

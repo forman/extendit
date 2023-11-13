@@ -12,14 +12,6 @@ import {
 } from "@/core";
 import { useExtensions } from "@/react";
 
-function sortExtensions(extensions: Extension[]): Extension[] {
-  return extensions.sort((e1, e2) =>
-    getExtensionDisplayName(e1.manifest).localeCompare(
-      getExtensionDisplayName(e2.manifest)
-    )
-  );
-}
-
 function InstalledExtensions() {
   const extensions = useExtensions();
   const sortedExtensions = useMemo(
@@ -61,3 +53,11 @@ function InstalledExtensions() {
 }
 
 export default InstalledExtensions;
+
+function sortExtensions(extensions: Extension[]): Extension[] {
+  return extensions.sort((e1, e2) =>
+    getExtensionDisplayName(e1.manifest).localeCompare(
+      getExtensionDisplayName(e2.manifest)
+    )
+  );
+}
