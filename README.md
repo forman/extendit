@@ -18,8 +18,9 @@ import JavaScript modules - _extensions_ - that add new features and
 capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
-[React](https://react.dev/), for this purpose it provides a number of
-reactive [hooks](). However, the library can be used without 
+[React](https://react.dev/), for this purpose it provides a number of reactive 
+[React hooks](https://react.dev/reference/react/hooks). 
+However, the library can be used without 
 React too. It's only a peer dependency.
 
 # Installation
@@ -104,16 +105,24 @@ export function activate(ctx: ExtensionContext) {
 ```
 
 The host application registers extensions using the 
+[`readExtensionManifest`](https://forman.github.io/extendit/functions/core.readExtensionManifest.html)
+and
 [`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
-function:
+functions:
 
 ```ts
-import { registerExtension } from "@forman2/extendit";
+import { readExtensionManifest, registerExtension } from "@forman2/extendit";
 
 export function initApp() {
    const extensionsUrls = getAppExtensionUrls();
    extensionUrls.forEach((extensionUrl) => {
-      void registerExtension(extensionUrl);
+     readExtensionManifest(extensionUrl)
+     .then((manifest) => 
+       registerExtension(manifest)
+     )
+     .catch((error) => {
+       // ...
+     });
    });
 }
 
@@ -277,7 +286,7 @@ async function getCommand(commandId: string): Promise<Command> {
 ```
 
 There is also a corresponding React hook 
-[`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useCodeContributions.html)
+[`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useLoadCodeContribution.html)
 that is used for implementing React components:
 
 ```tsx
@@ -305,21 +314,6 @@ export default function CommandButton({ command }: CommandButtonProps) {
 
 We currently only have this file and the 
 [API docs](https://forman.github.io/extendit/), sorry.
-
-# Acknowledgements
-
-ExtendIt.js currently uses the awesome libraries
-
-* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
-* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
-* [zustand](https://github.com/pmndrs/zustand) for state management
-
-# License
-
-Copyright © 2023 Norman Fomferra
-
-Permissions are hereby granted under the terms of the MIT License:
-https://opensource.org/licenses/MIT.
 
 # Development
 
@@ -377,3 +371,18 @@ stick to the following order:
 If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
 we first import TypeScript source dependencies, then separated by a 
 newline, insert resource dependencies in the same order as source dependencies.
+
+# Acknowledgements
+
+ExtendIt.js currently uses the awesome libraries
+
+* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
+* [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
+* [zustand](https://github.com/pmndrs/zustand) for state management
+
+# License
+
+Copyright © 2023 Norman Fomferra
+
+Permissions are hereby granted under the terms of the MIT License:
+https://opensource.org/licenses/MIT.
