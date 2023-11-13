@@ -18,8 +18,9 @@ import JavaScript modules - _extensions_ - that add new features and
 capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
-[React](https://react.dev/), for this purpose it provides a number of
-reactive [hooks](). However, the library can be used without 
+[React](https://react.dev/), for this purpose it provides a number of reactive 
+[React hooks](https://react.dev/reference/react/hooks). 
+However, the library can be used without 
 React too. It's only a peer dependency.
 
 # Installation
@@ -104,16 +105,24 @@ export function activate(ctx: ExtensionContext) {
 ```
 
 The host application registers extensions using the 
+[`readExtensionManifest`](https://forman.github.io/extendit/functions/core.readExtensionManifest.html)
+and
 [`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
-function:
+functions:
 
 ```ts
-import { registerExtension } from "@forman2/extendit";
+import { readExtensionManifest, registerExtension } from "@forman2/extendit";
 
 export function initApp() {
    const extensionsUrls = getAppExtensionUrls();
    extensionUrls.forEach((extensionUrl) => {
-      void registerExtension(extensionUrl);
+     readExtensionManifest(extensionUrl)
+     .then((manifest) => 
+       registerExtension(manifest)
+     )
+     .catch((error) => {
+       // ...
+     });
    });
 }
 
