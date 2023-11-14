@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-export function MyEx2View() {
+export function Ex2View() {
   return (
     <div style={{ color: "rgba(0, 255,  0, 0.7)", fontStyle: "italic" }}>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

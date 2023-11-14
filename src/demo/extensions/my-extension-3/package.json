@@ -1,0 +1,40 @@
+{
+  "provider": "forman",
+  "name": "ex3",
+  "version": "0.0.0",
+  "displayName": "Example #3",
+  "main": "activator",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ex3.bar",
+        "title": "Print Bar 3"
+      },
+      {
+        "command": "ex3.pippo",
+        "title": "Show Pippo 3",
+        "enablement": "viewId != 'ex3.pippo'"
+      }
+    ],
+    "menus": {
+      "main": [
+        {
+          "command": "ex3.bar",
+          "group": "print@3"
+        },
+        {
+          "command": "ex3.pippo",
+          "group": "show@3"
+        }
+      ]
+    },
+    "toolViews": {
+      "main": [
+        {
+          "id": "ex3.pippo",
+          "title": "Pippo 3"
+        }
+      ]
+    }
+  }
+}

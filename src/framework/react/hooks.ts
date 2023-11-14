@@ -100,6 +100,7 @@ export function useExtensionContributions<T>(
 
 /**
  * A React hook that provides all registered contribution points.
+ *
  * @category React Hooks
  * @returns An array comprising all contributions points
  */
@@ -113,8 +114,11 @@ export function useContributionPoints(): ContributionPoint[] {
  * It may activate inactive extensions required for the code contribution
  * as a side effect.
  *
+ * **Important:** On the very first render of a component, the function returns
+ * `undefined`. TODO: Find out how we can we avoid this behaviour.
+ *
  * @category React Hooks
- * @returns The current state of the code contribution.
+ * @returns The current state of the code contribution or `undefined`.
  */
 export function useLoadCodeContribution<Data = unknown>(
   contribPointId: string,

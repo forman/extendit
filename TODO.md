@@ -1,65 +1,63 @@
-## TODO
+# TODO
 
-### Publish stable version
+## For first stable version
 
-* Implement remaining unit-tests
-  - Missing specific tests in experimental `src/framework/contrib`
-  - Find out how to test React hooks using `vitest`
+* Find out how to test React hooks using `vitest`.
+* Make `contrib` an own toplevel subpackage 
+  - Every contribution point should go into a separate submodule.
+  - Every submodule should be exported, so points can
+    be imported independently of each other and so tree-shaking
+    becomes possible during build.
+  - Every submodule should have its own `index` and comprise implementation 
+    modules `types`, `point`, `get`, `hooks`, and optionally others.
+  - Add unit tests for each module of a submodule.
+  - Allow using the contrib module without React.
+    Export React-dependent modules from `contrib/<point>/react`
+* Decide whether to export `utils` at all or make it an implementation detail.
+  Some exports of current `framework/util` are used by public `core` and
+  `contrib` APIs. These elements may then be re-exported by `core` and
+  `contrib` to hide an extra `utils` package.
+* Implement a GH action that builds documentation in `./docs` including 
+  API docs, so we don't have to include generated API docs pages in source code.
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants also in `util` and `contrib`.
-* Enhance the demo:
-  - Add explanations what's going on
-  - Add submenus demo
-* Add coverage badge in `README.md`
+* Review and adjust logging, check for consistent use of logger names 
+  and log levels.
+* Add coverage badge in `README.md`.
 
-### Improve design
+## Potential design changes for later versions
 
-* Refactor `framework/contrib`
-  * Every point should be a separate sub-folder that may contain
-    `types.ts`, `point.ts`, `get.ts`, `hooks.ts`
-  * A `hooks.ts` in each submodule requires React
-* Split modules into separate packages:
-  * `extendit/` `@extendit/core` (incl. `util`)
-  * `extendit/contrib` --> `@extendit/ui`
-  * see https://github.com/adiun/vite-monorepo
-* Allow using the contrib module without React.
-  Move react-dependent modules into `framework/contrib/react`
-* Review logging, e.g., use logger named "extendit/core" etc
-* Schema validation should be optional.
-  Add framework option `validateSchema: (jsonValue) => [boolean, errors]`
-* Maybe get rid of globals later, instead instantiate `Framework` class that
-  contains the configuration, the store, the API, and provides hook factories.
-
-
-## DONE
-
-* Write _Getting Started_ section in `README.md`
-* Setup CI
-* Allow using the core module without React.
-  Move react-dependent modules into `framework/react`
-* Get rid of `registerAppExtension`, just use `registerExtension` with
-  options:
-  - `pathResolver`
-  - `module`
-* Move log levels from `levels` into `LogLevel`.
-* Check why in the demo the app commands are not shown
-* Turn `react` into a peer dependency
-* Use global module imports with "@"
-* Understand how to dynamically import from any
-  depths in the source tree. See
-  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import
-  --> Use trailing slash.
-* Use Zustand's vanilla store for `framework/core`. See
-  https://github.com/pmndrs/zustand#using-zustand-without-react
-  --> Implemented
-* Logger improvements
-  - `warnOnce()`
-  - `log()` without level --> use logger level
-* Enhance the demo:
-  - Demo command enablement
-  - Demo menu when clauses
-  - Add a little more CSS
-* Configure TypeDoc to generate an API reference.
-* Add TSDoc to user-facing types, classes, members, methods,
-  functions, and constants.
-* Expand the ESLint configuration `.eslintrc.cjs`, see section below
+* Split exported modules into separate packages:
+  - Use [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces).
+  - Turn single-package repo into monorepo comprising multiple 
+    [scoped packages](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages),
+    see https://github.com/adiun/vite-monorepo.
+  - Workspaces would potentially output the following packages: 
+    + `@<scope-name>/core`
+    + `@<scope-name>/contrib` or `@<scope-name>/ui`
+    + `@<scope-name>/demo`
+* JSON Schema validation and use of [`ajv`](https://ajv.js.org/) 
+  should be optional. Therefore, add framework option 
+  `validateSchema?: "ajv" | (jsonValue: JsonValue) => [boolean, string[]]`.
+  If `"ajv"` is passed, then `ajv` will be used for validation.
+* Turn the core API including the store and global functions into a single
+  `Framework` interface add a factory for it that returns instances of that 
+  interface (implemented by a plain object or class).
+  - Pros: 
+    + cleaner design for ExtendIt.js lib implementation.
+    + cleaner design for user apps since only a single framework 
+      must be passed around.
+    + unit testing is easier as framework instances can be created, configured 
+      and disposed for individual tests instead of dealing with a global state 
+      object.
+    + user extensions could create new framework instances to maintain their
+      own extension environment (well, this should be a rare use case).
+  - Cons:
+    + in user apps, the framework instance must be passed around where a simple
+      function import would suffice.
+    + in user extensions, framework instance must now be passed to 
+      activators and React hooks. This forces the framework instance to be a 
+      global variable in an application.
+    + in user extensions, framework instance must also be passed to React hooks.
+    + in user apps, extra step for creating and exporting the framework 
+      instance.

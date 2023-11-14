@@ -6,7 +6,8 @@
 
 import { useMemo } from "react";
 import { useToolViews, ToolViewComponent } from "@/contrib";
-import { useAppContext, useAppStore } from "./app-store";
+import { useAppContext, useAppStore } from "../app/store";
+import ApiLink from "./ApiLink";
 
 function ViewContainer() {
   const selectedViewId = useAppStore((s) => s.viewId);
@@ -23,8 +24,14 @@ function ViewContainer() {
         Current View: {selectedView ? selectedView.title : "No view selected"}
       </h1>
       <p>
-        Shows a selected view (UI component) of the <code>views</code>{" "}
-        contribution point:
+        Shows a selected view (UI component) of the{" "}
+        <ApiLink
+          module="contrib"
+          type="variables"
+          name="toolViewsPoint"
+          text="toolViews"
+        />{" "}
+        contribution point.
       </p>
       <div>
         {selectedView && (
