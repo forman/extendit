@@ -2,7 +2,6 @@
 
 ## For first stable version
 
-* Find out how to test React hooks using `vitest`.
 * Make `contrib` an own toplevel subpackage 
   - Every contribution point should go into a separate submodule.
   - Every submodule should be exported, so points can
