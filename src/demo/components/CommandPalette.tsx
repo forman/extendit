@@ -13,7 +13,7 @@ function CommandPalette() {
 
   return (
     <div className="row2-item">
-      <h1>Command Palette</h1>
+      <h2>Command Palette</h2>
       <p>
         Shows all available commands of the{" "}
         <ApiLink

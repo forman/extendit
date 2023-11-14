@@ -25,11 +25,12 @@ function InstalledExtensions() {
 
   return (
     <div className="row2-item">
-      <h1>Installed Extensions</h1>
+      <h2>Installed Extensions</h2>
       <p>
-        Extensions will be auto-activated when you click a corresponding command
-        below. Already activated extensions are disabled. Click to activate
-        manually using the <ApiLink name="activateExtension" /> function:
+        Buttons below indicate installed extensions. Activated extensions are
+        indicated by disabled buttons. Click to activate manually using the{" "}
+        <ApiLink name="activateExtension" /> function. Activation is also
+        triggered by if one of the contributed commands must be executed.
       </p>
       <div className="button-bar">
         {sortedExtensions.map((extension) => {

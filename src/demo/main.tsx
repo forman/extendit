@@ -9,6 +9,8 @@ import ReactDOM from "react-dom/client";
 import { assertDefined } from "@/util/assert";
 import App from "./app/App";
 
+import "./main.css";
+
 const root = document.getElementById("root");
 assertDefined(root, "root");
 ReactDOM.createRoot(root).render(
