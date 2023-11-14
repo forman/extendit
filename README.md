@@ -23,6 +23,15 @@ ExtendIt.js has been designed to efficiently work with
 However, the library can be used without 
 React too. It's only a peer dependency.
 
+# Demo
+
+To see the API in action, you can run the
+[Demo code](https://github.com/forman/extendit/tree/main/src/demo)
+using `npm run dev`,
+see section [Development](#development) below. It is a simple React
+application that demonstrates how extensions are installed,
+activated, and how they contribute UI elements to the application.
+
 # Installation
 
 ```bash
@@ -315,7 +324,7 @@ export default function CommandButton({ command }: CommandButtonProps) {
 
 # Documentation
 
-We currently only have this file and the 
+We currently only have this file, the 
 [API docs](https://forman.github.io/extendit/), sorry.
 
 # Development
@@ -366,7 +375,7 @@ Since `prettier` is un-opinionated regarding the order of imports, we try to
 stick to the following order: 
 
 1. React dependencies
-2. Other 3rd party dependencies
+2. Other 3rd-party dependencies
 3. Dependencies on our own packages
 4. Dependencies on our own modules higher up in the hierarchy 
    using source prefix `@`
@@ -381,7 +390,7 @@ newline, insert resource dependencies in the same order as source dependencies.
 
 ExtendIt.js currently uses the awesome libraries
 
-* [Ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
+* [ajv](https://ajv.js.org/) for JSON validation (may be turned into peer dependency later)
 * [memoize-one](https://github.com/alexreardon/memoize-one) for implementing state selector functions
 * [zustand](https://github.com/pmndrs/zustand) for state management
 
