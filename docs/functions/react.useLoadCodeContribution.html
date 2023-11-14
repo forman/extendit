@@ -23,6 +23,8 @@
 <div class="tsd-comment tsd-typography"><p>A React hook that gets a code contribution.
 It may activate inactive extensions required for the code contribution
 as a side effect.</p>
+<p><strong>Important:</strong> On the very first render of a component, the function returns
+<code>undefined</code>. TODO: Find out how we can we avoid this behaviour.</p>
 </div>
 <section class="tsd-panel">
 <h4>Type Parameters</h4>
@@ -36,11 +38,11 @@ as a side effect.</p>
 <h5><span class="tsd-kind-parameter">contribPointId</span>: <span class="tsd-signature-type">string</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">contribId</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../interfaces/core.CodeContribution.html" class="tsd-signature-type tsd-kind-interface">CodeContribution</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">Data</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4><p>The current state of the code contribution.</p>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/core.CodeContribution.html" class="tsd-signature-type tsd-kind-interface">CodeContribution</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">Data</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4><p>The current state of the code contribution or <code>undefined</code>.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/forman/extend-me/blob/12bc4d5/src/framework/react/hooks.ts#L119">src/framework/react/hooks.ts:119</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/forman/extend-me/blob/78d697d/src/framework/react/hooks.ts#L123">src/framework/react/hooks.ts:123</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
