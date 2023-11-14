@@ -17,7 +17,8 @@ function Header() {
         components. The &quot;Show X&quot; commands select a given given view,
         while the &quot;Print X&quot; commands output a message to the Developer
         Tools console (press <span className="keybinding">CTRL SHIFT I</span> to
-        open).
+        open). Note, this page is best viewed using your browser&apos;s dark
+        mode.
       </p>
     </>
   );
