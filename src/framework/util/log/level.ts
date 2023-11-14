@@ -4,6 +4,8 @@
  * https://opensource.org/licenses/MIT.
  */
 
+const DEFAULT_LOG_LABEL = import.meta.env.VITE_LOG_LEVEL ?? "OFF";
+
 /**
  * A log level.
  */
@@ -82,14 +84,28 @@ export class LogLevel {
     readonly logFn?: (...data: unknown[]) => void
   ) {}
 
+  /**
+   * Gets the log level for the given log label.
+   *
+   * @param label The log label, "OFF", "ALL", "DEBUG",
+   *    "INFO", "WARN", or "ERROR".
+   * @returns The log label or `undefined` if no such level exists.
+   */
   static get(label: string): LogLevel | undefined;
+  /**
+   * Gets the log level for the given log label.
+   *
+   * @param label The log label, "OFF", "ALL", "DEBUG",
+   *    "INFO", "WARN", or "ERROR".
+   * @param defaultLevel The default level.
+   * @returns The log label or the given `defaultLevel`
+   *   if no such level exists.
+   */
   static get(label: string, defaultLevel: LogLevel): LogLevel;
   static get(label: string, defaultLevel?: LogLevel): LogLevel | undefined {
     const key = label.toUpperCase();
     if (key === "DEFAULT") {
-      return import.meta.env.VITE_LOG_LEVEL
-        ? LogLevel.get(import.meta.env.VITE_LOG_LEVEL, LogLevel.DEFAULT)
-        : LogLevel.DEFAULT;
+      return LogLevel.get(DEFAULT_LOG_LABEL, LogLevel.DEFAULT);
     }
     return LogLevel.LEVELS.has(key) ? LogLevel.LEVELS.get(key) : defaultLevel;
   }
