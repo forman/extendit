@@ -323,7 +323,7 @@ export default function CommandButton({ command }: CommandButtonProps) {
 
 # Documentation
 
-We currently only have this file, the 
+We currently only have this file and the 
 [API docs](https://forman.github.io/extendit/), sorry.
 
 # Development
