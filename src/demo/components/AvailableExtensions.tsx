@@ -35,11 +35,11 @@ function AvailableExtensions() {
 
   return (
     <div className="row2-item">
-      <h1>Available Extensions</h1>
+      <h2>Available Extensions</h2>
       <p>
-        Click to install an extension. Installing means registering an extension
-        in the application using the <ApiLink name="registerExtension" />{" "}
-        function.
+        Buttons below indicate available extensions. Installed extensions are
+        indicated by disabled buttons. Click to install an extension using the{" "}
+        <ApiLink name="registerExtension" /> function.
       </p>
       <div className="button-bar">
         {availableExtensions.map(([extPath, manifest]) => {

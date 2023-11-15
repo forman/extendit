@@ -9,6 +9,7 @@ import InstalledExtensions from "../components/InstalledExtensions";
 import CommandPalette from "../components/CommandPalette";
 import ViewContainer from "../components/ViewContainer";
 import MainMenu from "../components/MainMenu";
+import Header from "../components/Header";
 import { initApp } from "./init";
 
 import "./App.css";
@@ -18,6 +19,9 @@ initApp();
 function App() {
   return (
     <>
+      <div className="row1">
+        <Header />
+      </div>
       <div className="row2">
         <AvailableExtensions />
         <InstalledExtensions />

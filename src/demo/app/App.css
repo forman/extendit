@@ -4,19 +4,18 @@
  * https://opensource.org/licenses/MIT.
  */
 
+.row1 {
+  padding: 8px;
+}
+
 .row2 {
   display: flex;
   gap: 10px;
-  padding: 10px;
+  padding: 8px;
 }
 
 .row2-item {
-  width: 40%;
-}
-
-.row1 {
-  width: 80%;
-  padding: 10px;
+  width: 50%;
 }
 
 .button-bar {
@@ -36,4 +35,14 @@
 
 .menu-separator {
   width: 100%;
+}
+
+.keybinding {
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px;
+  font-size: 0.8em;
+  font-weight: 200;
+  font-family: inherit;
+  background-color: #3a3a3a;
 }

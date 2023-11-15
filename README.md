@@ -30,7 +30,8 @@ To see the API in action, you can run the
 using `npm run dev`,
 see section [Development](#development) below. It is a simple React
 application that demonstrates how extensions are installed,
-activated, and how they contribute UI elements to the application.
+activated, and how they can contribute elements such as commands or 
+UI components to an application.
 
 # Installation
 
@@ -279,9 +280,7 @@ export function activate() {
 
 Such code contributions are loaded lazily. Only the first time a
 code contribution is needed by a consumer, the contributing extension will be
-activated.
-
-Therefore, code contributions are loaded asynchronously using the 
+activated. Therefore, code contributions are loaded asynchronously using the 
 [`loadCodeContribution`](https://forman.github.io/extendit/functions/core.loadCodeContribution.html)
 function:
 
@@ -324,7 +323,7 @@ export default function CommandButton({ command }: CommandButtonProps) {
 
 # Documentation
 
-We currently only have this file, the 
+We currently only have this file and the 
 [API docs](https://forman.github.io/extendit/), sorry.
 
 # Development

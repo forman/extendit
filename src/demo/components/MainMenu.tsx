@@ -15,7 +15,7 @@ function MainMenu() {
 
   return (
     <div className="row2-item">
-      <h1>Main Menu</h1>
+      <h2>Main Menu</h2>
       <p>
         Shows the contributions made to the <code>main</code> menu of the{" "}
         <ApiLink

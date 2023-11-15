@@ -20,9 +20,9 @@ function ViewContainer() {
 
   return (
     <div style={{ width: "100%" }}>
-      <h1>
+      <h2>
         Current View: {selectedView ? selectedView.title : "No view selected"}
-      </h1>
+      </h2>
       <p>
         Shows a selected view (UI component) of the{" "}
         <ApiLink
