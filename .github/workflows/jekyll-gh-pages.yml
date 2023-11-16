@@ -33,6 +33,8 @@ jobs:
         with:
           node-version: 18.x
           cache: 'npm'
+      - name: Clean Install
+        run: npm ci
       - name: Build API Docs
         run: npm run typedoc
       - name: Setup Pages
