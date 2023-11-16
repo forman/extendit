@@ -47,8 +47,9 @@ const whenClauseCompiler = new WhenClauseCompiler();
 /**
  * Compiles a when-clause into a when-function.
  *
- * This utility function may be used inside the `processEntry` function
- * that is part of the {@link CodeContributionInfo}.
+ * This utility function is typically used in the `processEntry` function
+ * that is part of the {@link ManifestContributionInfo} if the JSON
+ * entry contains when-clauses.
  *
  * Compiled when-functions are cached; the method will return
  * the same functions for equal when-clauses.
