@@ -5,18 +5,19 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { registerContributionPoint } from "@/core";
+// import { registerContributionPoint } from "@/core";
 
 /**
  * This module defines a number of contribution points that are
  * common for UI application development.
  *
  * You can register all contribution points defined in this module using the
- * {@link registerContributionPoints} or register individual points using
- * the {@link registerContributionPoint}. Contribution points are currently
- * exported constants that are named `<name>Point`, where `<name>` is the
- * extension point identifier. The following contribution points are
- * available:
+ * {@link registerContributionPoints} function or register individual points
+ * using the {@link registerContributionPoint} function.
+ *
+ * Contribution points are currently exported constants that are named
+ * `<name>Point`, where `<name>` is the extension point identifier.
+ * The following contribution points are available:
  *
  * - {@link commandsPoint}
  * - {@link configurationPoint}
