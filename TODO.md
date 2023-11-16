@@ -2,8 +2,6 @@
 
 ## For first stable version
 
-* Add TSDoc to all types, classes, members, methods,
-  functions, and constants also in `util` and `contrib`.
 * Review and adjust logging, check for consistent use of logger names 
   and log levels.
 * Add coverage badge in `README.md`.
