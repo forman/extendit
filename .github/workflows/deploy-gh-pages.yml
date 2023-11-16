@@ -1,5 +1,5 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+# Building and deploying a (Jekyll) site to GitHub Pages
+name: Deploy to GH Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -39,11 +39,11 @@ jobs:
         run: npm run typedoc
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      #- name: Build with Jekyll
-      #  uses: actions/jekyll-build-pages@v1
-      #  with:
-      #    source: ./docs
-      #    destination: ./_site
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
 
