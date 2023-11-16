@@ -33,10 +33,10 @@ jobs:
         with:
           node-version: 18.x
           cache: 'npm'
-      - name: Clean Install
-        run: npm ci
-      - name: Build API Docs
-        run: npm run typedoc | mkdir -p ./docs/assets/images | mv ./docs/logo.png ./docs/assets/images/
+      - run: npm ci
+      - run: npm run typedoc
+      - run: mkdir -p ./docs/assets/images
+      - run: cp ./logo.png ./docs/assets/images/
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Build with Jekyll
