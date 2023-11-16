@@ -36,7 +36,7 @@ jobs:
       - name: Clean Install
         run: npm ci
       - name: Build API Docs
-        run: npm run typedoc | mkdir ./docs/assets/images | cp ./docs/logo.png ./docs/assets/images/
+        run: npm run typedoc | mkdir ./docs/assets/images | mv ./docs/logo.png ./docs/assets/images/
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Build with Jekyll
