@@ -46,8 +46,9 @@ export interface Store<State = unknown> {
 
 /**
  * The "stores" contribution point.
- * To register a store in your app, call {@link registerStore} with
- * your store of type {@link Store}.
+ *
+ * Contributions to this point are made using the
+ * {@link registerStore} with a store of type {@link Store}.
  *
  * @category UI Contributions API
  * @experimental
@@ -72,6 +73,7 @@ export function registerStore(store: Store) {
  * Gets an array of registered stores.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export function useStores() {
   const stores = useCodeContributions<Store>(storesPoint.id);

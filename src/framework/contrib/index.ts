@@ -4,9 +4,32 @@
  * https://opensource.org/licenses/MIT.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { registerContributionPoint } from "@/core";
+
 /**
- * The API of this module is still experimental and hence
- * it may change without notice from one package release to the other.
+ * This module defines a number of contribution points that are
+ * common for UI application development.
+ *
+ * You can register all contribution points defined in this module using the
+ * {@link registerContributionPoints} or register individual points using
+ * the {@link registerContributionPoint}. Contribution points are currently
+ * exported constants that are named `<name>Point`, where `<name>` is the
+ * extension point identifier. The following contribution points are
+ * available:
+ *
+ * - {@link commandsPoint}
+ * - {@link configurationPoint}
+ * - {@link dataViewsPoint}
+ * - {@link keybindingsPoint}
+ * - {@link menusPoint}
+ * - {@link submenusPoint}
+ * - {@link storesPoint}
+ * - {@link toolViewsPoint}
+ *
+ * **IMPORTANT NOTE**: This module is still in development, hence it has not
+ * yet reached a stable state. Its name, API, and implementation may change
+ * without notice from one package release to the other.
  *
  * @category UI Contributions API
  * @experimental

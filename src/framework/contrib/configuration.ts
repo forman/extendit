@@ -22,6 +22,9 @@ import { getExtensionContext } from "@/core/extension-context/get";
 
 //const LOG = new log.Logger("contrib/configurations");
 
+/**
+ * A configuration category.
+ */
 export interface ConfigurationCategory {
   title: string;
   familyTitle?: string;
@@ -29,7 +32,15 @@ export interface ConfigurationCategory {
   properties: Record<string, UiSchema>;
 }
 
+/**
+ * A configuration is a single configuration category
+ * or an array of configuration categories.
+ */
 export type Configuration = ConfigurationCategory | ConfigurationCategory[];
+
+/**
+ * JSON representation of a configuration contribution.
+ */
 export type ConfigurationManifestEntry = Configuration;
 
 export interface ConfigurationNode {
@@ -66,8 +77,9 @@ const configurationSchema = {
 
 /**
  * The "configuration" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link configurationPoint}.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link ConfigurationManifestEntry}.
  *
  * @category UI Contributions API
  * @experimental

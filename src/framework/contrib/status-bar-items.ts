@@ -36,8 +36,10 @@ export interface StatusBarItem {
 
 /**
  * The "statusBarItems" contribution point.
- * To register a status bar item in your app,
- * call {@link registerStatusBarItem}.
+ *
+ * Contributions to this point are made using the
+ * {@link registerStatusBarItem} that accepts an argument of type
+ * {@link StatusBarItem}.
  *
  * @category UI Contributions API
  * @experimental

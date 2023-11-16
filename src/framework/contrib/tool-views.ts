@@ -18,12 +18,18 @@ import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/views");
 
+/**
+ * A tool view.
+ */
 export interface ToolView {
   id: string;
   title?: string;
   icon?: string;
 }
 
+/**
+ * JSON representation of a tool view.
+ */
 export interface ToolViewManifestEntry extends ToolView {
   when?: string;
 }
@@ -54,9 +60,14 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
 };
 
 /**
- * The "views" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link toolViewsPoint}.
+ * The "toolViews" contribution point.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link ToolViewManifestEntry}.
+ *
+ * Code contributions to this point are made using the
+ * {@link registerToolViewComponent} that accepts a React component of type
+ * `React.JSX.Element`.
  *
  * @category UI Contributions API
  */
@@ -91,7 +102,7 @@ export function useToolViews(
 ): ToolView[] {
   const views = useContributions<StoreToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
-    LOG.debug("Hook 'useViews' is recomputing");
+    LOG.debug("Hook 'useToolViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));
   }, [views, ctx]);
 }

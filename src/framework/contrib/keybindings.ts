@@ -75,8 +75,9 @@ function processKeybinding(keybinding: KeybindingManifestEntry): Keybinding {
 
 /**
  * The "keybindings" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link keybindingsPoint}.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link KeybindingManifestEntry}.
  *
  * @category UI Contributions API
  * @experimental

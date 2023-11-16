@@ -27,6 +27,9 @@ interface CommandBase {
   icon?: string;
 }
 
+/**
+ * JSON representation of a command.
+ */
 export interface CommandManifestEntry extends CommandBase {
   enablement?: string;
   checked?: string;
@@ -72,8 +75,13 @@ function processCommand(command: CommandManifestEntry): Command {
 
 /**
  * The "commands" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link commandsPoint}.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link CommandManifestEntry}.
+ *
+ * Code contributions to this point are made using the
+ * {@link registerCommand} that accepts an argument of type
+ * {@link CommandFn}.
  *
  * @category UI Contributions API
  * @experimental
@@ -93,6 +101,9 @@ export const commandsPoint: ContributionPoint<
   },
 };
 
+/**
+ * The function executed by a command.
+ */
 export type CommandFn<T = unknown, A extends unknown[] = unknown[]> = (
   ...args: A
 ) => T;

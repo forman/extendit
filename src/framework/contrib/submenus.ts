@@ -44,8 +44,9 @@ const schema: JSONSchemaType<Submenu[]> = {
 
 /**
  * The "submenus" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link submenusPoint}.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link SubmenuManifestEntry}.
  *
  * @category UI Contributions API
  * @experimental

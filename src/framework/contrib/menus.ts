@@ -22,6 +22,9 @@ const LOG = new log.Logger("contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 
+/**
+ * Common menu item type.
+ */
 export interface MenuItemBase {
   submenu?: string;
   command?: string;
@@ -33,10 +36,17 @@ export interface MenuItemBase {
   icon?: string;
 }
 
+/**
+ * JSON representation of a menu item.
+ */
 export interface MenuItemManifestEntry extends MenuItemBase {
   when?: string;
 }
 
+// This is a local package export only
+/**
+ * A menu item with resolved `id`, `label`, `group`, and `order` fields.
+ */
 export interface ResolvedMenuItem extends MenuItemBase {
   id: string;
   label: string;
@@ -45,19 +55,22 @@ export interface ResolvedMenuItem extends MenuItemBase {
 }
 
 // This is a local package export only
+/**
+ * A menu item with compiled `when` and `enablement` clauses.
+ */
 export interface ProcessedMenuItem extends ResolvedMenuItem {
   when?: When;
   enablement?: When;
 }
 
+/**
+ * A menu item.
+ */
 export interface MenuItem extends ResolvedMenuItem {
   disabled?: boolean;
   checked?: boolean;
   keybinding?: Keybinding;
 }
-
-type ManifestMenusContrib = Record<string, MenuItemManifestEntry[]>;
-type ProcessedMenusContrib = Record<string, ProcessedMenuItem[]>;
 
 const menuItemSchema: JSONSchemaType<MenuItemManifestEntry> = {
   type: "object",
@@ -86,7 +99,7 @@ const menuItemSchema: JSONSchemaType<MenuItemManifestEntry> = {
   //required: [],
 };
 
-const schema: JSONSchemaType<ManifestMenusContrib> = {
+const schema: JSONSchemaType<Record<string, MenuItemManifestEntry[]>> = {
   type: "object",
   additionalProperties: {
     type: "array",
@@ -96,9 +109,9 @@ const schema: JSONSchemaType<ManifestMenusContrib> = {
 };
 
 function processEntry(
-  manifestMenusContrib: ManifestMenusContrib
-): ProcessedMenusContrib {
-  const processedMenusContrib: ProcessedMenusContrib = {};
+  manifestMenusContrib: Record<string, MenuItemManifestEntry[]>
+): Record<string, ProcessedMenuItem[]> {
+  const processedMenusContrib: Record<string, ProcessedMenuItem[]> = {};
   Object.keys(manifestMenusContrib).forEach((key) => {
     processedMenusContrib[key] =
       manifestMenusContrib[key].map(processJsonMenuItem);
@@ -108,15 +121,17 @@ function processEntry(
 
 /**
  * The "menus" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link menusPoint}.
+ *
+ * JSON contributions to this point are represented by JSON objects
+ * whose keys are menu identifiers and the value values are
+ * manu items of type {@link MenuItemManifestEntry}.
  *
  *  @category UI Contributions API
  *  @experimental
  */
 export const menusPoint: ContributionPoint<
-  ManifestMenusContrib,
-  ProcessedMenusContrib
+  Record<string, MenuItemManifestEntry[]>,
+  Record<string, ProcessedMenuItem[]>
 > = {
   id: "menus",
   manifestInfo: {
@@ -125,7 +140,7 @@ export const menusPoint: ContributionPoint<
   },
 };
 
-export function useMenu(menuId: string, ctx: Record<string, unknown>) {
+export function useMenu(menuId: string, ctx: Record<string, unknown>): MenuItem[] {
   if (menuId === COMMAND_PALETTE_MENU_ID) {
     LOG.warn(
       `Items for the menu '${COMMAND_PALETTE_MENU_ID}' ` +

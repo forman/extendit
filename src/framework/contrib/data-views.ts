@@ -61,8 +61,13 @@ const schema: JSONSchemaType<DataViewManifestEntry[]> = {
 
 /**
  * The "dataViews" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link dataViewsPoint}.
+ *
+ * JSON contributions to this point are represented by type
+ * {@link DataViewManifestEntry}.
+ *
+ * Code contributions to this point are made using the
+ * {@link registerDataViewProvider} that accepts an argument of type
+ * {@link DataViewProvider}.
  *
  * @category UI Contributions API
  * @experimental
