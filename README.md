@@ -1,4 +1,4 @@
-[![CI](https://github.com/forman/extendit/actions/workflows/node.js.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/node.js.yml)
+[![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
 [![License: MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
 [![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
