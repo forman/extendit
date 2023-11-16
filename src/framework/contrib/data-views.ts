@@ -60,11 +60,12 @@ const schema: JSONSchemaType<DataViewManifestEntry[]> = {
 };
 
 /**
- * The "views" contribution point.
+ * The "dataViews" contribution point.
  * To register in your app, call {@link registerContributionPoint} with
  * {@link dataViewsPoint}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const dataViewsPoint: ContributionPoint<DataViewManifestEntry[]> = {
   id: "dataViews",

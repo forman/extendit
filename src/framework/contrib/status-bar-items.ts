@@ -9,19 +9,38 @@ import { type ContributionPoint, registerCodeContribution } from "@/core";
 import { Disposable } from "@/util";
 import { useCodeContributions } from "@/react";
 
+/**
+ * A status bar item.
+ *
+ * @category UI Contributions API
+ * @experimental
+ */
 export interface StatusBarItem {
+  /**
+   * Unique identifier.
+   */
   id: string;
+  /**
+   * Item position in the status bar.
+   */
   position: "left" | "right";
+  /**
+   * The order used to sort items.
+   */
   order?: number;
+  /**
+   * The UI component to render.
+   */
   component: React.JSX.Element;
 }
 
 /**
- * The "submenus" contribution point.
- * To register in your app, call {@link registerContributionPoint} with
- * {@link submenusPoint}.
+ * The "statusBarItems" contribution point.
+ * To register a status bar item in your app,
+ * call {@link registerStatusBarItem}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const statusBarItemsPoint: ContributionPoint = {
   id: "statusBarItems",
@@ -30,6 +49,13 @@ export const statusBarItemsPoint: ContributionPoint = {
   },
 };
 
+/**
+ * Registers a status bar item.
+ *
+ * @category UI Contributions API
+ * @experimental
+ * @param statusBarItem - The status bar item.
+ */
 export function registerStatusBarItem(
   statusBarItem: StatusBarItem
 ): Disposable {
@@ -40,6 +66,12 @@ export function registerStatusBarItem(
   );
 }
 
+/**
+ * Gets all registered status bar items.
+ *
+ * @category UI Contributions API
+ * @experimental
+ */
 export function useStatusBarItems() {
   const statusBarItems = useCodeContributions<StatusBarItem>(
     statusBarItemsPoint.id
@@ -50,6 +82,7 @@ export function useStatusBarItems() {
   );
 }
 
+/* exported for testing only */
 export function processStatusBarItems(statusBarItems: StatusBarItem[]) {
   return [
     sortStatusBarItems(

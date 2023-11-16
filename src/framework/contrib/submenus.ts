@@ -12,11 +12,17 @@ import * as log from "@/util/log";
 
 const LOG = new log.Logger("contrib/submenus");
 
+/**
+ * Represents a JSON submenu contribution.
+ */
 export interface SubmenuManifestEntry {
   id: string;
   label: string;
 }
 
+/**
+ * Represents a JSON submenu contribution.
+ */
 export interface Submenu extends SubmenuManifestEntry {}
 
 const submenuSchema: JSONSchemaType<Submenu> = {
@@ -42,6 +48,7 @@ const schema: JSONSchemaType<Submenu[]> = {
  * {@link submenusPoint}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const submenusPoint: ContributionPoint<Submenu[]> = {
   id: "submenus",
@@ -50,10 +57,22 @@ export const submenusPoint: ContributionPoint<Submenu[]> = {
   },
 };
 
+/**
+ * Gets the array of all registered submenus.
+ *
+ * @category UI Contributions API
+ * @experimental
+ */
 export function useSubmenus() {
   return useContributions<Submenu>(submenusPoint.id);
 }
 
+/**
+ * Gets a mapping of submenu identifiers to submenus.
+ *
+ * @category UI Contributions API
+ * @experimental
+ */
 export function useSubmenusMap() {
   const submenus = useSubmenus();
   return useMemo(() => {

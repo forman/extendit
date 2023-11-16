@@ -31,6 +31,7 @@ import { Disposable } from "@/util";
  * - `"toolViews"`
  *
  * @category UI Contributions API
+ * @experimental
  * @returns A disposable that unregisters all provided contribution points.
  */
 export function registerContributionPoints(): Disposable {
