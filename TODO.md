@@ -8,6 +8,22 @@
 
 ## Potential design changes for later versions
 
+* Contribution points shall allow for defining optional type guards
+  for both JSON entries and/or code contributions.
+* Can we combine contribution points `toolViews` and `dataViews` into one
+  flexible `views` contribution point? If not, are the current names
+  `toolViews` and `dataViews` ok?
+  The current names attempt to express the two different main use cases: 
+  - A `toolViews` view is a singleton in the application. 
+    A typical usage is to provide one or more tools or details view for a 
+    currently active `dataViews` view or the selected items within a data view.
+    Typically, tool views do not maintain a complex state on their own. Instead, 
+    they depend on the selection state of the data view made available by 
+    some context state. 
+  - A `dataViews` view is one of many instances of a _data view type_.
+    Its code contribution is a data view factory. 
+    Typically, data view instances maintain a complex view state on their own,
+    e.g., a map view may maintain visual base maps, data layers and overlays.
 * Make `contrib` an own toplevel subpackage
   - Every contribution point should go into a separate submodule.
   - Every submodule should be exported, so points can
