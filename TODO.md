@@ -5,8 +5,6 @@
 * Adhere to community standards
   - Write `CONTRIBUTING.md`
   - Write PR template
-* Implement a GH action that builds documentation in `./docs` including 
-  API docs, so we don't have to include generated API docs pages in source code.
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants also in `util` and `contrib`.
 * Review and adjust logging, check for consistent use of logger names 
