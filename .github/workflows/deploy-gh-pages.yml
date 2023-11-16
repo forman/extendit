@@ -35,8 +35,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run typedoc
-      - run: mkdir -p ./docs/assets/images
-      - run: cp ./logo.png ./docs/assets/images/
+      - run: cp ./logo.png ./docs/
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Build with Jekyll
