@@ -2,9 +2,6 @@
 
 ## For first stable version
 
-* Adhere to community standards
-  - Write `CONTRIBUTING.md`
-  - Write PR template
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants also in `util` and `contrib`.
 * Review and adjust logging, check for consistent use of logger names 
