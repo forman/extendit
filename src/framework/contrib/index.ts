@@ -5,10 +5,8 @@
  */
 
 /**
- * The API of this module is still experimental.
- *
- * While experimental it may change without notice from one package
- * release to the other.
+ * The API of this module is still experimental and hence
+ * it may change without notice from one package release to the other.
  *
  * @category UI Contributions API
  * @experimental
