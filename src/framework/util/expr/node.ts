@@ -11,6 +11,9 @@ import type { BinaryOp, UnaryOp } from "./ops";
  */
 export type EvalContext = Record<string, unknown>;
 
+/**
+ * A generic function object.
+ */
 export type Func = (...args: unknown[]) => unknown;
 
 /**

@@ -79,6 +79,7 @@ function processKeybinding(keybinding: KeybindingManifestEntry): Keybinding {
  * {@link keybindingsPoint}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const keybindingsPoint: ContributionPoint<
   KeybindingManifestEntry[],

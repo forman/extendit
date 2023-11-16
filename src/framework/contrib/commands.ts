@@ -76,6 +76,7 @@ function processCommand(command: CommandManifestEntry): Command {
  * {@link commandsPoint}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const commandsPoint: ContributionPoint<
   CommandManifestEntry[],

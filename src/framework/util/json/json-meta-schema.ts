@@ -6,6 +6,9 @@
 
 import ajv from "./ajv";
 
+/**
+ * Represents the JSON Schema of JSON Schema.
+ */
 export const jsonMetaSchema = (function () {
   const defaultMeta = ajv.defaultMeta();
   if (typeof defaultMeta === "string") {

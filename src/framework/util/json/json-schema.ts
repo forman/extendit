@@ -6,5 +6,12 @@
 
 import type { AnySchema, JSONSchemaType } from "ajv";
 
+/**
+ * Represents an JSON Schema.
+ */
 export type JsonSchema = AnySchema;
+
+/**
+ * Represents the JSON Schema for the given type `T`.
+ */
 export type JsonTypedSchema<T> = JSONSchemaType<T>;

@@ -1,6 +1,6 @@
 {
   "name": "@forman2/extendit",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
@@ -13,17 +13,13 @@
   "keywords": [
     "dependency inversion",
     "dependency injection",
-    "contributions",
-    "extensions",
-    "management",
-    "manager",
+    "extension management",
     "state",
     "store",
     "react"
   ],
   "files": [
     "dist",
-    "src",
     "logo.png"
   ],
   "exports": {

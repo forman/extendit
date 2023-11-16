@@ -112,6 +112,7 @@ function processEntry(
  * {@link menusPoint}.
  *
  *  @category UI Contributions API
+ *  @experimental
  */
 export const menusPoint: ContributionPoint<
   ManifestMenusContrib,

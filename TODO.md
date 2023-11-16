@@ -2,22 +2,6 @@
 
 ## For first stable version
 
-* Make `contrib` an own toplevel subpackage 
-  - Every contribution point should go into a separate submodule.
-  - Every submodule should be exported, so points can
-    be imported independently of each other and so tree-shaking
-    becomes possible during build.
-  - Every submodule should have its own `index` and comprise implementation 
-    modules `types`, `point`, `get`, `hooks`, and optionally others.
-  - Add unit tests for each module of a submodule.
-  - Allow using the contrib module without React.
-    Export React-dependent modules from `contrib/<point>/react`
-* Decide whether to export `utils` at all or make it an implementation detail.
-  Some exports of current `framework/util` are used by public `core` and
-  `contrib` APIs. These elements may then be re-exported by `core` and
-  `contrib` to hide an extra `utils` package.
-* Implement a GH action that builds documentation in `./docs` including 
-  API docs, so we don't have to include generated API docs pages in source code.
 * Add TSDoc to all types, classes, members, methods,
   functions, and constants also in `util` and `contrib`.
 * Review and adjust logging, check for consistent use of logger names 
@@ -26,6 +10,20 @@
 
 ## Potential design changes for later versions
 
+* Make `contrib` an own toplevel subpackage
+  - Every contribution point should go into a separate submodule.
+  - Every submodule should be exported, so points can
+    be imported independently of each other and so tree-shaking
+    becomes possible during build.
+  - Every submodule should have its own `index` and comprise implementation
+    modules `types`, `point`, `get`, `hooks`, and optionally others.
+  - Add unit tests for each module of a submodule.
+  - Allow using the contrib module without React.
+    Export React-dependent modules from `contrib/<point>/react`
+* Decide whether to export `utils` at all or make it an implementation detail.
+  Some exports of current `framework/util` are used by public `core` and
+  `contrib` APIs. These elements may then be re-exported by `core` and
+  `contrib` to hide an extra `utils` package.
 * Split exported modules into separate packages:
   - Use [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces).
   - Turn single-package repo into monorepo comprising multiple 

@@ -4,6 +4,15 @@
  * https://opensource.org/licenses/MIT.
  */
 
+/**
+ * The API of this module is still experimental and hence
+ * it may change without notice from one package release to the other.
+ *
+ * @category UI Contributions API
+ * @experimental
+ * @packageDocumentation
+ */
+
 export {
   type Command,
   type CommandFn,
@@ -69,10 +78,10 @@ export {
 } from "./status-bar-items";
 
 export {
-  type StoreProvider,
+  type Store,
   storesPoint,
-  registerStoreProvider,
-  useStores,
+  registerStore,
+  useStoreStates,
 } from "./stores";
 
 export {

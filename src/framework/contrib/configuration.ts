@@ -70,6 +70,7 @@ const configurationSchema = {
  * {@link configurationPoint}.
  *
  * @category UI Contributions API
+ * @experimental
  */
 export const configurationPoint: ContributionPoint<Configuration> = {
   id: "configuration",
