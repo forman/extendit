@@ -60,7 +60,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs & copy logo.png docs"
+    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs & copyfiles logo.png docs/"
   },
   "dependencies": {
     "ajv": "^8.12.0",
@@ -85,6 +85,7 @@
     "@vitejs/plugin-react-swc": "^3.3.2",
     "@vitest/coverage-v8": "^0.34.2",
     "@vitest/ui": "^0.34.6",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
