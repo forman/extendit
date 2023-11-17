@@ -70,6 +70,8 @@ yarn add @forman2/extendit
 
 # Usage
 
+## Extension basics
+
 Any extension must be defined by its 
 [_extension manifest_](https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html), 
 which is basically a slightly enhanced 
@@ -99,6 +101,8 @@ export function activate() {
   // register your contributions to the app
 }
 ```
+
+## Extension-specific APIs
 
 The activator may also export an extension-specific API for other extensions
 
@@ -137,7 +141,30 @@ export function activate(ctx: ExtensionContext) {
 }
 ```
 
-The host application registers extensions using the 
+If you add `extensionDependencies` to your `package.json`
+
+```json
+{
+   "extensionDependencies": [
+     "my-company.my-extension"
+   ]
+}
+```
+
+then you can save some lines of code in your activator
+
+```ts
+import { type ExtensionContext, getExtension } from "@forman2/extendit";
+import { type MyApi } from "@my-company/my-extension";
+
+export function activate(ctx: ExtensionContext, myApi: MyApi) {
+  myApi.registerViewProvider({ ... });
+}
+```
+
+## Contribution points and contributions
+
+The host application registers (installs) extensions using the 
 [`readExtensionManifest`](https://forman.github.io/extendit/functions/core.readExtensionManifest.html)
 and
 [`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
