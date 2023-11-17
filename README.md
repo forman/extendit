@@ -162,9 +162,9 @@ export function activate(ctx: ExtensionContext, myApi: MyApi) {
 }
 ```
 
-## Contribution points and contributions
+## Extension installation
 
-The host application registers (installs) extensions using the 
+The host application registers (installs) extensions by using the 
 [`readExtensionManifest`](https://forman.github.io/extendit/functions/core.readExtensionManifest.html)
 and
 [`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
@@ -174,22 +174,25 @@ functions:
 import { readExtensionManifest, registerExtension } from "@forman2/extendit";
 
 export function initApp() {
-   const extensionsUrls = getAppExtensionUrls();
+   const extensionsUrls: string[] = [
+     // Get or read installed extension URLs
+   ];
+   const pathResolver = (modulePath: string): string => {
+     // Resolve a relative "main" entry from package.json
+   };  
    extensionUrls.forEach((extensionUrl) => {
      readExtensionManifest(extensionUrl)
      .then((manifest) => 
-       registerExtension(manifest)
+       registerExtension(manifest, { pathResolver })
      )
      .catch((error) => {
-       // ...
+       // Handle installation error
      });
    });
 }
-
-function getAppExtensionUrls(): URL[] {
-  // ...
-}
 ```
+
+## Contribution points and contributions
 
 The host application (or an extension) can also define handy 
 [_contribution points_](https://forman.github.io/extendit/interfaces/core.ContributionPoint.html):
