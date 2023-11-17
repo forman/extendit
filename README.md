@@ -3,6 +3,8 @@
 [![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 ![npm](https://img.shields.io/npm/v/%40forman2/extendit)
+[![codecov](https://codecov.io/gh/forman/extendit/branch/master/graph/badge.svg)](https://codecov.io/gh/forman/extendit)
+
 
 ![image](logo.png)
 
