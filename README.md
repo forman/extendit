@@ -1,10 +1,11 @@
-[![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
-[![License: MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
-[![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
-[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-![npm](https://img.shields.io/npm/v/%40forman2/extendit)
-
 ![image](logo.png)
+
+[![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
+[![MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
+[![TypeScript](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
+[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![npm](https://img.shields.io/npm/v/%40forman2/extendit)](https://www.npmjs.com/package/@forman2/extendit)
+
 
 ExtendIt.js is a framework and library that is used to create extensible and
 scalable JavaScript applications. Its 
