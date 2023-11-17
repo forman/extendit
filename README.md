@@ -381,7 +381,7 @@ We currently only have this file and the
 
 # Development
 
-## Source Code
+## Source code
 
 Get sources and install dependencies first:
 
