@@ -130,7 +130,7 @@ function processEntry(
  */
 export const menusPoint: ContributionPoint<
   Record<string, MenuItemManifestEntry[]>,
-  Record<string, ProcessedMenuItem[]>
+  Record<string, MenuItem[]>
 > = {
   id: "menus",
   manifestInfo: {

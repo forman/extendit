@@ -14,3 +14,4 @@ export * from "./json";
 export * from "./key";
 export * from "./selector";
 export * from "./to-title";
+export * from "./types";

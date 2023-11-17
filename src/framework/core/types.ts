@@ -5,7 +5,8 @@
  */
 
 import type { DisposableLike } from "@/util/disposable";
-import type { JsonSchema, JsonTypedSchema } from "@/util";
+import type { JsonSchema, JsonTypedSchema } from "@/util/json";
+import type { KeyOfObjOrArrayItem } from "@/util/types";
 
 /**
  * Represents the content of an extension's `package.json` file.
@@ -163,12 +164,6 @@ export interface ExtensionListener {
    */
   onExtensionUnregistered?(extensionId: string): void;
 }
-
-type KeyOfObjOrArrayItem<T> = T extends unknown[]
-  ? keyof T[number]
-  : T extends unknown
-  ? keyof T
-  : string;
 
 /**
  * Represents a contribution point.

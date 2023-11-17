@@ -21,7 +21,7 @@ ExtendIt.js has been designed to efficiently work with
 [React](https://react.dev/), for this purpose it provides a number of reactive 
 [React hooks](https://react.dev/reference/react/hooks). 
 However, the library can be used without 
-React too. It's only a peer dependency.
+React too. It's just a peer dependency.
 
 # Highlights
 
@@ -43,7 +43,7 @@ React too. It's only a peer dependency.
 * Provides optional utilities for Web UI development:
   - React hooks for reactive access to extensions and contributions.
   - Predefined contribution points for typical UI elements.
-* 100% test coverage of core API.
+* 99% test coverage of core API.
 * 100% prettier, linted TypeScript.
 
 # Demo
@@ -422,7 +422,7 @@ VITE_LOG_LEVEL=ALL
 ## Coding style
 
 Most of the code is formatted to default settings of
-[prettier](https://prettier.io/), see its [configuration](./.prettierrc.json).
+[prettier](https://prettier.io/), see its [configuration](.prettierrc.json).
 Since `prettier` is un-opinionated regarding the order of imports, we try to 
 stick to the following order: 
 
