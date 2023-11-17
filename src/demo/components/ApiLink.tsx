@@ -27,7 +27,7 @@ export function ApiLink({ type, module, name, text }: ApiLinkProps) {
   ].join("/");
   return (
     <code>
-      <a href={href} target="_blank">
+      <a href={href} target="_blank" rel="noreferrer">
         {text ?? name}
       </a>
     </code>
