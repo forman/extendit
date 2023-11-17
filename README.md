@@ -44,8 +44,6 @@ React too. It's just a peer dependency.
 * Provides optional utilities for Web UI development:
   - React hooks for reactive access to extensions and contributions.
   - Predefined contribution points for typical UI elements.
-* 99% test coverage of core API.
-* 100% prettier, linted TypeScript.
 
 # Demo
 
