@@ -4,9 +4,6 @@
  * https://opensource.org/licenses/MIT.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import { registerContributionPoint } from "@/core";
-
 /**
  * This module defines a number of contribution points that are
  * common for UI application development.
