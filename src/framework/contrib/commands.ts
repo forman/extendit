@@ -83,7 +83,6 @@ function processCommand(command: CommandManifestEntry): Command {
  * {@link registerCommand} that accepts an argument of type
  * {@link CommandFn}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const commandsPoint: ContributionPoint<

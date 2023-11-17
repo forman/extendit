@@ -69,7 +69,6 @@ const schema: JSONSchemaType<DataViewManifestEntry[]> = {
  * {@link registerDataViewProvider} that accepts an argument of type
  * {@link DataViewProvider}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const dataViewsPoint: ContributionPoint<DataViewManifestEntry[]> = {

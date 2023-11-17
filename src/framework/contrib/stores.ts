@@ -13,7 +13,6 @@ import { useCodeContributions } from "@/react";
  * A store informs clients about state changes
  * and publishes its state as a stable snapshot.
  *
- * @category UI Contributions API
  * @experimental
  * @typeParam State - The type of state managed by this store.
  */
@@ -50,7 +49,6 @@ export interface Store<State = unknown> {
  * Contributions to this point are made using the
  * {@link registerStore} with a store of type {@link Store}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const storesPoint: ContributionPoint = {
@@ -61,7 +59,6 @@ export const storesPoint: ContributionPoint = {
 /**
  * Registers a store.
  *
- * @category UI Contributions API
  * @experimental
  * @param store The store.
  */
@@ -72,7 +69,6 @@ export function registerStore(store: Store) {
 /**
  * Gets an array of registered stores.
  *
- * @category UI Contributions API
  * @experimental
  */
 export function useStores() {
@@ -84,7 +80,6 @@ export function useStores() {
  * Gets an object comprising state snapshots for all the registered stores.
  * The object keys are the store identifiers.
  *
- * @category UI Contributions API
  * @experimental
  */
 export function useStoreStates() {

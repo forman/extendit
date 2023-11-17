@@ -78,7 +78,6 @@ const configurationSchema = {
  * JSON contributions to this point are represented by type
  * {@link ConfigurationManifestEntry}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const configurationPoint: ContributionPoint<Configuration> = {

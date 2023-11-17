@@ -48,7 +48,6 @@ const schema: JSONSchemaType<Submenu[]> = {
  * JSON contributions to this point are represented by type
  * {@link SubmenuManifestEntry}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const submenusPoint: ContributionPoint<Submenu[]> = {
@@ -61,7 +60,6 @@ export const submenusPoint: ContributionPoint<Submenu[]> = {
 /**
  * Gets the array of all registered submenus.
  *
- * @category UI Contributions API
  * @experimental
  */
 export function useSubmenus() {
@@ -71,7 +69,6 @@ export function useSubmenus() {
 /**
  * Gets a mapping of submenu identifiers to submenus.
  *
- * @category UI Contributions API
  * @experimental
  */
 export function useSubmenusMap() {

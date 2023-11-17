@@ -126,7 +126,6 @@ function processEntry(
  * whose keys are menu identifiers and the value values are
  * manu items of type {@link MenuItemManifestEntry}.
  *
- *  @category UI Contributions API
  *  @experimental
  */
 export const menusPoint: ContributionPoint<

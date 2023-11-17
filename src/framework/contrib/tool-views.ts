@@ -69,7 +69,7 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
  * {@link registerToolViewComponent} that accepts a React component of type
  * `React.JSX.Element`.
  *
- * @category UI Contributions API
+ * @experimental
  */
 export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
   id: "toolViews",
