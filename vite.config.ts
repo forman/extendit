@@ -71,7 +71,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["src/framework/test/setup.ts"],
     coverage: {
-      exclude: ["src/demo", "src/framework/test/extensions/**"],
+      provider: "v8",
+      reporter: ["text", "html"],
+      include: ["src/framework/core", "src/framework/util"],
     },
     onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
       | false
