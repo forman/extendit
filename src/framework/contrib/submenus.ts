@@ -8,9 +8,9 @@ import { useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import { type ContributionPoint } from "@/core";
 import { useContributions } from "@/react";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/submenus");
+const LOG = new Logger("extendit/contrib/submenus");
 
 /**
  * Represents a JSON submenu contribution.

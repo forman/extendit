@@ -10,7 +10,7 @@ import type { ExtensionContextImpl } from "@/core/extension-context/impl";
 import { getExtensionContext } from "@/core/extension-context/get";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extension/activate");
+const LOG = new Logger("extendit/core");
 
 /**
  * Activate the extension given by the extension identifier

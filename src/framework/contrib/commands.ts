@@ -15,9 +15,9 @@ import {
 } from "@/core";
 import { useContributions } from "@/react";
 import { Disposable } from "@/util/disposable";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/commands");
+const LOG = new Logger("extendit/contrib/commands");
 
 interface CommandBase {
   command: string;

@@ -9,7 +9,7 @@ import { Logger } from "@/util/log";
 import { getExtensionContext } from "@/core/extension-context/get";
 import { setExtensionStatus } from "@/core/extension/set";
 
-const LOG = new Logger("extension/deactivate");
+const LOG = new Logger("extendit/core");
 
 /**
  * Deactivate the extension given by the extension identifier

@@ -18,9 +18,6 @@ import {
   type UiValue,
 } from "@/util";
 import { getExtensionContext } from "@/core/extension-context/get";
-//import * as log from "@/util/log";
-
-//const LOG = new log.Logger("contrib/configurations");
 
 /**
  * A configuration category.
