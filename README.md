@@ -23,6 +23,29 @@ ExtendIt.js has been designed to efficiently work with
 However, the library can be used without 
 React too. It's only a peer dependency.
 
+# Highlights
+
+* Simple, low-level API allowing for complex, loosely coupled 
+  application designs offered by dependency inversion.
+* Manages _extensions_, which are JavaScript packages with a minor
+  `package.json` enhancement.
+* Lets applications and extensions define _contribution points_ that
+  specify the type of contribution that applications and extensions 
+  can provide.
+* Lets applications and extensions provide _contributions_ to a given 
+  contribution point. Contributions can be  
+  - JSON entries in the extension's `package.json` and/or
+  - JavaScript values registered programmatically in code. 
+* Allows dynamic loading of code:
+  - Extensions may be installed at runtime or bound statically.
+  - Code contributions are loaded on demand only, while JSON entries 
+    can be used right after extension installation.
+* Provides optional utilities for Web UI development:
+  - React hooks for reactive access to extensions and contributions.
+  - Predefined contribution points for typical UI elements.
+* 100% test coverage of core API.
+* 100% prettier, linted TypeScript.
+
 # Demo
 
 To see the API in action, you can run the
@@ -30,7 +53,7 @@ To see the API in action, you can run the
 using `npm run dev`,
 see section [Development](#development) below. It is a simple React
 application that demonstrates how extensions are installed,
-activated, and how they can contribute elements such as commands or 
+activated, and how they can contribute elements such as commands or
 UI components to an application.
 
 # Installation
@@ -45,7 +68,7 @@ or
 yarn add @forman2/extendit
 ```
 
-# Getting Started
+# Usage
 
 Any extension must be defined by its 
 [_extension manifest_](https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html), 
