@@ -1,15 +1,16 @@
 # How to contribute
 
 The [ExtendIt.js](README.md) project welcomes contributions of any form
-as long as you respect our [code of conduct](CODE_OF_CONDUCT.md) and stay in line with 
-the following instructions and guidelines.
+as long as you respect our [code of conduct](CODE_OF_CONDUCT.md) and stay 
+in line with the following instructions and guidelines.
 
 If you have suggestions, ideas, feature requests, or if you have identified
 a malfunction or error, then please 
 [post an issue](https://github.com/forman/extendit/issues). 
 
 If you'd like to submit code or documentation changes, we ask you to provide a 
-[PR](https://github.com/forman/extendit/pulls). 
+[pull request](https://github.com/forman/extendit/pulls) (PR) 
+[here]((https://github.com/forman/extendit/pulls)). 
 For code and configuration changes, your PR must be linked to a 
 corresponding issue. 
 

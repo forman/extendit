@@ -20,7 +20,7 @@ import JavaScript modules - _extensions_ - that add new features and
 capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
-[React](https://react.dev/), for this purpose it provides a number of reactive 
+[React](https://react.dev/), for this purpose it provides a number of  
 [React hooks](https://react.dev/reference/react/hooks). 
 However, the library can be used without 
 React too. It's just a peer dependency.
@@ -422,7 +422,8 @@ VITE_LOG_LEVEL=ALL
 ## Contributing
 
 ExtendIt.js welcomes contributions of any form! Please refer to
-the dedicated document on [how to contribute](CONTRIBUTING.md).
+the dedicated document on 
+[how to contribute](https://github.com/forman/extendit/blob/main/CONTRIBUTING.md).
 
 # Acknowledgements
 
