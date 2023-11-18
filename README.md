@@ -1,11 +1,11 @@
 ![image](logo.png)
 
 [![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
-[![MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
+[![codecov](https://codecov.io/gh/forman/extendit/graph/badge.svg?token=UK5JJ2SVRG)](https://codecov.io/gh/forman/extendit)
+[![npm](https://img.shields.io/npm/v/%40forman2/extendit)](https://www.npmjs.com/package/@forman2/extendit)
 [![TypeScript](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![npm](https://img.shields.io/npm/v/%40forman2/extendit)](https://www.npmjs.com/package/@forman2/extendit)
-[![codecov](https://codecov.io/gh/forman/extendit/graph/badge.svg?token=UK5JJ2SVRG)](https://codecov.io/gh/forman/extendit)
+[![MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
 
 
 ExtendIt.js is a framework and library that is used to create extensible and
@@ -419,24 +419,10 @@ NODE_ENV=development
 VITE_LOG_LEVEL=ALL
 ```
 
-## Coding style
+## Contributing
 
-Most of the code is formatted to default settings of
-[prettier](https://prettier.io/), see its [configuration](.prettierrc.json).
-Since `prettier` is un-opinionated regarding the order of imports, we try to 
-stick to the following order: 
-
-1. React dependencies
-2. Other 3rd-party dependencies
-3. Dependencies on our own packages
-4. Dependencies on our own modules higher up in the hierarchy 
-   using source prefix `@`
-5. Dependencies on submodules that are in the same module folder 
-   further down the hierarchy using source prefix `./`
-
-If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
-we first import TypeScript source dependencies, then separated by a 
-newline, insert resource dependencies in the same order as source dependencies.
+ExtendIt.js welcomes contributions of any form! Please refer to
+the dedicated document on [how to contribute](CONTRIBUTING.md).
 
 # Acknowledgements
 
