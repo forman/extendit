@@ -15,7 +15,7 @@ import { frameworkConfig } from "@/core/config";
 import { Logger } from "@/util/log";
 import { getExtension } from "@/core";
 
-const LOG = new Logger("extension/context");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * Implements the public {@link ExtensionContext} interface.

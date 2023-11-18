@@ -8,7 +8,7 @@ import { activateExtension } from "@/core/extension/activate";
 import { Logger } from "@/util/log";
 import { getExtensionContexts } from "@/core/extension-context/get";
 
-const LOG = new Logger("activation/emit");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * Emit an activation event.

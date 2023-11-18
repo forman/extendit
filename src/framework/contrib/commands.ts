@@ -15,9 +15,9 @@ import {
 } from "@/core";
 import { useContributions } from "@/react";
 import { Disposable } from "@/util/disposable";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/commands");
+const LOG = Logger.getLogger("extendit/contrib/commands");
 
 interface CommandBase {
   command: string;
@@ -83,7 +83,6 @@ function processCommand(command: CommandManifestEntry): Command {
  * {@link registerCommand} that accepts an argument of type
  * {@link CommandFn}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const commandsPoint: ContributionPoint<

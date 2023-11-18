@@ -12,7 +12,6 @@ import { useCodeContributions } from "@/react";
 /**
  * A status bar item.
  *
- * @category UI Contributions API
  * @experimental
  */
 export interface StatusBarItem {
@@ -41,7 +40,6 @@ export interface StatusBarItem {
  * {@link registerStatusBarItem} that accepts an argument of type
  * {@link StatusBarItem}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const statusBarItemsPoint: ContributionPoint = {
@@ -54,7 +52,6 @@ export const statusBarItemsPoint: ContributionPoint = {
 /**
  * Registers a status bar item.
  *
- * @category UI Contributions API
  * @experimental
  * @param statusBarItem - The status bar item.
  */
@@ -71,7 +68,6 @@ export function registerStatusBarItem(
 /**
  * Gets all registered status bar items.
  *
- * @category UI Contributions API
  * @experimental
  */
 export function useStatusBarItems() {

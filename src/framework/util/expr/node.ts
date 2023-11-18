@@ -207,6 +207,8 @@ export class IndexRef extends Node {
  *
  * The assigment only works, if the target is a mutable object or array such
  * as the draft object used by an [immer](https://immerjs.github.io) producer.
+ *
+ * @internal
  */
 export class Assign extends Node {
   constructor(

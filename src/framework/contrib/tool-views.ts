@@ -14,9 +14,9 @@ import {
 } from "@/core";
 import { useContributions, useLoadCodeContribution } from "@/react";
 import { Disposable } from "@/util/disposable";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/views");
+const LOG = Logger.getLogger("extendit/contrib/views");
 
 /**
  * A tool view.
@@ -69,7 +69,7 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
  * {@link registerToolViewComponent} that accepts a React component of type
  * `React.JSX.Element`.
  *
- * @category UI Contributions API
+ * @experimental
  */
 export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
   id: "toolViews",

@@ -18,9 +18,6 @@ import {
   type UiValue,
 } from "@/util";
 import { getExtensionContext } from "@/core/extension-context/get";
-//import * as log from "@/util/log";
-
-//const LOG = new log.Logger("contrib/configurations");
 
 /**
  * A configuration category.
@@ -81,7 +78,6 @@ const configurationSchema = {
  * JSON contributions to this point are represented by type
  * {@link ConfigurationManifestEntry}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const configurationPoint: ContributionPoint<Configuration> = {

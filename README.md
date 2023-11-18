@@ -1,10 +1,12 @@
-[![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
-[![License: MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
-[![](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
-[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-![npm](https://img.shields.io/npm/v/%40forman2/extendit)
-
 ![image](logo.png)
+
+[![CI](https://github.com/forman/extendit/actions/workflows/ci.yml/badge.svg)](https://github.com/forman/extendit/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/forman/extendit/graph/badge.svg?token=UK5JJ2SVRG)](https://codecov.io/gh/forman/extendit)
+[![npm](https://img.shields.io/npm/v/%40forman2/extendit)](https://www.npmjs.com/package/@forman2/extendit)
+[![TypeScript](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
+[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![MIT](https://badgen.net/static/license/MIT/blue)](https://mit-license.org/)
+
 
 ExtendIt.js is a framework and library that is used to create extensible and
 scalable JavaScript applications. Its 
@@ -18,10 +20,31 @@ import JavaScript modules - _extensions_ - that add new features and
 capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
-[React](https://react.dev/), for this purpose it provides a number of reactive 
+[React](https://react.dev/), for this purpose it provides a number of  
 [React hooks](https://react.dev/reference/react/hooks). 
 However, the library can be used without 
-React too. It's only a peer dependency.
+React too. It's just a peer dependency.
+
+# Highlights
+
+* Simple, low-level API allowing for complex, loosely coupled 
+  application designs offered by dependency inversion.
+* Manages _extensions_, which are JavaScript packages with a minor
+  `package.json` enhancement.
+* Lets applications and extensions define _contribution points_ that
+  specify the type of contribution that applications and extensions 
+  can provide.
+* Lets applications and extensions provide _contributions_ to a given 
+  contribution point. Contributions can be  
+  - JSON entries in the extension's `package.json` and/or
+  - JavaScript values registered programmatically in code. 
+* Allows dynamic loading of code:
+  - Extensions may be installed at runtime or bound statically.
+  - Code contributions are loaded on demand only, while JSON entries 
+    can be used right after extension installation.
+* Provides optional utilities for Web UI development:
+  - React hooks for reactive access to extensions and contributions.
+  - Predefined contribution points for typical UI elements.
 
 # Demo
 
@@ -30,7 +53,7 @@ To see the API in action, you can run the
 using `npm run dev`,
 see section [Development](#development) below. It is a simple React
 application that demonstrates how extensions are installed,
-activated, and how they can contribute elements such as commands or 
+activated, and how they can contribute elements such as commands or
 UI components to an application.
 
 # Installation
@@ -45,7 +68,9 @@ or
 yarn add @forman2/extendit
 ```
 
-# Getting Started
+# Usage
+
+## Extension basics
 
 Any extension must be defined by its 
 [_extension manifest_](https://forman.github.io/extendit/interfaces/core.ExtensionManifest.html), 
@@ -76,6 +101,8 @@ export function activate() {
   // register your contributions to the app
 }
 ```
+
+## Extension-specific APIs
 
 The activator may also export an extension-specific API for other extensions
 
@@ -114,7 +141,30 @@ export function activate(ctx: ExtensionContext) {
 }
 ```
 
-The host application registers extensions using the 
+If you add `extensionDependencies` to your `package.json`
+
+```json
+{
+   "extensionDependencies": [
+     "my-company.my-extension"
+   ]
+}
+```
+
+then you can save some lines of code in your activator
+
+```ts
+import { type ExtensionContext, getExtension } from "@forman2/extendit";
+import { type MyApi } from "@my-company/my-extension";
+
+export function activate(ctx: ExtensionContext, myApi: MyApi) {
+  myApi.registerViewProvider({ ... });
+}
+```
+
+## Extension installation
+
+The host application registers (installs) extensions by using the 
 [`readExtensionManifest`](https://forman.github.io/extendit/functions/core.readExtensionManifest.html)
 and
 [`registerExtension`](https://forman.github.io/extendit/functions/core.registerExtension.html)
@@ -124,22 +174,25 @@ functions:
 import { readExtensionManifest, registerExtension } from "@forman2/extendit";
 
 export function initApp() {
-   const extensionsUrls = getAppExtensionUrls();
+   const extensionsUrls: string[] = [
+     // Get or read installed extension URLs
+   ];
+   const pathResolver = (modulePath: string): string => {
+     // Resolve a relative "main" entry from package.json
+   };  
    extensionUrls.forEach((extensionUrl) => {
      readExtensionManifest(extensionUrl)
      .then((manifest) => 
-       registerExtension(manifest)
+       registerExtension(manifest, { pathResolver })
      )
      .catch((error) => {
-       // ...
+       // Handle installation error
      });
    });
 }
-
-function getAppExtensionUrls(): URL[] {
-  // ...
-}
 ```
+
+## Contribution points and contributions
 
 The host application (or an extension) can also define handy 
 [_contribution points_](https://forman.github.io/extendit/interfaces/core.ContributionPoint.html):
@@ -328,7 +381,7 @@ We currently only have this file and the
 
 # Development
 
-## Source Code
+## Source code
 
 Get sources and install dependencies first:
 
@@ -366,24 +419,11 @@ NODE_ENV=development
 VITE_LOG_LEVEL=ALL
 ```
 
-## Coding style
+## Contributing
 
-Most of the code is formatted to default settings of
-[prettier](https://prettier.io/), see its [configuration](./.prettierrc.json).
-Since `prettier` is un-opinionated regarding the order of imports, we try to 
-stick to the following order: 
-
-1. React dependencies
-2. Other 3rd-party dependencies
-3. Dependencies on our own packages
-4. Dependencies on our own modules higher up in the hierarchy 
-   using source prefix `@`
-5. Dependencies on submodules that are in the same module folder 
-   further down the hierarchy using source prefix `./`
-
-If we also have resource dependencies (`*.css`, `*.json`, `*.svg`, ...), 
-we first import TypeScript source dependencies, then separated by a 
-newline, insert resource dependencies in the same order as source dependencies.
+ExtendIt.js welcomes contributions of any form! Please refer to
+the dedicated document on 
+[how to contribute](https://github.com/forman/extendit/blob/main/CONTRIBUTING.md).
 
 # Acknowledgements
 

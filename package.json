@@ -1,6 +1,6 @@
 {
   "name": "@forman2/extendit",
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0",
   "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
@@ -56,7 +56,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --out docs & copyfiles logo.png docs/"
+    "typedoc": "typedoc src/framework/core src/framework/react src/framework/contrib src/framework/util --excludePrivate --out docs & copyfiles logo.png docs/"
   },
   "dependencies": {
     "ajv": "^8.12.0",
