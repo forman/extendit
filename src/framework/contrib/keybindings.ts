@@ -11,7 +11,7 @@ import { useContributions } from "@/react";
 import { executeCommand } from "@/contrib/commands";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/keybindings");
+const LOG = Logger.getLogger("extendit/contrib/keybindings");
 
 interface KeybindingBase {
   command: string;

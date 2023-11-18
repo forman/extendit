@@ -12,7 +12,7 @@ import { COMMAND_PALETTE_MENU_ID, menusPoint } from "@/contrib/menus";
 import { capitalize } from "@/util/capitalize";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/command-palette");
+const LOG = Logger.getLogger("extendit/contrib/command-palette");
 
 interface ProcessedCommandMenuItem extends Omit<ProcessedMenuItem, "submenu"> {
   command: string;

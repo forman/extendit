@@ -16,7 +16,7 @@ import { useContributions, useLoadCodeContribution } from "@/react";
 import { Disposable } from "@/util/disposable";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/views");
+const LOG = Logger.getLogger("extendit/contrib/views");
 
 /**
  * A tool view.

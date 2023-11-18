@@ -10,7 +10,7 @@ import { type ContributionPoint } from "@/core";
 import { useContributions } from "@/react";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/submenus");
+const LOG = Logger.getLogger("extendit/contrib/submenus");
 
 /**
  * Represents a JSON submenu contribution.

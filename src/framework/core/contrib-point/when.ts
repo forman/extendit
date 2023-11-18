@@ -8,7 +8,7 @@ import type { When } from "@/core/types";
 import { Parser } from "@/util/expr";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/core");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * A compiler for when-clauses.

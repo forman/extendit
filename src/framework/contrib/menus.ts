@@ -18,7 +18,7 @@ import {
 } from "@/contrib/keybindings";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/menus");
+const LOG = Logger.getLogger("extendit/contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 

@@ -17,7 +17,7 @@ import { useContributions } from "@/react";
 import { Disposable } from "@/util/disposable";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extendit/contrib/commands");
+const LOG = Logger.getLogger("extendit/contrib/commands");
 
 interface CommandBase {
   command: string;

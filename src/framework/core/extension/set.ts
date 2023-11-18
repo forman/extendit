@@ -9,7 +9,7 @@ import { getExtension } from "@/core/extension/get";
 import { setStoreRecord } from "@/core/store";
 import { Logger, LogLevel } from "@/util/log";
 
-const LOG = new Logger("extendit/core");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * Sets an extension's status to the given value.
