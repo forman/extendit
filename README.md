@@ -5,6 +5,7 @@
 [![TypeScript](https://badgen.net/npm/types/tslib)](https://www.typescriptlang.org/)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![npm](https://img.shields.io/npm/v/%40forman2/extendit)](https://www.npmjs.com/package/@forman2/extendit)
+[![codecov](https://codecov.io/gh/forman/extendit/graph/badge.svg?token=UK5JJ2SVRG)](https://codecov.io/gh/forman/extendit)
 
 
 ExtendIt.js is a framework and library that is used to create extensible and

@@ -32,4 +32,12 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build
-    - run: npm run test
+    - run: npm run coverage
+    - if: ${{ matrix.node-version == '18.x' }}
+      name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/coverage-final.json
+      #env:
+      #  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
