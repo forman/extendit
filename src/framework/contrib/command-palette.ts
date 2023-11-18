@@ -10,9 +10,9 @@ import { type Command, useCommands } from "@/contrib/commands";
 import type { MenuItem, ProcessedMenuItem } from "@/contrib/menus";
 import { COMMAND_PALETTE_MENU_ID, menusPoint } from "@/contrib/menus";
 import { capitalize } from "@/util/capitalize";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/command-palette");
+const LOG = Logger.getLogger("extendit/contrib/command-palette");
 
 interface ProcessedCommandMenuItem extends Omit<ProcessedMenuItem, "submenu"> {
   command: string;

@@ -21,7 +21,7 @@ import { ExtensionContextImpl } from "@/core/extension-context/impl";
 import { Disposable } from "@/util/disposable";
 import { Logger } from "@/util/log";
 
-const LOG = new Logger("extension/register");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * Registers a new extension given by the extension manifest.

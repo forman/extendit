@@ -2,8 +2,6 @@
 
 ## For first stable version
 
-* Review and adjust logging, check for consistent use of logger names 
-  and log levels.
 * Add coverage badge in `README.md`.
 
 ## Potential design changes for later versions

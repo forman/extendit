@@ -5,20 +5,20 @@
  */
 
 import { useMemo } from "react";
+import type { JSONSchemaType } from "ajv";
 import { type ContributionPoint, type When, compileWhenClause } from "@/core";
 import { useContributions } from "@/react";
 import { type Command, useCommandsMap } from "./commands";
 import { type Submenu, useSubmenusMap } from "./submenus";
 import { newId } from "@/util/id";
-import * as log from "@/util/log";
-import type { JSONSchemaType } from "ajv";
 import {
   type Keybinding,
   findKeybindingForCommand,
   useCommandToKeybindingsMap,
 } from "@/contrib/keybindings";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/menus");
+const LOG = Logger.getLogger("extendit/contrib/menus");
 
 export const COMMAND_PALETTE_MENU_ID = "commandPalette";
 
@@ -126,12 +126,11 @@ function processEntry(
  * whose keys are menu identifiers and the value values are
  * manu items of type {@link MenuItemManifestEntry}.
  *
- *  @category UI Contributions API
  *  @experimental
  */
 export const menusPoint: ContributionPoint<
   Record<string, MenuItemManifestEntry[]>,
-  Record<string, ProcessedMenuItem[]>
+  Record<string, MenuItem[]>
 > = {
   id: "menus",
   manifestInfo: {
@@ -140,7 +139,10 @@ export const menusPoint: ContributionPoint<
   },
 };
 
-export function useMenu(menuId: string, ctx: Record<string, unknown>): MenuItem[] {
+export function useMenu(
+  menuId: string,
+  ctx: Record<string, unknown>
+): MenuItem[] {
   if (menuId === COMMAND_PALETTE_MENU_ID) {
     LOG.warn(
       `Items for the menu '${COMMAND_PALETTE_MENU_ID}' ` +

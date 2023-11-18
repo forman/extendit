@@ -11,18 +11,35 @@ import { LogLevel } from "./level";
  * A logger.
  */
 export class Logger {
+  private static instances = new Map<string, Logger>();
   private static globalLevel = LogLevel.get("DEFAULT")!;
   private seenWarnings = new Set<string>();
 
+  /*
+   * Gets a global, optionally named, logger instance.
+   *
+   * @param name - An optional logger name.
+   * @returns A global logger instance.
+   */
+  static getLogger(name?: string): Logger {
+    let key = name ?? "";
+    let logger = Logger.instances.get(key);
+    if (!logger) {
+      logger = new Logger(key);
+      Logger.instances.set(key, logger);
+    }
+    return logger!;
+  }
+
   /**
-   * Gets the global log level.
+   * Gets the global log level applicable to all loggers.
    */
   static getGlobalLevel(): LogLevel {
     return Logger.globalLevel;
   }
 
   /**
-   * Sets the global log level.
+   * Sets the global log level applicable to all loggers.
    * @param level - The new global log level
    * @returns The previous global level
    */

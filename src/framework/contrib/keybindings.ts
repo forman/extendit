@@ -8,10 +8,10 @@ import { useEffect, useMemo } from "react";
 import type { JSONSchemaType } from "ajv";
 import { type ContributionPoint, type When, compileWhenClause } from "@/core";
 import { useContributions } from "@/react";
-import * as log from "@/util/log";
 import { executeCommand } from "@/contrib/commands";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/keybindings");
+const LOG = Logger.getLogger("extendit/contrib/keybindings");
 
 interface KeybindingBase {
   command: string;
@@ -79,7 +79,6 @@ function processKeybinding(keybinding: KeybindingManifestEntry): Keybinding {
  * JSON contributions to this point are represented by type
  * {@link KeybindingManifestEntry}.
  *
- * @category UI Contributions API
  * @experimental
  */
 export const keybindingsPoint: ContributionPoint<

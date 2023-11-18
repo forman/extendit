@@ -17,6 +17,21 @@ afterEach(() => {
   Logger.setGlobalLevel(globalLevel);
 });
 
+test("global unnamed logger", () => {
+  expect(Logger.getLogger()).toBeInstanceOf(Logger);
+  expect(Logger.getLogger("")).toBeInstanceOf(Logger);
+  expect(Logger.getLogger()).toBe(Logger.getLogger());
+  expect(Logger.getLogger()).toBe(Logger.getLogger(""));
+});
+
+test("global named logger", () => {
+  expect(Logger.getLogger("test1")).toBeInstanceOf(Logger);
+  expect(Logger.getLogger("test2")).toBeInstanceOf(Logger);
+  expect(Logger.getLogger("test1")).toBe(Logger.getLogger("test1"));
+  expect(Logger.getLogger("test2")).toBe(Logger.getLogger("test2"));
+  expect(Logger.getLogger("test1")).not.toBe(Logger.getLogger("test2"));
+});
+
 test("logger global level", () => {
   expect(globalLevel).toBeInstanceOf(LogLevel);
   const oldLevel = Logger.setGlobalLevel(LogLevel.INFO);

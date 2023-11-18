@@ -6,9 +6,9 @@
 
 import type { When } from "@/core/types";
 import { Parser } from "@/util/expr";
-import * as log from "@/util/log";
+import { Logger } from "@/util/log";
 
-const LOG = new log.Logger("contrib/when");
+const LOG = Logger.getLogger("extendit/core");
 
 /**
  * A compiler for when-clauses.

@@ -10,7 +10,7 @@
  *
  * You can register all contribution points defined in this module using the
  * {@link registerContributionPoints} function or register individual points
- * using the {@link registerContributionPoint} function.
+ * using the {@link core.registerContributionPoint} function.
  *
  * Contribution points are currently exported constants that are named
  * `<name>Point`, where `<name>` is the extension point identifier.
@@ -29,7 +29,6 @@
  * yet reached a stable state. Its name, API, and implementation may change
  * without notice from one package release to the other.
  *
- * @category UI Contributions API
  * @experimental
  * @packageDocumentation
  */

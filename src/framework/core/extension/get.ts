@@ -43,7 +43,6 @@ export function getExtension(
  * Gets a stable snapshot of the registered extensions.
  *
  * @category Extension API
- * @see {@link useExtensions}
  */
 export function getExtensions(): Extension[] {
   return getExtensionsMemo(frameworkStore.getState().extensions);
