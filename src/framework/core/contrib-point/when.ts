@@ -43,21 +43,38 @@ class WhenClauseCompiler {
  * The framework's when-clause compiler (singleton).
  */
 const whenClauseCompiler = new WhenClauseCompiler();
-
 /**
  * Compiles a when-clause into a when-function.
  *
+ * When-clauses use the same syntax as JavaScript expressions
+ * including literals, operators, variables, object property access,
+ * array indexing, and function calls. Currently, only a subset  of all
+ * JavaScript operators are supported, namely:
+ *
+ * - ternary conditional: `x ? y : z`
+ * - binary comparative: `!=`, `==`, `<=`, `>=`, `<`, `>`
+ * - binary arithmetic: `+`, `-`, `*`, `/`, `%`
+ * - unary: `+`, `-`, `!`
+ * - function call: `x()` or `x(y, ...)`
+ * - array indexing: `x[y]`
+ * - property access: `x.y`
+ *
+ * Variables are made available as a context object during evaluation of
+ * a compiled when-clause, i.e., the {@link When} function.
+ * Variables may have any JavaScript value.
+ *
  * This utility function may be used inside the `processEntry` function
- * that is part of the {@link CodeContributionInfo}.
+ * that is part of the {@link ManifestContributionInfo}.
  *
  * Compiled when-functions are cached; the method will return
- * the same functions for equal when-clauses.
+ * the same function instance for equal when-clauses.
  *
  * @category Extension Contribution API
  * @param whenClause The when-clause / expression
  * @returns a function that executes the when-clause, or `undefined`
  *   if an error occurs during compilation
  */
+
 export function compileWhenClause(
   whenClause: string | undefined | null
 ): When | undefined {
