@@ -1,9 +1,3 @@
-# TODO
-
-## For first stable version
-
-* Add coverage badge in `README.md`.
-
 ## Potential design changes for later versions
 
 * Make `contrib` an own toplevel subpackage
