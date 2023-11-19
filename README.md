@@ -21,9 +21,8 @@ capabilities to the application.
 
 ExtendIt.js has been designed to efficiently work with 
 [React](https://react.dev/), for this purpose it provides a number of  
-[React hooks](https://react.dev/reference/react/hooks). 
-However, the library can be used without 
-React too. It's just a peer dependency.
+[React hooks](https://react.dev/reference/react/hooks). However, the library 
+can be used without React too. It's just a peer dependency.
 
 # Highlights
 
@@ -151,7 +150,9 @@ If you add `extensionDependencies` to your `package.json`
 }
 ```
 
-then you can save some lines of code in your activator
+then you can save some lines of code in your activator, because the 
+framework passes desired APIs as a subsequent arguments corresponding
+to the `extensionDependencies` entries: 
 
 ```ts
 import { type ExtensionContext, getExtension } from "@forman2/extendit";
@@ -348,7 +349,7 @@ async function getCommand(commandId: string): Promise<Command> {
 
 There is also a corresponding React hook 
 [`useLoadCodeContribution`](https://forman.github.io/extendit/functions/react.useLoadCodeContribution.html)
-that is used for implementing React components:
+that is used for implementing components:
 
 ```tsx
 import { useLoadCodeContribution } from "@forman2/extendit/react";
@@ -421,8 +422,8 @@ VITE_LOG_LEVEL=ALL
 
 ## Contributing
 
-ExtendIt.js welcomes contributions of any form! Please refer to
-the dedicated document on 
+ExtendIt.js welcomes contributions of any form! Please refer to a dedicated 
+document on 
 [how to contribute](https://github.com/forman/extendit/blob/main/CONTRIBUTING.md).
 
 # Acknowledgements
