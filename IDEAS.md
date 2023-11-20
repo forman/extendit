@@ -1,9 +1,3 @@
-# TODO
-
-## For first stable version
-
-* Add coverage badge in `README.md`.
-
 ## Potential design changes for later versions
 
 * Contribution points shall allow for defining optional type guards
