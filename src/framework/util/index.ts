@@ -6,6 +6,7 @@
 
 export * as expr from "./expr";
 export * as log from "./log";
+export * from "./log";
 export * from "./assert";
 export * from "./capitalize";
 export * from "./disposable";

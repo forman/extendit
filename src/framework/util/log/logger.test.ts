@@ -66,10 +66,16 @@ describe("enablement", () => {
     errorOk: boolean
   ) {
     expect(logger.isEnabled()).toBe(ok);
+
     expect(logger.isLevelEnabled(LogLevel.DEBUG)).toBe(debugOk);
     expect(logger.isLevelEnabled(LogLevel.INFO)).toBe(infoOk);
     expect(logger.isLevelEnabled(LogLevel.WARN)).toBe(warnOk);
     expect(logger.isLevelEnabled(LogLevel.ERROR)).toBe(errorOk);
+
+    expect(logger.isLevelEnabled("DEBUG")).toBe(debugOk);
+    expect(logger.isLevelEnabled("INFO")).toBe(infoOk);
+    expect(logger.isLevelEnabled("WARN")).toBe(warnOk);
+    expect(logger.isLevelEnabled("ERROR")).toBe(errorOk);
   }
 
   test("global ALL and logger ALL", () => {
@@ -91,22 +97,41 @@ describe("enablement", () => {
     assertLoggerEnablement(logger, false, false, false, false, false);
   });
 
-  test("global WARN and logger ALL", () => {
-    Logger.setGlobalLevel(LogLevel.WARN);
+  test("global ERROR and logger ALL", () => {
+    Logger.setGlobalLevel(LogLevel.ERROR);
 
     const logger = new Logger("test", LogLevel.ALL);
-    assertLoggerEnablement(logger, true, false, false, true, true);
+    assertLoggerEnablement(logger, true, false, false, false, true);
 
     logger.setLevel(LogLevel.INFO);
-    assertLoggerEnablement(logger, true, false, false, true, true);
+    assertLoggerEnablement(logger, true, false, false, false, true);
 
     logger.setLevel(LogLevel.WARN);
-    assertLoggerEnablement(logger, true, false, false, true, true);
+    assertLoggerEnablement(logger, true, false, false, false, true);
 
     logger.setLevel(LogLevel.ERROR);
     assertLoggerEnablement(logger, true, false, false, false, true);
 
     logger.setLevel(LogLevel.OFF);
+    assertLoggerEnablement(logger, false, false, false, false, false);
+  });
+
+  test("global WARN and logger INFO using labels", () => {
+    Logger.setGlobalLevel("WARN");
+
+    const logger = new Logger("test", LogLevel.ALL);
+    assertLoggerEnablement(logger, true, false, false, true, true);
+
+    logger.setLevel("INFO");
+    assertLoggerEnablement(logger, true, false, false, true, true);
+
+    logger.setLevel("WARN");
+    assertLoggerEnablement(logger, true, false, false, true, true);
+
+    logger.setLevel("ERROR");
+    assertLoggerEnablement(logger, true, false, false, false, true);
+
+    logger.setLevel("OFF");
     assertLoggerEnablement(logger, false, false, false, false, false);
   });
 });
@@ -135,6 +160,13 @@ describe("logging methods", () => {
   test("using console with logger level", () => {
     const logger = new Logger("test", LogLevel.ALL);
     logStuff(logger);
+  });
+
+  test("log functions (smoke tests)", () => {
+    Logger.setGlobalLevel(new LogLevel("WEIRD", 0));
+    logStuff(new Logger("test"));
+    logStuff(new Logger("test", LogLevel.ALL));
+    logStuff(new Logger("test", new LogLevel("WEIRD", 0), undefined));
   });
 
   test("generated records", () => {
