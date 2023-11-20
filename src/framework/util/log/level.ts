@@ -85,25 +85,30 @@ export class LogLevel {
   ) {}
 
   /**
-   * Gets the log level for the given log label.
+   * Gets the log level for the given level label.
    *
-   * @param label The log label, "OFF", "ALL", "DEBUG",
-   *    "INFO", "WARN", or "ERROR".
+   * @param labelOrLevel The level label "OFF", "ALL", "DEBUG",
+   *    "INFO", "WARN", or "ERROR", or a level instance.
    * @returns The log label or `undefined` if no such level exists.
    */
-  static get(label: string): LogLevel | undefined;
+  static get(labelOrLevel: string | LogLevel): LogLevel | undefined;
   /**
    * Gets the log level for the given log label.
    *
-   * @param label The log label, "OFF", "ALL", "DEBUG",
-   *    "INFO", "WARN", or "ERROR".
+   * @param labelOrLevel The level label "OFF", "ALL", "DEBUG",
+   *    "INFO", "WARN", or "ERROR", or a level instance.
    * @param defaultLevel The default level.
+   *    Ignored, if `labelOrLevel` is a valid label or level instance.
    * @returns The log label or the given `defaultLevel`
    *   if no such level exists.
    */
-  static get(label: string, defaultLevel: LogLevel): LogLevel;
-  static get(label: string, defaultLevel?: LogLevel): LogLevel | undefined {
-    const key = label.toUpperCase();
+  static get(labelOrLevel: string | LogLevel, defaultLevel: LogLevel): LogLevel;
+  static get(labelOrLevel: string | LogLevel,
+             defaultLevel?: LogLevel): LogLevel | undefined {
+    if (labelOrLevel instanceof LogLevel) {
+      return labelOrLevel;
+    }
+    const key = labelOrLevel.toUpperCase();
     if (key === "DEFAULT") {
       return LogLevel.get(DEFAULT_LOG_LABEL, LogLevel.DEFAULT);
     }

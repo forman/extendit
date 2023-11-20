@@ -40,12 +40,12 @@ export class Logger {
 
   /**
    * Sets the global log level applicable to all loggers.
-   * @param level - The new global log level
+   * @param level - The new global log level or level label
    * @returns The previous global level
    */
-  static setGlobalLevel(level: LogLevel): LogLevel {
+  static setGlobalLevel(level: LogLevel | string): LogLevel {
     const prevLevel = Logger.globalLevel;
-    Logger.globalLevel = level;
+    Logger.globalLevel = LogLevel.get(level, prevLevel);
     return prevLevel;
   }
 
@@ -77,10 +77,14 @@ export class Logger {
 
   /**
    * Sets the logger's level.
-   * @param level - the new level or undefined
+   * @param level - the new level or level label or `null`, or `undefined`.
    */
-  setLevel(level: LogLevel | undefined | null) {
-    this.level = !level ? undefined : level;
+  setLevel(level: LogLevel | string | undefined | null) {
+    if (!level) {
+      this.level = undefined;
+    } else {
+      this.level = LogLevel.get(level);
+    }
   }
 
   /**
@@ -92,11 +96,15 @@ export class Logger {
 
   /**
    * Checks whether this logger is enabled for the given the log level.
-   * @param level - the log level
+   * @param levelOrLabel - The log level or level label.
    */
-  isLevelEnabled(level: LogLevel): boolean {
+  isLevelEnabled(levelOrLabel: LogLevel | string): boolean {
+    if (!this.isEnabled()) {
+      return false;
+    }
+    const level = LogLevel.get(levelOrLabel);
     return (
-      this.isEnabled() &&
+      !!level &&
       level.value >= Logger.getGlobalLevel().value &&
       level.value >= this.getLevel().value
     );

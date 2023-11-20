@@ -14,6 +14,8 @@ test("Framework Util API is complete", () => {
     "AssertionError",
     "Disposable",
     "JsonValidationError",
+    "LogLevel",
+    "Logger",
     "assert",
     "assertDefined",
     "capitalize",
