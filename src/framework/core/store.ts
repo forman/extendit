@@ -44,11 +44,26 @@ export interface FrameworkState {
   contributionPoints: Record<string, ContributionPoint>;
   /**
    * A mapping from contribution point identifiers to code contributions.
-   * Code contributions are not expected to change once added to the store.
-   * However, adding or removing code contributions is reactive.
+   * Adding, changing, and removing a code contribution is a
+   * reactive operation.
    */
   codeContributions: Record<string, Map<string, unknown>>;
 }
+
+/**
+ * Create a new framework initial state.
+ *
+ * For testing only.
+ *
+ * @internal
+ * @category Extension Framework API
+ */
+export const newInitialFrameworkState = () => ({
+  extensions: {},
+  extensionContexts: {},
+  contributionPoints: {},
+  codeContributions: {},
+});
 
 /**
  * The framework's reactive store instance.
@@ -56,12 +71,9 @@ export interface FrameworkState {
  * @internal
  * @category Extension Framework API
  */
-export const frameworkStore = createStore<FrameworkState>()(() => ({
-  extensions: {},
-  extensionContexts: {},
-  contributionPoints: {},
-  codeContributions: {},
-}));
+export const frameworkStore = createStore<FrameworkState>()(() =>
+  newInitialFrameworkState()
+);
 
 //////////////////////////////////////////////////////////////////////////////
 // Store record management
@@ -84,6 +96,9 @@ export function getStoreRecord<K extends keyof FrameworkState>(
 
 /**
  * Sets a record in the framework's reactive store instance.
+ *
+ * Calling this function will always create a new framework state, even if
+ * the same record value is already set.
  *
  * @internal
  * @category Extension Framework API

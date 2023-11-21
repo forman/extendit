@@ -1,5 +1,6 @@
 # 0.1.1-alpha.0
 
+* Fixed the `registerCodeContribution` function to be fully reactive. [#23]
 * Log levels may also be given as strings. [#20]
 * Import logging classes directly from `util`: 
   `import { Logger, LogLevel } from "@forman2/extendit/util"`.

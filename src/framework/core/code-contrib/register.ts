@@ -4,11 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import {
-  deleteStoreRecord,
-  getStoreRecord,
-  setStoreRecord,
-} from "@/core/store";
+import { getStoreRecord, setStoreRecord } from "@/core/store";
 import { Disposable } from "@/util/disposable";
 
 /**
@@ -29,12 +25,20 @@ export function registerCodeContribution<Data>(
   contribData: Data
 ): Disposable {
   let contribDataMap = getStoreRecord("codeContributions", contribPointId);
-  if (!contribDataMap) {
-    contribDataMap = new Map<string, Data>();
-    setStoreRecord("codeContributions", contribPointId, contribDataMap);
+  if (contribDataMap) {
+    if (Object.is(contribDataMap.get(contribId), contribData)) {
+      return new Disposable(() => {});
+    }
+    contribDataMap = new Map(contribDataMap.entries());
+  } else {
+    contribDataMap = new Map();
   }
   contribDataMap.set(contribId, contribData);
+  setStoreRecord("codeContributions", contribPointId, contribDataMap);
   return new Disposable(() => {
-    deleteStoreRecord("codeContributions", contribPointId);
+    const contribDataMap = getStoreRecord("codeContributions", contribPointId);
+    if (contribDataMap && contribDataMap.has(contribId)) {
+      contribDataMap.delete(contribId);
+    }
   });
 }
