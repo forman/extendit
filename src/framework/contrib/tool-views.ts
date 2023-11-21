@@ -121,7 +121,7 @@ export function useToolViewComponent(
     toolViewsPoint.id,
     viewId
   );
-  return (!codeContribution?.loading && codeContribution?.data) || undefined;
+  return (!codeContribution?.loading && codeContribution?.value) || undefined;
 }
 
 export interface ToolViewComponentProps {

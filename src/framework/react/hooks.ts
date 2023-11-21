@@ -33,7 +33,8 @@ import { getExtensionsMemo } from "@/core/extension/get";
 // 2. Return result of get<Name>Memo(deps + args)
 
 /**
- * A React hook that gets data from the framework's store.
+ * A React hook that gets data from the framework's store
+ * using the given `selector` function.
  *
  * @internal
  * @category React Hooks
@@ -118,12 +119,13 @@ export function useContributionPoints(): ContributionPoint[] {
  * `undefined`. TODO: Find out how we can we avoid this behaviour.
  *
  * @category React Hooks
+ * @typeParam Value - Type of the loaded code contribution value.
  * @returns The current state of the code contribution or `undefined`.
  */
-export function useLoadCodeContribution<Data = unknown>(
+export function useLoadCodeContribution<Value = unknown>(
   contribPointId: string,
   contribId: string
-): CodeContribution<Data> | undefined {
+): CodeContribution<Value> | undefined {
   // TODO: Check, if we'd need to put this state into our frameworkStore.
   //   Otherwise, the state is only available until unmount of the
   //   component that owns this state.
@@ -156,7 +158,7 @@ export function useLoadCodeContribution<Data = unknown>(
         }));
       });
   }, [contribPointId, contribId, dataId, dataStates]);
-  return dataStates[dataId] as CodeContribution<Data> | undefined;
+  return dataStates[dataId] as CodeContribution<Value> | undefined;
 }
 
 /**
@@ -165,15 +167,16 @@ export function useLoadCodeContribution<Data = unknown>(
  * an empty map is returned.
  *
  * @category React Hooks
+ * @typeParam Value - Type of the code contribution values in the map.
  * @param contribPointId - The code contribution point identifier.
  * @returns A read-only map of code contributions.
  */
-export function useCodeContributions<Data = unknown>(
+export function useCodeContributions<Value = unknown>(
   contribPointId: string
-): ReadonlyMap<string, Data> {
+): ReadonlyMap<string, Value> {
   const codeContribMap = useStore((s) => s.codeContributions[contribPointId]);
   return useMemo(
     () => codeContribMap || new Map(),
     [codeContribMap]
-  ) as ReadonlyMap<string, Data>;
+  ) as ReadonlyMap<string, Value>;
 }

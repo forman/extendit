@@ -1,5 +1,8 @@
 # 0.1.1-alpha.0
 
+* Changed type parameter name from `Data` to `Value`. [#24]
+  Corresponding to this change, also changed property name `data`
+  into `value` in type `CodeContribution<Value>`. 
 * Fixed the `registerCodeContribution` function to be fully reactive. [#23]
 * Log levels may also be given as strings. [#20]
 * Import logging classes directly from `util`: 

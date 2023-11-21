@@ -15,16 +15,17 @@ import { getContributionPoint } from "@/core/contrib-point/get";
  * given `contribPoint.activationEvent`, if any.
  *
  * @category Extension Contribution API
+ * @typeParam Value - Type of the loaded code contribution value
  * @param contribPointId - The contribution point identifier.
  * @param contribId - The code contribution identifier.
  * @returns A promise that resolves to the code contribution data.
  * @throws Error - If the contribution point is unknown
  *  or if the contribution identifier is not registered
  */
-export async function loadCodeContribution<Data>(
+export async function loadCodeContribution<Value>(
   contribPointId: string,
   contribId: string
-): Promise<Data> {
+): Promise<Value> {
   let contribDataMap = getStoreRecord("codeContributions", contribPointId);
   if (!contribDataMap || !contribDataMap.has(contribId)) {
     const contribPoint = getContributionPoint(contribPointId, true);
@@ -39,5 +40,5 @@ export async function loadCodeContribution<Data>(
       `Unregistered code contribution '${contribPointId}/${contribId}'.`
     );
   }
-  return Promise.resolve(contribDataMap.get(contribId) as Data);
+  return Promise.resolve(contribDataMap.get(contribId) as Value);
 }

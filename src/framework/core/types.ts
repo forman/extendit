@@ -273,20 +273,20 @@ export interface CodeContributionInfo<TS = unknown> {
  * or that is already loaded.
  *
  * @category Extension Contribution API
- * @typeParam Data - Type of the loaded code contribution data
+ * @typeParam Value - Type of the loaded code contribution value
  */
-export interface CodeContribution<Data = unknown> {
+export interface CodeContribution<Value = unknown> {
   /**
    * While `true` the code contribution data is being loaded.
-   * Then {@link data} and {@link error} are undefined.
+   * Then {@link value} and {@link error} are undefined.
    * If `false`, loading code contribution data either succeeded or failed.
    */
   loading: boolean;
   /**
-   * The loaded code contribution data or `undefined`
+   * The loaded code contribution value or `undefined`
    * while {@link loading} is `true` or if an {@link error} occurred.
    */
-  data?: Data;
+  value?: Value;
   /**
    * If defined, loading of code contribution data failed.
    */
