@@ -168,22 +168,20 @@ export function useLoadCodeContribution<Value = unknown>(
   // TODO: Check, if we'd need to put this state into our frameworkStore.
   //   Otherwise, the state is only available until unmount of the
   //   component that owns this state.
-  const [dataStates, setDataStates] = useState<
-    Record<string, CodeContribution>
-  >({});
-  const dataId = `${contribPointId}/${contribId}`;
+  const [values, setValues] = useState<Record<string, CodeContribution>>({});
+  const valueId = `${contribPointId}/${contribId}`;
   useEffect(() => {
     // LOG.debug("Hook 'useLoadCodeContribution' is recomputing");
-    if (dataStates[dataId]) {
+    if (values[valueId]) {
       // Done: we already have either loaded data or an error
       return;
     }
-    setDataStates((s) => ({ ...s, [dataId]: { loading: true } }));
+    setValues((s) => ({ ...s, [valueId]: { loading: true } }));
     loadCodeContribution(contribPointId, contribId)
-      .then((data) => {
-        setDataStates((s) => ({
+      .then((value) => {
+        setValues((s) => ({
           ...s,
-          [dataId]: { loading: false, data },
+          [valueId]: { loading: false, value },
         }));
       })
       .catch((error: unknown) => {
@@ -191,13 +189,13 @@ export function useLoadCodeContribution<Value = unknown>(
         //   "Hook 'useLoadCodeContribution' failed due to following error:",
         //   error
         // );
-        setDataStates((s) => ({
+        setValues((s) => ({
           ...s,
-          [dataId]: { loading: false, error },
+          [valueId]: { loading: false, error },
         }));
       });
-  }, [contribPointId, contribId, dataId, dataStates]);
-  return dataStates[dataId] as CodeContribution<Value> | undefined;
+  }, [contribPointId, contribId, valueId, values]);
+  return values[valueId] as CodeContribution<Value> | undefined;
 }
 
 /**
