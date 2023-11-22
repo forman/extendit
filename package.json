@@ -1,6 +1,6 @@
 {
   "name": "@forman2/extendit",
-  "version": "0.2.0-alpha",
+  "version": "0.2.0-alpha.0",
   "type": "module",
   "displayName": "ExtendIt.js",
   "description": "A framework supporting development of extensible and scalable JavaScript applications",
