@@ -1,5 +1,6 @@
 # 0.1.1-alpha.0
 
+* Enhanced API docs for React Hooks. [#27]
 * Changed type parameter name from `Data` to `Value`. [#24]
   Corresponding to this change, also changed property name `data`
   into `value` in type `CodeContribution<Value>`. 
