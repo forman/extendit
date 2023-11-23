@@ -51,7 +51,7 @@ export function assertDefined<T>(
 ): asserts value is NonNullable<T> {
   if (value === undefined || value === null) {
     throw AssertionError.fromMessage(
-      message ?? `Expected 'value' to be defined, but received ${value}`
+      message ?? `Expected 'value' to be defined, but received ${value + ""}`
     );
   }
 }

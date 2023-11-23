@@ -11,11 +11,13 @@
 export function keyFromValue(value: unknown): string {
   return typeof value === "string"
     ? value
+    : value === null
+    ? "null"
     : Array.isArray(value)
     ? keyFromArray(value)
-    : typeof value === "object" && value !== null
+    : typeof value === "object"
     ? keyFromObject(value)
-    : `${value}`;
+    : value + "";
 }
 
 /**

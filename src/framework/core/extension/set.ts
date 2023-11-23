@@ -69,8 +69,7 @@ export function setExtensionStatus(
         ? r
         : typeof r === "string"
         ? new Error(r)
-        : // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          new Error(`${r})`)
+        : new Error(r + "")
     );
     nextExtension = {
       ...nextExtension,

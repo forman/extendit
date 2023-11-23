@@ -47,7 +47,6 @@ export class Literal<T> extends Node<T> {
   }
 
   toString(): string {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `${typeof this.value}(${this.value})`;
   }
 }
@@ -236,7 +235,7 @@ export class Assign extends Node {
       } else {
         throw new Error(
           'An array index must have type "number" or "string", ' +
-            `was type "${typeof indexValue}": ${indexValue}`
+            `was type "${typeof indexValue}": ${indexValue + ""}`
         );
       }
     }

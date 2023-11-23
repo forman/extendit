@@ -11,7 +11,7 @@ import type { BinaryOp, UnaryOp } from "./ops";
 describe("unary ops", () => {
   function assertUnaryOps<T>(x: unknown, expected: [UnaryOp, T][]) {
     expected.forEach(([op, result]) => {
-      expect(op(x), `${op.name}(${x})`).toEqual(result);
+      expect(op(x), `${op.name}(${String(x)})`).toEqual(result);
     });
   }
 
@@ -35,7 +35,9 @@ describe("binary ops", () => {
     expected: [BinaryOp, T][]
   ) {
     expected.forEach(([op, result]) => {
-      expect(op(x, y), `${op.name}(${x}, ${y})`).toEqual(result);
+      expect(op(x, y), `${op.name}(${String(x)}, ${String(y)})`).toEqual(
+        result
+      );
     });
   }
 

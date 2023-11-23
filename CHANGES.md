@@ -10,6 +10,7 @@
   `import { Logger, LogLevel } from "@forman2/extendit/util"`.
 * Fixed and enhanced API doc of `compileWhenClause` function. [#16]
 * Clarified effect of `extensionDependencies` in `README.md`.
+* Addressed all `eslint` warnings in code and CI now also runs `npm run lint`.
 
 # 0.1.0 (from 18.11.2023)
 

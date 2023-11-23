@@ -17,7 +17,7 @@ export type TokenType =
 
 export interface Token {
   type: TokenType;
-  value: unknown;
+  value: string | number;
 }
 
 // End-of-token-stream marker

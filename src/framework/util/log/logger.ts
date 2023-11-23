@@ -22,7 +22,7 @@ export class Logger {
    * @returns A global logger instance.
    */
   static getLogger(name?: string): Logger {
-    let key = name ?? "";
+    const key = name ?? "";
     let logger = Logger.instances.get(key);
     if (!logger) {
       logger = new Logger(key);

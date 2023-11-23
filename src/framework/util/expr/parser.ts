@@ -87,7 +87,6 @@ export class Parser {
       } else {
         throw this.error(
           `Missing ":" after "?" of conditional` +
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             ` near "${this.token().value}".`
         );
       }
