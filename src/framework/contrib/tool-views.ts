@@ -34,7 +34,11 @@ export interface ToolViewManifestEntry extends ToolView {
   when?: string;
 }
 
-interface StoreToolView extends ToolView {
+/**
+ * A tool view as stored in the store.
+ * @internal
+ */
+export interface StoreToolView extends ToolView {
   when?: When;
 }
 
