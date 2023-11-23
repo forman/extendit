@@ -57,7 +57,7 @@ test("deactivateExtension with failing deactivate()", async () => {
   expect(Array.isArray(extension.reasons)).toBe(true);
   expect(extension.reasons).toHaveLength(1);
   expect(extension.reasons![0]).toBeInstanceOf(Error);
-  expect(`${extension.reasons![0]}`).toMatch(
+  expect(extension.reasons![0] + "").toMatch(
     "Failed by intention: pippo.will-fail-on-deactivation"
   );
   disposable.dispose();

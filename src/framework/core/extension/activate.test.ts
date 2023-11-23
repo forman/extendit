@@ -98,7 +98,7 @@ test("activateExtension fails for missing main.js file", async () => {
   expect(extension.status).toEqual("rejected");
   expect(Array.isArray(extension.reasons)).toBe(true);
   expect(extension.reasons).toHaveLength(1);
-  expect(`${extension.reasons![0]}`).toMatch("Failed to load url main.js");
+  expect(extension.reasons![0] + "").toMatch("Failed to load url main.js");
   disposable.dispose();
 });
 
@@ -112,7 +112,7 @@ test("activateExtension fails on activation", async () => {
   expect(Array.isArray(extension.reasons)).toBe(true);
   expect(extension.reasons).toHaveLength(1);
   expect(extension.reasons![0]).toBeInstanceOf(Error);
-  expect(`${extension.reasons![0]}`).toMatch(
+  expect(extension.reasons![0] + "").toMatch(
     "Failed by intention: pippo.will-fail-on-activation"
   );
   disposable.dispose();
@@ -133,10 +133,10 @@ test("activateExtension fails for failing dependency", async () => {
   expect(extension.status).toEqual("rejected");
   expect(Array.isArray(extension.reasons)).toBe(true);
   expect(extension.reasons).toHaveLength(2);
-  expect(`${extension.reasons![0]}`).toMatch(
+  expect(extension.reasons![0] + "").toMatch(
     "Extension 'pippo.requires-failing' rejected because dependencies could not be resolved."
   );
-  expect(`${extension.reasons![1]}`).toMatch(
+  expect(extension.reasons![1] + "").toMatch(
     "Failed by intention: pippo.will-fail-on-activation"
   );
   disposable1.dispose();
