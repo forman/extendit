@@ -15,32 +15,33 @@ const LOG = Logger.getLogger("extendit/contrib/tool-views-menu");
 
 export function useToolViewMenuItems(
   menuId: string,
-  toolViewMenuId: string,
+  toolViewsMenuId: string,
   toolViewShowCommand: string,
   ctx: Record<string, unknown>
-): MenuItem[] {
-  const activityBarViews = useConditionalHook(
-    menuId === toolViewMenuId,
-    useContributions<StoreToolView>
-  )(toolViewsPoint.id, "activityBar");
-  const secondarySideBarViews = useConditionalHook(
-    menuId === toolViewMenuId,
-    useContributions<StoreToolView>
-  )(toolViewsPoint.id, "secondarySideBar");
-  const panelViews = useConditionalHook(
-    menuId === toolViewMenuId,
-    useContributions<StoreToolView>
-  )(toolViewsPoint.id, "panel");
+): MenuItem[] | undefined {
+  const activityBarViews = useContributions<StoreToolView>(
+    toolViewsPoint.id,
+    "activityBar"
+  );
+  const secondarySideBarViews = useContributions<StoreToolView>(
+    toolViewsPoint.id,
+    "secondarySideBar"
+  );
+  const panelViews = useContributions<StoreToolView>(
+    toolViewsPoint.id,
+    "panel"
+  );
 
   return useMemo(() => {
     LOG.debug("Hook 'useToolViews' is recomputing");
 
+    if (menuId !== toolViewsMenuId) {
+      return undefined;
+    }
+
     let order = 0;
 
-    function createMenuItems(
-      toolViews: StoreToolView[] | undefined,
-      containerId: string
-    ) {
+    function createMenuItems(toolViews: StoreToolView[], containerId: string) {
       if (!toolViews) {
         return [];
       }
@@ -62,23 +63,16 @@ export function useToolViewMenuItems(
       ...createMenuItems(panelViews, "panel"),
     ];
   }, [
+    menuId,
+    toolViewsMenuId,
+    toolViewShowCommand,
+    ctx,
     activityBarViews,
     secondarySideBarViews,
     panelViews,
-    ctx,
-    toolViewShowCommand,
   ]);
 }
 
 function isValidToolView(view: StoreToolView, ctx: Record<string, unknown>) {
   return view.when ? view.when(ctx) : true;
 }
-
-function useConditionalHook<C, A extends unknown[], R>(
-  condition: C,
-  hook: (...args: A) => R
-): ((...args: A) => R) | ((...args: A) => undefined) {
-  return condition ? hook : useNothing<A>;
-}
-
-function useNothing<A extends unknown[]>(..._args: A): undefined {}
