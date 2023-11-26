@@ -154,7 +154,7 @@ export function useMenu(
   const toolViewMenuItems = useToolViewMenuItems(
     menuId,
     "view/toolViews",
-    "activateToolView",
+    "selectToolView",
     ctx
   );
   const commandsMap = useCommandsMap();

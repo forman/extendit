@@ -33,7 +33,7 @@ export function useToolViewMenuItems(
   );
 
   return useMemo(() => {
-    LOG.debug("Hook 'useToolViews' is recomputing");
+    LOG.debug("Hook 'useToolViewMenuItems' is recomputing");
 
     if (menuId !== toolViewsMenuId) {
       return undefined;
@@ -51,7 +51,7 @@ export function useToolViewMenuItems(
           id: newId(),
           label: view.title ?? capitalize(view.id),
           command: toolViewShowCommand,
-          args: [containerId],
+          args: [view.id, containerId],
           group: containerId,
           order: order++,
         }));
