@@ -406,7 +406,6 @@ function collectConfigurationItems(
         titlePath: [...titlePath, node.title],
       });
       Object.entries(node.category.properties)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .filter(([_, propertySchema]) => !propertySchema.hidden)
         .sort(compareCategoryProperties)
         .forEach(([propertyName, propertySchema]) => {

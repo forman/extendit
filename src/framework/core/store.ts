@@ -129,7 +129,6 @@ export function deleteStoreRecord<K extends keyof FrameworkState>(
   id: string
 ) {
   frameworkStore.setState((state) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [id]: _, ...rest } = state[key];
     return { [key]: { ...rest } };
   });
