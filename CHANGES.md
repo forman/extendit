@@ -11,8 +11,10 @@
 * Fixed the `registerCodeContribution` function to be fully reactive. [#23]
 * Fixed and enhanced API doc of `compileWhenClause` function. [#16]
 
-## Other enhancements
+## Other changes
 
+* Included the compiled `when` clause in `ToolView` interface to better 
+  support [#30].
 * Enhanced API docs for React Hooks. [#27]
 * Log levels may also be given as strings. [#20]
 * Import logging classes directly from `util`:

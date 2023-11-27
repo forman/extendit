@@ -19,9 +19,9 @@ import { Logger } from "@/util/log";
 const LOG = Logger.getLogger("extendit/contrib/views");
 
 /**
- * A tool view.
+ * Basic properties for any tool view.
  */
-export interface ToolView {
+interface ToolViewBase {
   id: string;
   title?: string;
   icon?: string;
@@ -30,11 +30,14 @@ export interface ToolView {
 /**
  * JSON representation of a tool view.
  */
-export interface ToolViewManifestEntry extends ToolView {
+export interface ToolViewManifestEntry extends ToolViewBase {
   when?: string;
 }
 
-interface StoreToolView extends ToolView {
+/**
+ * A tool view as stored in the store.
+ */
+export interface ToolView extends ToolViewBase {
   when?: When;
 }
 
@@ -71,7 +74,10 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
  *
  * @experimental
  */
-export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
+export const toolViewsPoint: ContributionPoint<
+  Record<string, ToolViewManifestEntry[]>,
+  Record<string, ToolView[]>
+> = {
   id: "toolViews",
   manifestInfo: {
     schema,
@@ -85,8 +91,8 @@ export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
 
 function processEntry(
   views: Record<string, ToolViewManifestEntry[]>
-): Record<string, StoreToolView[]> {
-  const processedContributions: Record<string, StoreToolView[]> = {};
+): Record<string, ToolView[]> {
+  const processedContributions: Record<string, ToolView[]> = {};
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
@@ -100,7 +106,7 @@ export function useToolViews(
   containerId: string,
   ctx: Record<string, unknown>
 ): ToolView[] {
-  const views = useContributions<StoreToolView>(toolViewsPoint.id, containerId);
+  const views = useContributions<ToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
     LOG.debug("Hook 'useToolViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));
