@@ -19,9 +19,9 @@ import { Logger } from "@/util/log";
 const LOG = Logger.getLogger("extendit/contrib/views");
 
 /**
- * A tool view.
+ * Basic properties for any tool view.
  */
-export interface ToolView {
+interface ToolViewBase {
   id: string;
   title?: string;
   icon?: string;
@@ -30,15 +30,14 @@ export interface ToolView {
 /**
  * JSON representation of a tool view.
  */
-export interface ToolViewManifestEntry extends ToolView {
+export interface ToolViewManifestEntry extends ToolViewBase {
   when?: string;
 }
 
 /**
  * A tool view as stored in the store.
- * @internal
  */
-export interface StoreToolView extends ToolView {
+export interface ToolView extends ToolViewBase {
   when?: When;
 }
 
@@ -75,22 +74,23 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
  *
  * @experimental
  */
-export const toolViewsPoint: ContributionPoint<Record<string, ToolView[]>> = {
-  id: "toolViews",
-  manifestInfo: {
-    schema,
-    processEntry,
-  },
-  codeInfo: {
-    idKey: "id",
-    activationEvent: "onToolView:${id}",
-  },
-};
+export const toolViewsPoint: ContributionPoint<Record<string, ToolViewBase[]>> =
+  {
+    id: "toolViews",
+    manifestInfo: {
+      schema,
+      processEntry,
+    },
+    codeInfo: {
+      idKey: "id",
+      activationEvent: "onToolView:${id}",
+    },
+  };
 
 function processEntry(
   views: Record<string, ToolViewManifestEntry[]>
-): Record<string, StoreToolView[]> {
-  const processedContributions: Record<string, StoreToolView[]> = {};
+): Record<string, ToolView[]> {
+  const processedContributions: Record<string, ToolView[]> = {};
   Object.entries(views).forEach(([k, v]) => {
     processedContributions[k] = v.map((view) => {
       const { when: whenClause, ...rest } = view;
@@ -103,8 +103,8 @@ function processEntry(
 export function useToolViews(
   containerId: string,
   ctx: Record<string, unknown>
-): ToolView[] {
-  const views = useContributions<StoreToolView>(toolViewsPoint.id, containerId);
+): ToolViewBase[] {
+  const views = useContributions<ToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
     LOG.debug("Hook 'useToolViews' is recomputing");
     return views.filter((view) => (view.when ? view.when(ctx) : true));
