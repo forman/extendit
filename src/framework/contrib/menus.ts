@@ -17,7 +17,6 @@ import {
   useCommandToKeybindingsMap,
 } from "@/contrib/keybindings";
 import { Logger } from "@/util/log";
-import { useToolViewMenuItems } from "@/contrib/tool-views-menu";
 
 const LOG = Logger.getLogger("extendit/contrib/menus");
 
@@ -151,12 +150,6 @@ export function useMenu(
     );
   }
   const menuItems = useContributions<ProcessedMenuItem>(menusPoint.id, menuId);
-  const toolViewMenuItems = useToolViewMenuItems(
-    menuId,
-    "view/toolViews",
-    "selectToolView",
-    ctx
-  );
   const commandsMap = useCommandsMap();
   const keybindingsMap = useCommandToKeybindingsMap();
   const submenusMap = useSubmenusMap();
@@ -164,23 +157,10 @@ export function useMenu(
     LOG.debug("Hook 'useMenu' is recomputing");
     return insertGroupSeparators(
       sortMenuItems(
-        newMenuItems(
-          toolViewMenuItems ? toolViewMenuItems : menuItems,
-          commandsMap,
-          keybindingsMap,
-          submenusMap,
-          ctx
-        )
+        newMenuItems(menuItems, commandsMap, keybindingsMap, submenusMap, ctx)
       )
     );
-  }, [
-    menuItems,
-    toolViewMenuItems,
-    commandsMap,
-    keybindingsMap,
-    submenusMap,
-    ctx,
-  ]);
+  }, [menuItems, commandsMap, keybindingsMap, submenusMap, ctx]);
 }
 
 //---------------------------------------------------------------
