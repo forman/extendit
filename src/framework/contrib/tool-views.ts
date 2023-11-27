@@ -74,18 +74,20 @@ const schema: JSONSchemaType<Record<string, ToolViewManifestEntry[]>> = {
  *
  * @experimental
  */
-export const toolViewsPoint: ContributionPoint<Record<string, ToolViewBase[]>> =
-  {
-    id: "toolViews",
-    manifestInfo: {
-      schema,
-      processEntry,
-    },
-    codeInfo: {
-      idKey: "id",
-      activationEvent: "onToolView:${id}",
-    },
-  };
+export const toolViewsPoint: ContributionPoint<
+  Record<string, ToolViewManifestEntry[]>,
+  Record<string, ToolView[]>
+> = {
+  id: "toolViews",
+  manifestInfo: {
+    schema,
+    processEntry,
+  },
+  codeInfo: {
+    idKey: "id",
+    activationEvent: "onToolView:${id}",
+  },
+};
 
 function processEntry(
   views: Record<string, ToolViewManifestEntry[]>
@@ -103,7 +105,7 @@ function processEntry(
 export function useToolViews(
   containerId: string,
   ctx: Record<string, unknown>
-): ToolViewBase[] {
+): ToolView[] {
   const views = useContributions<ToolView>(toolViewsPoint.id, containerId);
   return useMemo(() => {
     LOG.debug("Hook 'useToolViews' is recomputing");
