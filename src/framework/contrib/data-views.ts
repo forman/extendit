@@ -8,6 +8,7 @@ import React from "react";
 import type { JSONSchemaType } from "ajv";
 import {
   type ContributionPoint,
+  getContributions,
   loadCodeContribution,
   registerCodeContribution,
 } from "@/core";
@@ -24,7 +25,7 @@ export interface DataViewManifestEntry {
 }
 
 /**
- * A data view types is used to describe a data view instances.
+ * A data view type is used to describe a data view instances.
  */
 export interface DataViewType extends DataViewManifestEntry {}
 
@@ -39,8 +40,23 @@ export interface DataView extends DataViewType, DisposableLike {
 /**
  * Used to create new data views from data view types.
  */
-export interface DataViewProvider {
-  createDataView(dataViewType: DataViewType): DataView;
+export interface DataViewProvider<Args extends unknown[] = unknown[]> {
+  /**
+   * Get or create a data view for the given data view type and optional
+   * arguments.
+   *
+   * Typically, the function creates a new data view instance for the given
+   * arguments. However, a data view type may define a singleton data view,
+   * so subsequent calls of this function will return the same data view
+   * instance.
+   *
+   * @param dataViewType - The data view type.
+   * @param args - Arbitrary arguments understood by the data view to be
+   *   created. Typically, they specify some data source to be displayed
+   *   in the view
+   * @returns An existing or new data view instance.
+   */
+  getDataView(dataViewType: DataViewType, ...args: Args): DataView;
 }
 
 const dataViewSchema: JSONSchemaType<DataViewManifestEntry> = {
@@ -104,6 +120,21 @@ export function registerDataViewProvider(
     viewType,
     dataViewProvider
   );
+}
+
+export function getDataViewType(viewType: string): DataViewType | undefined;
+export function getDataViewType(
+  viewType: string,
+  mustExist: true
+): DataViewType;
+export function getDataViewType(viewType: string, mustExist?: boolean) {
+  const dataViewType = getContributions<DataViewType>(dataViewsPoint.id).find(
+    (dataViewType) => dataViewType.viewType === viewType
+  );
+  if (!dataViewType && mustExist) {
+    throw new Error(`No data view found for view type "${viewType}"`);
+  }
+  return dataViewType;
 }
 
 export async function getDataViewProvider(viewType: string) {

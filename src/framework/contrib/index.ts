@@ -70,6 +70,7 @@ export {
   type DataViewProvider,
   type DataViewType,
   getDataViewProvider,
+  getDataViewType,
   registerDataViewProvider,
   useDataViewTypes,
   useDataViewType,
