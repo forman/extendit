@@ -2,7 +2,12 @@
 
 ## Breaking changes
 
-* Changed type parameter name from `Data` to `Value`. [#24]
+* Renamed `DataViewProvider.createDataView()` into
+  `DataViewProvider.getDataView()` because it should cover singleton views too.
+  It can now be called with arbitrary arguments. Typically, such arguments 
+  specify some data source to be displayed in the data view instance.
+* Changed the generic type parameter name from `Data` to `Value` for a 
+  number of functions and interfaces. [#24]
   Corresponding to this change, also changed property name `data`
   into `value` in type `CodeContribution<Value>`.
 
@@ -13,6 +18,8 @@
 
 ## Other changes
 
+* A new function `getDataViewType(viewType: string): DataViewType`
+  is exported from `extendit/contrib`.
 * Included the compiled `when` clause in `ToolView` interface to better 
   support [#30].
 * Enhanced API docs for React Hooks. [#27]
