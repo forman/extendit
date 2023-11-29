@@ -7,7 +7,7 @@
 import { expect, test } from "vitest";
 import * as core from "./index";
 
-import packageJson from "/package.json";
+import packageJson from "../../../package.json";
 
 export const expectedExports = [
   "activateExtension",
