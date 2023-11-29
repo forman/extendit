@@ -40,5 +40,6 @@ test("Framework Core API is complete", () => {
 });
 
 test("Framework Core API version matches package.json", () => {
+  expect(typeof core.version).toEqual("string");
   expect(core.version).toEqual(packageJson.version);
 });
