@@ -7,6 +7,8 @@
 import { expect, test } from "vitest";
 import * as core from "./index";
 
+import packageJson from "/package.json";
+
 export const expectedExports = [
   "activateExtension",
   "addExtensionListener",
@@ -27,6 +29,7 @@ export const expectedExports = [
   "registerContributionPoint",
   "registerExtension",
   "updateFrameworkConfig",
+  "version",
 ];
 
 test("Framework Core API is complete", () => {
@@ -37,5 +40,5 @@ test("Framework Core API is complete", () => {
 });
 
 test("Framework Core API version matches package.json", () => {
-  expect(core.version).toEqual("0.2.0");
+  expect(core.version).toEqual(packageJson.version);
 });
