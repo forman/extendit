@@ -4,6 +4,8 @@
  * https://opensource.org/licenses/MIT.
  */
 
+export const version = "0.2.0";
+
 //////////////////////////////////////////////////////////////////////////
 // Framework API:
 export type { FrameworkOptions } from "./types";

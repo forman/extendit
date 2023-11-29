@@ -35,3 +35,7 @@ test("Framework Core API is complete", () => {
   // console.log(api)
   expect(api).toEqual(expectedExports);
 });
+
+test("Framework Core API version matches package.json", () => {
+  expect(core.version).toEqual("0.2.0");
+});

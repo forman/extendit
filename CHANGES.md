@@ -1,4 +1,4 @@
-# 0.2.0 (in development)
+# 0.2.0 (from 29.11.2023)
 
 ## Breaking changes
 
@@ -18,6 +18,7 @@
 
 ## Other changes
 
+* Exporting version number from `core` module.
 * A new function `getDataViewType(viewType: string): DataViewType`
   is exported from `extendit/contrib`.
 * Included the compiled `when` clause in `ToolView` interface to better 
